@@ -3,12 +3,14 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
+  - bzip2
   - cmake
   - cxx-compiler
   - ipython
   - libblas=*=*mkl
   - libopenblas
   - python
+  - r-base
   - radian
   - snakemake
   - r-base
