@@ -1,0 +1,16 @@
+name: functional-profiler
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - cmake
+  - cxx-compiler
+  - ipython
+  - libblas=*=*mkl
+  - libopenblas
+  - python
+  - radian
+  - snakemake
+  - r-base
+  - r-languageserver
+  - zlib
