@@ -6,6 +6,6 @@ dependencies:
   - libblas=*=*mkl
   - libopenblas
   - python
-  - snakemake
   - r-base
   - r-languageserver
+  - snakemake
