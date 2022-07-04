@@ -37,7 +37,7 @@ system-wide package manager, e.g. for RHEL/Fedora Linux `dnf` or Ubuntu
 
 
 ```bash
-$ sudo dnf install \
+sudo dnf install \
 autoconf \
 boost-devel \
 ca-certificates \
@@ -53,4 +53,13 @@ time \
 wget \
 xz-devel \
 zlib-devel
+```
+
+Install Pufferfish, Puffaligner, and Cedar:
+
+```bash
+mkdir pufferfish/build
+cd pufferfish/build
+cmake ../
+make
 ```
