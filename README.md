@@ -39,13 +39,21 @@ git clone --recurse-submodules https://github.com/hermidalc/dragonfish.git
 cd dragonfish
 ```
 
+Install `mamba`/`conda` environment. After installing the Pufferfish step
+below you can a `activate` it:
+
+```
+mamba env create -f envs/dragonfish-mkl.yaml
+```
+
 ### Pufferfish, Puffaligner, Cedar
 
-I could not get pufferfish to build within a conda envronment using the
+I could not get pufferfish to build within a `conda` envronment using the
 required dependencies already installed into that environment. Therefore,
 currently you have to install pufferfish using dependencies from your
 system-wide package manager, e.g. for RHEL/Fedora Linux `dnf` or Ubuntu
-`apt`. In RHEL/Fedora install the following:
+`apt`, and with the `conda` environment deactivated. In RHEL/Fedora
+install the following:
 
 
 ```bash
