@@ -9,6 +9,9 @@ metagenomic or metatranscriptomic sequencing experiments to such an index, and
 most importantly, accurately quantify the abundance of aligned reads to
 **functional** groups across genomes and transcriptomes in the index, while also
 providing species- and strain-level contribution to these functional abundances.
+We believe that using such modern methods, this toolkit will offer significant
+advantages to existing leading functional profiling tools that are
+available, which are based on older methods.
 
 Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
 at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab). It
