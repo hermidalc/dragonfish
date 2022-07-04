@@ -22,6 +22,18 @@ further.
 
 ## Installation
 
+### Mambaforge / Miniforge3
+
+Install and set up
+[Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) or
+[Miniforge3](https://github.com/conda-forge/miniforge#miniforge3)
+
+### Project source
+
+To obtain the source of the project and create a conda environment
+with the tools needed to run the project, execute the following below (if
+using Miniforge3 replace `mamba` with `conda`):
+
 ```bash
 git clone --recurse-submodules https://github.com/hermidalc/dragonfish.git
 cd dragonfish
