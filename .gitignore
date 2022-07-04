@@ -169,5 +169,8 @@ vignettes/*.pdf
 .Renviron
 
 # Custom directories and files
+bin/
 data/
+logs/
 results/
+.snakemake/
