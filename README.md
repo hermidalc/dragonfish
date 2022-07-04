@@ -32,7 +32,8 @@ cd dragonfish
 I could not get pufferfish to build within a conda envronment using the
 required dependencies already installed into that environment. Therefore,
 currently you have to install pufferfish using dependencies from your
-system-wide package manager, e.g. for RHEL/Fedora Linux `dnf` the following:
+system-wide package manager, e.g. for RHEL/Fedora Linux `dnf` or Ubuntu
+`apt`. In RHEL/Fedora install the following:
 
 
 ```bash
