@@ -11,9 +11,9 @@ most importantly, accurately quantify the abundance of aligned reads to
 providing species- and strain-level contribution to these functional abundances.
 
 Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
-at it's core, written by the COMBINE-lab. It is inspired by
-[AGAMEMNON](https://github.com/ivlachos/agamemnon), but it's design and
-functionality goes significantly further.
+at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab). It
+is inspired by [AGAMEMNON](https://github.com/ivlachos/agamemnon), but it's
+design and functionality go significantly further.
 
 ## Installation
 
