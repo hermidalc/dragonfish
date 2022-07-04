@@ -4,7 +4,7 @@ channels:
   - bioconda
 dependencies:
   - joblib
-  - libblas=*=*mkl
+  - libblas=[build=*mkl]
   - libopenblas
   - python
   - r-base
