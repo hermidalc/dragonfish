@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 
 import pandas as pd
-from joblib import dump
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -9,10 +8,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--meta-file",
         type=str,
-        default="data/uniprot_proteome_metadata.pkl",
-        help="Dataframe out file",
+        default="data/uniprot_proteome_metadata.tsv",
+        help="UniProt proteomes metadata TSV file",
     )
     args = parser.parse_args()
 
     metadata_df = pd.read_csv(args.api_url, sep="\t")
-    dump(metadata_df, args.meta_file)
+    metadata_df.loc.to_csv(args.meta_file, sep="\t", index=False)
