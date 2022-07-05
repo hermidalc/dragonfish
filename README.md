@@ -78,8 +78,8 @@ zlib-devel
 Install Pufferfish, Puffaligner, and Cedar:
 
 ```bash
-mkdir pufferfish/build
-cd pufferfish/build
+mkdir external/pufferfish/build
+cd external/pufferfish/build
 cmake ../
 make
 ```
