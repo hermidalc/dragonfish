@@ -39,7 +39,7 @@ git clone --recurse-submodules https://github.com/hermidalc/dragonfish.git
 cd dragonfish
 ```
 
-Install `mamba`/`conda` environment. After installing the Pufferfish step
+Install the `conda` environment. Only after installing the Pufferfish step
 below you can a `activate` it:
 
 ```
