@@ -16,9 +16,8 @@ available, which are based on older methods.
 Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
 at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab). It
 is inspired by [AGAMEMNON](https://github.com/ivlachos/agamemnon), and novel
-taxonomic profiler using the same underlying tools, but it's
-design goals and functionality are different and we also feel go significantly
-further.
+taxonomic profiler using the same underlying tools, but our
+design goals and functionality are complementary and our software provides more features.
 
 ## Installation
 
