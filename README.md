@@ -1,16 +1,16 @@
 # Dragonfish
 
-A novel **functional** metagenomic and metatranscriptomic profiler and framework
-that leverages more recent methdological advances in the field of computational
+A novel **functional** metagenomic and metatranscriptomic profiler and toolkit
+that leverages modern methdological advances in the field of computational
 and algorithmic genomics and relevant published software. It can efficiently
-store, index, and represent large collections of metagenomes and
-metatranscriptomes, perform fast and accurate alignment of short reads from
-whole shotgun metagenomic or metatranscriptomic sequencing experiments to such
-the index, and most importantly, accurately quantify the abundance of aligned
-reads to functional groups across genomes and transcriptomes in the index, while
-also providing species- and strain-level contribution to these functional
-abundances. We believe that using such modern methods, this toolkit will offer
-significant advantages to existing leading functional profiling tools that are
+store, index, and represent large collections of genomes and transcriptomes,
+perform fast and accurate alignment of short reads from whole shotgun
+metagenomic or metatranscriptomic sequencing experiments to an index, and most
+importantly, accurately quantify the abundance of mapped reads to functional
+groups across genomes and transcriptomes in the index, while also providing
+genus-, species-, and strain-level abundance contribution to these functional
+groups. We believe that by using modern methods, this toolkit will offer
+significant advantages to existing functional profiling tools that are
 available, which are based on older methods.
 
 Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
