@@ -1,15 +1,8 @@
 import re
-from ftplib import FTP
 from glob import glob
 from os import getcwd, mkdir, remove, walk
-from os.path import exists, isdir, join, split
+from os.path import exists, isdir, join, splitext
 from shutil import rmtree
-from urllib.parse import urlparse
-
-import pandas as pd
-from joblib import load
-from entrezpy.conduit import Conduit
-
 
 CONFIG_DIR = "config"
 DATA_DIR = "data"
@@ -22,12 +15,35 @@ SCRIPTS_DIR = "scripts"
 configfile: join(CONFIG_DIR, "config.yaml")
 
 
+GENBANK_ASSEMBLY_DIR = join(DATA_DIR, "assembly")
+
 UNIPROT_PROTEOME_METADATA_URL = config["uniprot_proteome_metadata_url"]
+GENBANK_ASSEMBLY_REPORTS_URL = config["genbank_assembly_reports_url"]
+GENBANK_ASSEMBLY_SUMMARY_FILENAMES = config["genbank_assembly_summary_filenames"]
+
+GENBANK_ASSEMBLY_SUMMARY_BASENAME = [
+    splitext(filename)[0] for filename in GENBANK_ASSEMBLY_SUMMARY_FILENAMES
+]
+
+NCBI_API_EMAIL = config["ncbi_api_email"]
+NCBI_API_KEY = config["ncbi_api_key"]
+
 UNIPROT_PROTEOME_METADATA_FILE = join(DATA_DIR, "uniprot_proteome_metadata.tsv")
-NCBI_GCA_NAME_FILE = join(DATA_DIR, "ncbi_gca_names.tsv")
+GENBANK_ASSEMBLY_SUMMARY_FILE = join(DATA_DIR, "{file_basename}.txt")
+GENBANK_ASSEMBLY_SUMMARY_FILES = [
+    join(DATA_DIR, filename) for filename in GENBANK_ASSEMBLY_SUMMARY_FILENAMES
+]
+GENBANK_MERGED_ASSEMBLY_SUMMARY_FILE = join(
+    DATA_DIR, "assembly_summary_genbank_merged.txt"
+)
 
 UNIPROT_PROTEOME_METADATA_LOG = join(LOG_DIR, "get_uniprot_proteome_metadata.log")
-NCBI_GCA_NAME_LOG = join(LOG_DIR, "get_ncbi_gca_names.log")
+GENBANK_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{file_basename}.log")
+GENBANK_MERGED_ASSEMBLY_SUMMARY_LOG = join(
+    LOG_DIR,
+    "genbank_assembly_summaries.log",
+)
+GENBANK_ASSEMBLY_FILES_LOG = join(LOG_DIR, "get_genbank_assembly_files.log")
 
 
 if not exists(LOG_DIR):
@@ -37,7 +53,11 @@ if not exists(LOG_DIR):
 rule all:
     input:
         UNIPROT_PROTEOME_METADATA_FILE,
-        NCBI_GCA_NAME_FILE,
+        expand(
+            GENBANK_ASSEMBLY_SUMMARY_FILE,
+            file_basename=GENBANK_ASSEMBLY_SUMMARY_BASENAME,
+        ),
+        GENBANK_MERGED_ASSEMBLY_SUMMARY_FILE,
 
 
 rule clean:
@@ -57,8 +77,8 @@ rule clean:
 
 rule get_uniprot_proteome_metadata:
     params:
-        scripts_dir=SCRIPTS_DIR,
         api_url=UNIPROT_PROTEOME_METADATA_URL,
+        scripts_dir=SCRIPTS_DIR,
     output:
         UNIPROT_PROTEOME_METADATA_FILE,
     log:
@@ -67,26 +87,42 @@ rule get_uniprot_proteome_metadata:
         """
         python {params.scripts_dir}/get_uniprot_proteome_metadata.py \
         --api-url '{params.api_url}' \
-        --meta-file {output} \
+        --out-file {output} \
         &> {log}
         """
 
 
-rule get_ncbi_gca_names:
+rule get_genbank_assembly_summary:
+    params:
+        file_basename="{file_basename}",
+        reports_url=GENBANK_ASSEMBLY_REPORTS_URL,
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        GENBANK_ASSEMBLY_SUMMARY_FILE,
+    log:
+        GENBANK_ASSEMBLY_SUMMARY_LOG,
+    shell:
+        """
+        python {params.scripts_dir}/get_genbank_assembly_summary.py \
+        --reports-url '{params.reports_url}' \
+        --out-file {output} \
+        &> {log}
+        """
+
+
+rule merge_genbank_assembly_summaries:
     input:
-        UNIPROT_PROTEOME_METADATA_FILE,
+        GENBANK_ASSEMBLY_SUMMARY_FILES,
     params:
         scripts_dir=SCRIPTS_DIR,
     output:
-        NCBI_GCA_NAME_FILE,
+        GENBANK_MERGED_ASSEMBLY_SUMMARY_FILE,
     log:
-        NCBI_GCA_NAME_LOG,
-    threads: 5
+        GENBANK_MERGED_ASSEMBLY_SUMMARY_LOG,
     shell:
         """
-        python {params.scripts_dir}/get_ncbi_gca_names.py \
-        --meta-file {input} \
-        --name-file {output} \
-        --n-jobs {threads}
+        python {params.scripts_dir}/merge_genbank_assembly_summaries.py \
+        --summary-file {input} \
+        --out-file {output} \
         &> {log}
         """
