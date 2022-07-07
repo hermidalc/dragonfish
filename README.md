@@ -51,11 +51,13 @@ mamba env create -f envs/dragonfish-mkl.yaml
 ### Pufferfish, Puffaligner, Cedar
 
 I could not get pufferfish to build within a `conda` envronment using the
-required dependencies already installed into that environment. Therefore,
-currently you have to install pufferfish using dependencies from your
-system-wide package manager, e.g. for RHEL/Fedora Linux `dnf` or Ubuntu
-`apt`, and with the `mamba deactivate` because will not work inside the
-`conda` environment. In RHEL/Fedora install the following:
+required dependencies already installed into that environment. This appears
+to be due to specifics of to how conda-forge built their C++ and related
+packages. Therefore, currently you have to install pufferfish using
+dependencies from your system-wide package manager, e.g. for RHEL/Fedora
+Linux `dnf` or Ubuntu `apt`, and with the `mamba deactivate` because will
+not work inside the `conda` environment. In RHEL/Fedora install the
+following:
 
 
 ```bash
