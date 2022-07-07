@@ -20,6 +20,7 @@ GENBANK_ASSEMBLY_DIR = join(DATA_DIR, "assembly")
 UNIPROT_PROTEOME_METADATA_URL = config["uniprot_proteome_metadata_url"]
 GENBANK_ASSEMBLY_REPORTS_URL = config["genbank_assembly_reports_url"]
 GENBANK_ASSEMBLY_SUMMARY_FILENAMES = config["genbank_assembly_summary_filenames"]
+GENBANK_ASSEMBLY_FILE_EXTS = config["genbank_assembly_file_exts"]
 
 GENBANK_ASSEMBLY_SUMMARY_BASENAME = [
     splitext(filename)[0] for filename in GENBANK_ASSEMBLY_SUMMARY_FILENAMES
@@ -58,6 +59,7 @@ rule all:
             file_basename=GENBANK_ASSEMBLY_SUMMARY_BASENAME,
         ),
         GENBANK_MERGED_ASSEMBLY_SUMMARY_FILE,
+        "data/finished",
 
 
 rule clean:
@@ -122,7 +124,49 @@ rule merge_genbank_assembly_summaries:
     shell:
         """
         python {params.scripts_dir}/merge_genbank_assembly_summaries.py \
-        --summary-file {input} \
+        --summary-files {input} \
         --out-file {output} \
         &> {log}
         """
+
+
+checkpoint get_genbank_assembly_files:
+    input:
+        proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
+        summary_file=GENBANK_MERGED_ASSEMBLY_SUMMARY_FILE,
+    params:
+        file_exts=GENBANK_ASSEMBLY_FILE_EXTS,
+        out_dir=GENBANK_ASSEMBLY_DIR,
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        directory(GENBANK_ASSEMBLY_DIR),
+    log:
+        GENBANK_ASSEMBLY_FILES_LOG,
+    threads: 8
+    shell:
+        """
+        python {params.scripts_dir}/get_genbank_assembly_files.py \
+        --proteome-file {input.proteome_file} \
+        --summary-file {input.summary_file} \
+        --file-exts {params.file_exts} \
+        --out-dir {params.out_dir} \
+        --n-jobs {threads} \
+        &> {log}
+        """
+
+
+def aggregate_genbank_assembly_files(wildcards):
+    files = checkpoints.get_genbank_assembly_files.get(**wildcards).output[0]
+    file_basenames, file_exts = glob_wildcards(join(files, "{i}.{ext}"))
+    return expand(
+        f"{GENBANK_ASSEMBLY_DIR}/{{i}}.{{ext}}", zip, file_basenames, file_exts
+    )
+
+
+rule finish:
+    input:
+        aggregate_genbank_assembly_files,
+    output:
+        touch("data/finished"),
+    shell:
+        "echo FINISHED"

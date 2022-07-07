@@ -12,13 +12,13 @@ if __name__ == "__main__":
             "assembly_summary_genbank.txt",
             "assembly_summary_genbank_historical.txt",
         ],
-        help="NCBI genomics assembly reports directory URL",
+        help="Genbank assembly summary files",
     )
     parser.add_argument(
         "--out-file",
         type=str,
         default="data/assembly_summary_merged.txt",
-        help="NCBI Genbank assembly summary merged file",
+        help="Genbank assembly summary merged file",
     )
     args = parser.parse_args()
 
