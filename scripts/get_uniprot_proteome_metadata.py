@@ -9,7 +9,7 @@ if __name__ == "__main__":
         "--out-file",
         type=str,
         default="data/uniprot_proteome_metadata.tsv",
-        help="UniProt proteomes metadata TSV file",
+        help="UniProt proteomes metadata file",
     )
     args = parser.parse_args()
 
