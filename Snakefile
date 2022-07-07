@@ -15,7 +15,7 @@ SCRIPTS_DIR = "scripts"
 configfile: join(CONFIG_DIR, "config.yaml")
 
 
-GENBANK_ASSEMBLY_DIR = join(DATA_DIR, "assembly")
+GENBANK_ASSEMBLY_DIR = join(DATA_DIR, "assemblies")
 
 UNIPROT_PROTEOME_METADATA_URL = config["uniprot_proteome_metadata_url"]
 GENBANK_ASSEMBLY_REPORTS_URL = config["genbank_assembly_reports_url"]
