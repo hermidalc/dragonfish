@@ -17,10 +17,10 @@ Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-la
 at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab). A
 purely taxonomic profiler called [AGAMEMNON](https://github.com/ivlachos/agamemnon)
 exists that was built using the same underlying COMBINE-lab toolkit, but our
-design goals and functionality are complementary, since we are quantifying
-abundances by functional feature as well as taxonomic level contribution to
-functional feature abundance, and our software provides more workflow features
-and options.
+design goals and functionality are both complementary and a superset of
+AGAMEMNON's, since we are quantifying abundances by functional feature,
+taxonomic level contribution to functional feature abundance, and taxonomic
+feature abundances.
 
 ## Installation
 
