@@ -30,21 +30,21 @@ if __name__ == "__main__":
     parser.add_argument(
         "--summary-file",
         type=str,
-        default="data/assembly_summary_genbank_merged.txt",
-        help="Genbank assembly summary merged file",
+        default="data/assembly_summary_merged.txt",
+        help="NCBI assembly summary merged file",
     )
     parser.add_argument(
         "--file-exts",
         nargs="+",
         type=str,
         default=["cds_from_genome.fna.gz", "genome.fna.gz", "genome.gtf.gz"],
-        help="Genbank assembly file extensions",
+        help="NCBI assembly file extensions",
     )
     parser.add_argument(
         "--out-dir",
         type=str,
         default="data/assembly",
-        help="Genbank assembly output directory",
+        help="NCBI assembly output directory",
     )
     parser.add_argument("--n-jobs", type=int, default=-1, help="num parallel jobs")
     parser.add_argument(

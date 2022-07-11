@@ -8,17 +8,13 @@ if __name__ == "__main__":
         "--summary-files",
         nargs="+",
         type=str,
-        default=[
-            "assembly_summary_genbank.txt",
-            "assembly_summary_genbank_historical.txt",
-        ],
-        help="Genbank assembly summary files",
+        help="NCBI assembly summary files",
     )
     parser.add_argument(
         "--out-file",
         type=str,
         default="data/assembly_summary_merged.txt",
-        help="Genbank assembly summary merged file",
+        help="NCBI assembly summary merged file",
     )
     args = parser.parse_args()
 
@@ -26,9 +22,15 @@ if __name__ == "__main__":
         merged_df = pd.DataFrame()
         for summary_file in args.summary_files:
             summary_df = pd.read_csv(
-                summary_file, sep="\t", skiprows=1, index_col=0, na_values="na"
+                summary_file,
+                sep="\t",
+                skiprows=1,
+                index_col=0,
+                keep_default_na=False,
             )
             summary_df.index.name = "assembly_accession"
+            summary_df.fillna("na", inplace=True)
+            summary_df.fillna("NA", inplace=True)
             merged_df = pd.concat([merged_df, summary_df], verify_integrity=True)
         merged_df.to_csv(args.out_file, sep="\t")
     else:
