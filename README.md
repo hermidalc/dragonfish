@@ -1,26 +1,26 @@
 # Dragonfish
 
 A novel **functional** metagenomic and metatranscriptomic profiler and toolkit
-that leverages modern methdological advances in the field of computational
+that leverages modern methodological advances in the field of computational
 and algorithmic genomics and relevant published software. It can efficiently
 store, index, and represent large collections of genomes and transcriptomes,
 perform fast and accurate alignment of short reads from whole shotgun
 metagenomic or metatranscriptomic sequencing experiments to an index, and most
 importantly, accurately quantify the abundance of mapped reads to functional
-groups across genomes and transcriptomes in the index, while also providing
+features across genomes and transcriptomes in the index, while also providing
 genus-, species-, and strain-level abundance contribution to these functional
-groups. We believe that by using modern methods, this toolkit will offer
-significant advantages to existing functional profiling tools that are
-available, which are based on older methods.
+features as well as standard taxonomic abundances. We believe that by using
+modern methods, this toolkit will offer significant advantages to existing
+functional profiling tools that are available.
 
-Dragonfish uses [Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
-at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab). A
-purely taxonomic profiler called [AGAMEMNON](https://github.com/ivlachos/agamemnon)
-exists that was built using the same underlying COMBINE-lab toolkit, but our
+Dragonfish uses [Pufferfish + Puffaligner + Cedar](
+https://github.com/COMBINE-lab/pufferfish) at it's core, written by the
+[COMBINE-lab](https://github.com/COMBINE-lab). A purely taxonomic profiler
+called [AGAMEMNON](https://github.com/ivlachos/agamemnon) exists that was
+built using the same underlying COMBINE-lab toolkit, but Dragonfish's
 design goals and functionality are both complementary and a superset of
 AGAMEMNON's, since we are quantifying abundances by functional feature,
-taxonomic level contribution to functional feature abundance, and taxonomic
-feature abundances.
+taxonomic-level contribution to functional feature, and taxonomic.
 
 ## Installation
 
@@ -48,16 +48,15 @@ below you can a `activate` it:
 mamba env create -f envs/dragonfish-mkl.yaml
 ```
 
-### Pufferfish, Puffaligner, Cedar
+### Pufferfish, Puffaligner, and Cedar
 
 I could not get pufferfish to build within a `conda` envronment using the
 required dependencies already installed into that environment. This appears
-to be due to specifics of to how conda-forge built their C++ and related
+to be due to the specifics of how conda-forge built their C++ and related
 packages. Therefore, currently you have to install pufferfish using
 dependencies from your system-wide package manager, e.g. for RHEL/Fedora
-Linux `dnf` or Ubuntu `apt`, and with the `mamba deactivate` because will
-not work inside the `conda` environment. In RHEL/Fedora install the
-following:
+Linux `dnf` or Ubuntu `apt`, and with the conda environment deactivated.
+In RHEL/Fedora install the following:
 
 
 ```bash
