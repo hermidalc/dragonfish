@@ -1,5 +1,5 @@
-import os
 from argparse import ArgumentParser
+from os import makedirs
 from os.path import join
 from pathlib import Path
 from urllib.error import URLError
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         else:
             print(f"Missing {acc}", flush=True)
 
-    os.makedirs(args.out_dir, mode=0o755, exist_ok=True)
+    makedirs(args.out_dir, mode=0o755, exist_ok=True)
 
     Parallel(n_jobs=args.n_jobs, backend=args.parallel_backend, verbose=args.verbose)(
         delayed(download_file)(url, file, args.debug)
