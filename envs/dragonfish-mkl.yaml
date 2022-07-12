@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - entrezpy
   - joblib
   - libblas=[build=*mkl]
   - libopenblas
