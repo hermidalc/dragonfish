@@ -2,9 +2,16 @@
 ncbi_api_email: 'leandro@leandrohermida.com'
 ncbi_api_key: '3e48f690c8007a7c8424a3c0ff3d18757808'
 
-uniprot_proteome_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
+ncbi_taxonomy_url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/'
+ncbi_taxonomy_file_paths: [
+  'accession2taxid/dead_nucl.accession2taxid.gz',
+  'accession2taxid/dead_wgs.accession2taxid.gz',
+  'accession2taxid/nucl_gb.accession2taxid.gz',
+  'accession2taxid/nucl_wgs.accession2taxid.gz',
+  'new_taxdump/new_taxdump.zip'
+]
 
-ncbi_assembly_reports_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS'
+ncbi_assembly_summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
 ncbi_assembly_summary_filenames: [
   'assembly_summary_genbank.txt',
   'assembly_summary_genbank_historical.txt',
@@ -16,3 +23,5 @@ ncbi_assembly_file_exts: [
   'genomic.fna.gz',
   'genomic.gff.gz'
 ]
+
+uniprot_proteome_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
