@@ -183,10 +183,10 @@ checkpoint get_ncbi_assembly_files:
         summary_file=NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
     params:
         file_exts=NCBI_ASSEMBLY_FILE_EXTS,
-        out_dir=NCBI_GENOME_DIR,
+        out_dir=NCBI_ASSEMBLY_DIR,
         scripts_dir=SCRIPTS_DIR,
     output:
-        directory(NCBI_GENOME_DIR),
+        directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_FILE_LOG,
     threads: 8
