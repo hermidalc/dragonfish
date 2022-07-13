@@ -59,6 +59,8 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
+NCBI_ASSEMBLY_GZ_FILE = join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}.gz")
+NCBI_ASSEMBLY_FILE = join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}")
 NCBI_ASSEMBLY_EXTS = [
     splitext(ext)[1].replace(".", "", 1) for ext in NCBI_ASSEMBLY_GZ_FILE_EXTS
 ]
@@ -71,7 +73,7 @@ NCBI_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{asu_basename}_{asu_ext}.log")
 NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "merge_ncbi_assembly_summaries.log")
 UNIPROT_PROTEOME_METADATA_LOG = join(LOG_DIR, "get_uniprot_proteome_metadata.log")
 NCBI_ASSEMBLY_GZ_FILES_LOG = join(LOG_DIR, "get_ncbi_assembly_gz_files.log")
-
+NCBI_ASSEMBLY_FILE_LOG = join(LOG_DIR, "gunzip_{asm_basename}_{asm_ext}_gz.log")
 
 if not exists(LOG_DIR):
     mkdir(LOG_DIR, mode=0o755)
@@ -263,13 +265,13 @@ checkpoint get_ncbi_assembly_gz_files:
 
 rule gunzip_ncbi_assembly_gz_file:
     input:
-        join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}.gz"),
+        NCBI_ASSEMBLY_GZ_FILE,
     params:
         scripts_dir=SCRIPTS_DIR,
     output:
-        join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}"),
+        NCBI_ASSEMBLY_FILE,
     log:
-        join(LOG_DIR, "gunzip_{asm_basename}_{asm_ext}_gz.log"),
+        NCBI_ASSEMBLY_FILE_LOG,
     shell:
         """
         python {params.scripts_dir}/gunzip_file.py \
