@@ -1,7 +1,6 @@
-import re
 from glob import glob
 from os import getcwd, mkdir, remove, walk
-from os.path import basename, dirname, exists, isdir, join, splitext
+from os.path import exists, isdir, join, splitext
 from shutil import rmtree
 
 CONFIG_DIR = "config"
@@ -20,77 +19,79 @@ UNIPROT_DIR = join(DATA_DIR, "uniprot")
 configfile: join(CONFIG_DIR, "config.yaml")
 
 
-NCBI_API_EMAIL = config["ncbi_api_email"]
-NCBI_API_KEY = config["ncbi_api_key"]
+NCBI_API_EMAIL = config["ncbi"]["api_email"]
+NCBI_API_KEY = config["ncbi"]["api_key"]
 
-NCBI_TAXONOMY_URL = config["ncbi_taxonomy_url"]
-NCBI_TAXONOMY_FILE_PATHS = config["ncbi_taxonomy_file_paths"]
-NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi_assembly_summary_url"]
-NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi_assembly_summary_filenames"]
-NCBI_ASSEMBLY_FILE_EXTS = config["ncbi_assembly_file_exts"]
-UNIPROT_PROTEOME_METADATA_URL = config["uniprot_proteome_metadata_url"]
+NCBI_ACC2TAXID_URL = config["ncbi"]["acc2taxid_url"]
+NCBI_ACC2TAXID_GZ_FILENAMES = config["ncbi"]["acc2taxid_gz_filenames"]
+NCBI_TAXDUMP_URL = config["ncbi"]["taxdump_url"]
+NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxdump_zip_filename"]
+NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxdump_filenames"]
 
-NCBI_TAXONOMY_FILE_DIRNAME, NCBI_TAXONOMY_FILE_BASENAME, NCBI_TAXONOMY_FILE_EXT = zip(
-    *(
-        (
-            dirname(file_path),
-            splitext(basename(file_path))[0],
-            splitext(basename(file_path))[1].replace(".", "", 1),
-        )
-        for file_path in NCBI_TAXONOMY_FILE_PATHS
-    )
-)
-NCBI_ASSEMBLY_SUMMARY_FILE_BASENAME, NCBI_ASSEMBLY_SUMMARY_FILE_EXT = zip(
+NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly_summary_url"]
+NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly_summary_filenames"]
+NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly_file_exts"]
+UNIPROT_PROTEOME_METADATA_URL = config["uniprot"]["proteome_metadata_url"]
+
+NCBI_ACC2TAXID_FILENAMES = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES
+]
+NCBI_ACC2TAXID_GZ_URL = join(NCBI_ACC2TAXID_URL, "{a2t_filename}.gz")
+NCBI_ACC2TAXID_GZ_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}")
+NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_FILES = [
+    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
+]
+NCBI_ASSEMBLY_SUMMARY_BASENAME, NCBI_ASSEMBLY_SUMMARY_EXT = zip(
     *(
         (splitext(filename)[0], splitext(filename)[1].replace(".", "", 1))
         for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
     )
 )
-
-NCBI_TAXONOMY_FILE = join(
-    NCBI_TAXONOMY_DIR, "{tax_dirname}", "{tax_basename}.{tax_ext}"
-)
-NCBI_TAXONOMY_FILE_URL = join(
-    NCBI_TAXONOMY_URL, "{tax_dirname}", "{tax_basename}.{tax_ext}"
-)
-NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asm_basename}.{asm_ext}")
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(
     NCBI_ASSEMBLY_SUMMARY_URL, "{asm_basename}.{asm_ext}"
 )
+NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asm_basename}.{asm_ext}")
 NCBI_ASSEMBLY_SUMMARY_FILES = [
     join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 
-NCBI_TAXONOMY_LOG = join(LOG_DIR, "get_{tax_dirname}_{tax_basename}_{tax_ext}.log")
+NCBI_ACC2TAXID_GZ_LOG = join(LOG_DIR, "get_{a2t_filename}_gz.log")
+NCBI_ACC2TAXID_LOG = join(LOG_DIR, "gunzip_{a2t_filename}_gz.log")
+NCBI_TAXDUMP_ZIP_LOG = join(LOG_DIR, "get_ncbi_taxdump_zip.log")
+NCBI_TAXDUMP_FILES_LOG = join(LOG_DIR, "unzip_ncbi_taxdump.log")
 NCBI_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{asm_basename}_{asm_ext}.log")
 NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "merge_ncbi_assembly_summaries.log")
 UNIPROT_PROTEOME_METADATA_LOG = join(LOG_DIR, "get_uniprot_proteome_metadata.log")
-NCBI_ASSEMBLY_FILE_LOG = join(LOG_DIR, "get_ncbi_assembly_files.log")
+NCBI_ASSEMBLY_FILES_LOG = join(LOG_DIR, "get_ncbi_assembly_files.log")
 
 
 if not exists(LOG_DIR):
     mkdir(LOG_DIR, mode=0o755)
 
 
+wildcard_constraints:
+    a2t_filename="|".join(set(NCBI_ACC2TAXID_FILENAMES)),
+
+
 rule all:
     input:
-        expand(
-            NCBI_TAXONOMY_FILE,
-            zip,
-            tax_dirname=NCBI_TAXONOMY_FILE_DIRNAME,
-            tax_basename=NCBI_TAXONOMY_FILE_BASENAME,
-            tax_ext=NCBI_TAXONOMY_FILE_EXT,
-        ),
+        expand(NCBI_ACC2TAXID_GZ_FILE, zip, a2t_filename=NCBI_ACC2TAXID_FILENAMES),
+        expand(NCBI_ACC2TAXID_FILE, zip, a2t_filename=NCBI_ACC2TAXID_FILENAMES),
+        NCBI_TAXDUMP_ZIP_FILE,
+        NCBI_TAXDUMP_FILES,
         expand(
             NCBI_ASSEMBLY_SUMMARY_FILE,
             zip,
-            asm_basename=NCBI_ASSEMBLY_SUMMARY_FILE_BASENAME,
-            asm_ext=NCBI_ASSEMBLY_SUMMARY_FILE_EXT,
+            asm_basename=NCBI_ASSEMBLY_SUMMARY_BASENAME,
+            asm_ext=NCBI_ASSEMBLY_SUMMARY_EXT,
         ),
-        UNIPROT_PROTEOME_METADATA_FILE,
         NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
+        UNIPROT_PROTEOME_METADATA_FILE,
 
 
 rule clean:
@@ -108,19 +109,71 @@ rule clean:
                     rmtree(join(dirpath, dirname))
 
 
-rule get_ncbi_taxonomy:
+rule get_ncbi_acc2taxid_gz:
     params:
-        file_url=NCBI_TAXONOMY_FILE_URL,
+        file_url=NCBI_ACC2TAXID_GZ_URL,
         scripts_dir=SCRIPTS_DIR,
     output:
-        NCBI_TAXONOMY_FILE,
+        NCBI_ACC2TAXID_GZ_FILE,
     log:
-        NCBI_TAXONOMY_LOG,
+        NCBI_ACC2TAXID_GZ_LOG,
     shell:
         """
         python {params.scripts_dir}/get_url_file.py \
         --file-url '{params.file_url}' \
         --out-file {output} \
+        &> {log}
+        """
+
+
+rule gunzip_acc2taxid:
+    input:
+        NCBI_ACC2TAXID_GZ_FILE,
+    params:
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        NCBI_ACC2TAXID_FILE,
+    log:
+        NCBI_ACC2TAXID_LOG,
+    shell:
+        """
+        python {params.scripts_dir}/gunzip_file.py \
+        --file {input} \
+        &> {log}
+        """
+
+
+rule get_ncbi_taxdump_zip:
+    params:
+        file_url=NCBI_TAXDUMP_ZIP_URL,
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        NCBI_TAXDUMP_ZIP_FILE,
+    log:
+        NCBI_TAXDUMP_ZIP_LOG,
+    shell:
+        """
+        python {params.scripts_dir}/get_url_file.py \
+        --file-url '{params.file_url}' \
+        --out-file {output} \
+        &> {log}
+        """
+
+
+rule unzip_ncbi_taxdump:
+    input:
+        NCBI_TAXDUMP_ZIP_FILE,
+    params:
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        NCBI_TAXDUMP_FILES,
+    log:
+        NCBI_TAXDUMP_FILES_LOG,
+    shell:
+        """
+        python {params.scripts_dir}/unzip_file.py \
+        --file {input} \
+        --members {output} \
         &> {log}
         """
 
@@ -188,7 +241,7 @@ checkpoint get_ncbi_assembly_files:
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
-        NCBI_ASSEMBLY_FILE_LOG,
+        NCBI_ASSEMBLY_FILES_LOG,
     threads: 8
     shell:
         """
