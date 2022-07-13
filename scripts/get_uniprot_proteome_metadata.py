@@ -13,5 +13,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    metadata_df = pd.read_csv(args.api_url, sep="\t")
-    metadata_df.to_csv(args.out_file, sep="\t", index=False)
+    pd.read_csv(args.api_url, sep="\t").to_csv(args.out_file, sep="\t", index=False)

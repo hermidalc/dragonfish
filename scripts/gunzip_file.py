@@ -11,3 +11,4 @@ if __name__ == "__main__":
     with gzip.open(args.file, "rb") as f_in:
         with open(splitext(args.file)[0], "wb") as f_out:
             copyfileobj(f_in, f_out)
+        f_in.close()

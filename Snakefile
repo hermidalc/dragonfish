@@ -30,7 +30,7 @@ NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxdump_filenames"]
 
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly_summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly_summary_filenames"]
-NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly_file_exts"]
+NCBI_ASSEMBLY_GZ_FILE_EXTS = config["ncbi"]["assembly_gz_file_exts"]
 UNIPROT_PROTEOME_METADATA_URL = config["uniprot"]["proteome_metadata_url"]
 
 NCBI_ACC2TAXID_FILENAMES = [
@@ -44,30 +44,33 @@ NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
 NCBI_TAXDUMP_FILES = [
     join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
 ]
-NCBI_ASSEMBLY_SUMMARY_BASENAME, NCBI_ASSEMBLY_SUMMARY_EXT = zip(
+NCBI_ASSEMBLY_SUMMARY_BASENAMES, NCBI_ASSEMBLY_SUMMARY_EXTS = zip(
     *(
         (splitext(filename)[0], splitext(filename)[1].replace(".", "", 1))
         for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
     )
 )
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(
-    NCBI_ASSEMBLY_SUMMARY_URL, "{asm_basename}.{asm_ext}"
+    NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.{asu_ext}"
 )
-NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asm_basename}.{asm_ext}")
+NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.{asu_ext}")
 NCBI_ASSEMBLY_SUMMARY_FILES = [
     join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
+NCBI_ASSEMBLY_EXTS = [
+    splitext(ext)[1].replace(".", "", 1) for ext in NCBI_ASSEMBLY_GZ_FILE_EXTS
+]
 
 NCBI_ACC2TAXID_GZ_LOG = join(LOG_DIR, "get_{a2t_filename}_gz.log")
 NCBI_ACC2TAXID_LOG = join(LOG_DIR, "gunzip_{a2t_filename}_gz.log")
 NCBI_TAXDUMP_ZIP_LOG = join(LOG_DIR, "get_ncbi_taxdump_zip.log")
 NCBI_TAXDUMP_FILES_LOG = join(LOG_DIR, "unzip_ncbi_taxdump.log")
-NCBI_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{asm_basename}_{asm_ext}.log")
+NCBI_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{asu_basename}_{asu_ext}.log")
 NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "merge_ncbi_assembly_summaries.log")
 UNIPROT_PROTEOME_METADATA_LOG = join(LOG_DIR, "get_uniprot_proteome_metadata.log")
-NCBI_ASSEMBLY_FILES_LOG = join(LOG_DIR, "get_ncbi_assembly_files.log")
+NCBI_ASSEMBLY_GZ_FILES_LOG = join(LOG_DIR, "get_ncbi_assembly_gz_files.log")
 
 
 if not exists(LOG_DIR):
@@ -75,6 +78,8 @@ if not exists(LOG_DIR):
 
 
 wildcard_constraints:
+    asu_basename="|".join(set(NCBI_ASSEMBLY_SUMMARY_BASENAMES)),
+    asu_ext="|".join(set(NCBI_ASSEMBLY_SUMMARY_EXTS)),
     a2t_filename="|".join(set(NCBI_ACC2TAXID_FILENAMES)),
 
 
@@ -87,11 +92,12 @@ rule all:
         expand(
             NCBI_ASSEMBLY_SUMMARY_FILE,
             zip,
-            asm_basename=NCBI_ASSEMBLY_SUMMARY_BASENAME,
-            asm_ext=NCBI_ASSEMBLY_SUMMARY_EXT,
+            asu_basename=NCBI_ASSEMBLY_SUMMARY_BASENAMES,
+            asu_ext=NCBI_ASSEMBLY_SUMMARY_EXTS,
         ),
         NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
+        join(NCBI_GENOME_DIR, "aggregated.txt"),
 
 
 rule clean:
@@ -230,22 +236,22 @@ rule get_uniprot_proteome_metadata:
         """
 
 
-checkpoint get_ncbi_assembly_files:
+checkpoint get_ncbi_assembly_gz_files:
     input:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
         summary_file=NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
     params:
-        file_exts=NCBI_ASSEMBLY_FILE_EXTS,
+        file_exts=NCBI_ASSEMBLY_GZ_FILE_EXTS,
         out_dir=NCBI_ASSEMBLY_DIR,
         scripts_dir=SCRIPTS_DIR,
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
-        NCBI_ASSEMBLY_FILES_LOG,
-    threads: 8
+        NCBI_ASSEMBLY_GZ_FILES_LOG,
+    threads: 10
     shell:
         """
-        python {params.scripts_dir}/get_ncbi_assembly_files.py \
+        python {params.scripts_dir}/get_ncbi_assembly_gz_files.py \
         --proteome-file {input.proteome_file} \
         --summary-file {input.summary_file} \
         --file-exts {params.file_exts} \
@@ -255,18 +261,40 @@ checkpoint get_ncbi_assembly_files:
         """
 
 
-def aggregate_ncbi_assembly_files(wildcards):
-    files = checkpoints.get_ncbi_assembly_files.get(**wildcards).output[0]
-    basenames, exts = glob_wildcards(join(files, "{asf_basename}.{asf_ext}"))
+rule gunzip_ncbi_assembly_gz_file:
+    input:
+        join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}.gz"),
+    params:
+        scripts_dir=SCRIPTS_DIR,
+    output:
+        join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}"),
+    log:
+        join(LOG_DIR, "gunzip_{asm_basename}_{asm_ext}_gz.log"),
+    shell:
+        """
+        python {params.scripts_dir}/gunzip_file.py \
+        --file {input} \
+        &> {log}
+        """
+
+
+def gather_ncbi_assembly_files(wildcards):
+    out_dir = checkpoints.get_ncbi_assembly_gz_files.get(**wildcards).output[0]
+    basenames, exts = glob_wildcards(join(out_dir, "{asm_basename}.{asm_ext}.gz"))
     return expand(
-        f"{NCBI_ASSEMBLY_DIR}/{{asf_basename}}.{{asf_ext}}", zip, basenames, exts
+        f"{out_dir}/{{asm_basename}}.{{asm_ext}}",
+        zip,
+        asm_basename=basenames,
+        asm_ext=exts,
     )
 
 
-rule finish:
+rule finished:
     input:
-        aggregate_ncbi_assembly_files,
+        gather_ncbi_assembly_files,
     output:
-        touch("data/finished"),
+        join(NCBI_GENOME_DIR, "aggregated.txt"),
     shell:
-        "echo FINISHED"
+        """
+        echo {input} > {output}
+        """

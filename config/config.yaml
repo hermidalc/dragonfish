@@ -26,7 +26,7 @@ ncbi:
     'assembly_summary_refseq.txt',
     'assembly_summary_refseq_historical.txt',
   ]
-  assembly_file_exts: [
+  assembly_gz_file_exts: [
     'cds_from_genomic.fna.gz',
     'genomic.fna.gz',
     'genomic.gff.gz'
