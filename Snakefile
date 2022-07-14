@@ -130,7 +130,7 @@ rule get_ncbi_acc2taxid_gz:
         python {params.scripts_dir}/get_url_file.py \
         --file-url '{params.file_url}' \
         --out-file {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -147,7 +147,7 @@ rule gunzip_acc2taxid:
         """
         python {params.scripts_dir}/gunzip_file.py \
         --file {input} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -164,7 +164,7 @@ rule get_ncbi_taxdump_zip:
         python {params.scripts_dir}/get_url_file.py \
         --file-url '{params.file_url}' \
         --out-file {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -182,7 +182,7 @@ rule unzip_ncbi_taxdump:
         python {params.scripts_dir}/unzip_file.py \
         --file {input} \
         --members {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -199,7 +199,7 @@ rule get_ncbi_assembly_summary:
         python {params.scripts_dir}/get_url_file.py \
         --file-url '{params.file_url}' \
         --out-file {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -217,7 +217,7 @@ rule merge_ncbi_assembly_summaries:
         python {params.scripts_dir}/merge_ncbi_assembly_summaries.py \
         --summary-files {input} \
         --out-file {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -234,7 +234,7 @@ rule get_uniprot_proteome_metadata:
         python {params.scripts_dir}/get_uniprot_proteome_metadata.py \
         --api-url '{params.api_url}' \
         --out-file {output} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -259,7 +259,7 @@ checkpoint get_ncbi_assembly_gz_files:
         --file-exts {params.file_exts} \
         --out-dir {params.out_dir} \
         --n-jobs {threads} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
@@ -276,7 +276,7 @@ rule gunzip_ncbi_assembly_gz_file:
         """
         python {params.scripts_dir}/gunzip_file.py \
         --file {input} \
-        &> {log}
+        1> {log} 2>&1
         """
 
 
