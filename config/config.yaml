@@ -19,6 +19,28 @@ ncbi:
     'rankedlineage.dmp'
   ]
 
+  tax_microeukaryote_genera: [
+    'Aspergillus',
+    'Blastocystis',
+    'Candida',
+    'Cryptococcus',
+    'Cryptosporidium',
+    'Cyclospora',
+    'Cystoisospora',
+    'Entamoeba',
+    'Giardia',
+    'Leishmania',
+    'Malassezia',
+    'Neosartorya',
+    'Pneumocystis',
+    'Saccharomyces',
+    'Toxoplasma',
+    'Trachipleistophora',
+    'Trichinella',
+    'Trichomonas',
+    'Trypanosoma'
+  ]
+
   assembly_summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
   assembly_summary_filenames: [
     'assembly_summary_genbank.txt',
