@@ -24,13 +24,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--proteome-file",
         type=str,
-        default="data/uniprot_proteome_metadata.tsv",
+        default="data/uniprot/uniprot_proteome_metadata.tsv",
         help="UniProt proteomes metadata file",
     )
     parser.add_argument(
         "--summary-file",
         type=str,
-        default="data/assembly_summary_merged.txt",
+        default="data/genomes/assembly_summary_merged.txt",
         help="NCBI assembly summary merged file",
     )
     parser.add_argument(
