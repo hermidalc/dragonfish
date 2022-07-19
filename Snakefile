@@ -1,3 +1,4 @@
+import re
 from glob import glob
 from os import getcwd, mkdir, remove, walk
 from os.path import exists, isdir, join, splitext
@@ -80,9 +81,9 @@ if not exists(LOG_DIR):
 
 
 wildcard_constraints:
-    asu_basename="|".join(set(NCBI_ASSEMBLY_SUMMARY_BASENAMES)),
-    asu_ext="|".join(set(NCBI_ASSEMBLY_SUMMARY_EXTS)),
-    a2t_filename="|".join(set(NCBI_ACC2TAXID_FILENAMES)),
+    asu_basename="|".join(set(re.escape(NCBI_ASSEMBLY_SUMMARY_BASENAMES))),
+    asu_ext="|".join(set(re.escape(NCBI_ASSEMBLY_SUMMARY_EXTS))),
+    a2t_filename="|".join(set(re.escape(NCBI_ACC2TAXID_FILENAMES))),
 
 
 rule all:
