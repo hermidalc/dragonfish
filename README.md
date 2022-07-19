@@ -20,7 +20,7 @@ called [AGAMEMNON](https://github.com/ivlachos/agamemnon) exists that was
 built using the same underlying COMBINE-lab toolkit, but Dragonfish's
 design goals and functionality are both complementary and a superset of
 AGAMEMNON's, since we are quantifying abundances by functional feature,
-taxonomic-level contribution to functional feature, and taxonomic.
+taxonomic-level contribution to functional feature, and taxonomy.
 
 ## Installation
 
