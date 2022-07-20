@@ -41,12 +41,6 @@ git clone --recurse-submodules https://github.com/hermidalc/dragonfish.git
 cd dragonfish
 ```
 
-Install the `conda` environment. Only after installing the Pufferfish step
-below you can a `activate` it:
-
-```
-mamba env create -f envs/dragonfish-mkl.yaml
-```
 
 ### Pufferfish, Puffaligner, and Cedar
 
@@ -55,7 +49,7 @@ required dependencies already installed into that environment. This appears
 to be due to the specifics of how conda-forge built their C++ and related
 packages. Therefore, currently you have to install pufferfish using
 dependencies from your system-wide package manager, e.g. for RHEL/Fedora
-Linux `dnf` or Ubuntu `apt`, and with the conda environment deactivated.
+Linux `dnf` or Ubuntu `apt`, and with any conda environment deactivated.
 In RHEL/Fedora install the following:
 
 
@@ -85,4 +79,10 @@ mkdir external/pufferfish/build
 cd external/pufferfish/build
 cmake ../
 make
+```
+
+Install the base `conda` environment:
+
+```
+mamba env create -f envs/dragonfish.yaml
 ```
