@@ -2,21 +2,21 @@
 
 A novel **functional** metagenomic and metatranscriptomic profiler and toolkit
 that leverages modern methodological advances in the field of computational
-and algorithmic genomics and relevant published software. It can efficiently
-store, index, and represent large collections of genomes and transcriptomes,
-perform fast and accurate alignment of short reads from whole shotgun
-metagenomic or metatranscriptomic sequencing experiments to an index, and most
-importantly, accurately quantify the abundance of mapped reads to functional
-features across genomes and transcriptomes in the index, while also providing
-genus-, species-, and strain-level abundance contribution to these functional
-features as well as standard taxonomic abundances. We believe that by using
-modern methods, this toolkit will offer significant advantages to existing
-functional profiling tools that are available.
+and algorithmic genomics and relevant published software. Dragonfish uses
+[Pufferfish + Puffaligner + Cedar](https://github.com/COMBINE-lab/pufferfish)
+at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab).
+It can efficiently store, index, and represent large collections of genomes
+and transcriptomes, perform fast and accurate alignment of short reads from
+whole shotgun metagenomic or metatranscriptomic sequencing experiments to an
+index, and most importantly, accurately quantify the abundance of mapped
+reads to functional features across genomes and transcriptomes in the index,
+while also providing genus-, species-, and strain-level abundance contribution
+to these functional features as well as standard taxonomic abundances. We
+believe that by using modern methods, this toolkit will offer significant
+advantages to existing functional profiling tools that are available.
 
-Dragonfish uses [Pufferfish + Puffaligner + Cedar](
-https://github.com/COMBINE-lab/pufferfish) at it's core, written by the
-[COMBINE-lab](https://github.com/COMBINE-lab). A purely taxonomic profiler
-called [AGAMEMNON](https://github.com/ivlachos/agamemnon) exists that was
+A purely taxonomic profiler called
+[AGAMEMNON](https://github.com/ivlachos/agamemnon) exists that was
 built using the same underlying COMBINE-lab toolkit, but Dragonfish's
 design goals and functionality are both complementary and a superset of
 AGAMEMNON's, since we are quantifying abundances by functional feature,
