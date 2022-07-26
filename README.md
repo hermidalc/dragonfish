@@ -15,7 +15,7 @@ to these functional features as well as standard taxonomic abundances. We
 believe that by using modern methods, this toolkit will offer significant
 advantages to existing functional profiling tools that are available.
 
-A purely taxonomic profiler called
+An exclusively taxonomic profiler called
 [AGAMEMNON](https://github.com/ivlachos/agamemnon) exists that was
 built using the same underlying COMBINE-lab toolkit, but Dragonfish's
 design goals and functionality are both complementary and a superset of
