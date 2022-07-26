@@ -1,8 +1,0 @@
-name: dragonfish
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - libblas=[build=*mkl]
-  - libopenblas
-  - snakemake
