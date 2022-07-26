@@ -3,9 +3,6 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - joblib
   - libblas=[build=*mkl]
   - libopenblas
-  - python
-  - r-base
   - snakemake
