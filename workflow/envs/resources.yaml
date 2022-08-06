@@ -1,0 +1,6 @@
+name: resources
+channels:
+  - conda-forge
+dependencies:
+  - joblib
+  - pandas

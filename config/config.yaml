@@ -3,56 +3,66 @@ ncbi:
   api_email: 'leandro@leandrohermida.com'
   api_key: '3e48f690c8007a7c8424a3c0ff3d18757808'
 
-  acc2taxid_url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
-  acc2taxid_gz_filenames: [
+  acc2taxid:
+    url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
+    gz_filenames: [
     'dead_nucl.accession2taxid.gz',
     'dead_wgs.accession2taxid.gz',
     'nucl_gb.accession2taxid.gz',
     'nucl_wgs.accession2taxid.gz',
   ]
 
-  taxdump_url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
-  taxdump_zip_filename: 'new_taxdump.zip'
-  taxdump_filenames: [
-    'names.dmp',
-    'nodes.dmp',
-    'rankedlineage.dmp'
-  ]
+  taxdump:
+    url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
+    zip_filename: 'new_taxdump.zip'
+    filenames: [
+      'names.dmp',
+      'nodes.dmp',
+      'rankedlineage.dmp'
+    ]
 
-  tax_microeukaryote_genera: [
-    'Aspergillus',
-    'Blastocystis',
-    'Candida',
-    'Cryptococcus',
-    'Cryptosporidium',
-    'Cyclospora',
-    'Cystoisospora',
-    'Entamoeba',
-    'Giardia',
-    'Leishmania',
-    'Malassezia',
-    'Neosartorya',
-    'Pneumocystis',
-    'Saccharomyces',
-    'Toxoplasma',
-    'Trachipleistophora',
-    'Trichinella',
-    'Trichomonas',
-    'Trypanosoma'
-  ]
+  taxonomy:
+    microeukaryote_genera: [
+      'Aspergillus',
+      'Blastocystis',
+      'Candida',
+      'Cryptococcus',
+      'Cryptosporidium',
+      'Cyclospora',
+      'Cystoisospora',
+      'Entamoeba',
+      'Giardia',
+      'Leishmania',
+      'Malassezia',
+      'Neosartorya',
+      'Pneumocystis',
+      'Saccharomyces',
+      'Toxoplasma',
+      'Trachipleistophora',
+      'Trichinella',
+      'Trichomonas',
+      'Trypanosoma'
+    ]
 
-  assembly_summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
-  assembly_summary_filenames: [
-    'assembly_summary_genbank.txt',
-    'assembly_summary_genbank_historical.txt',
-    'assembly_summary_refseq.txt',
-    'assembly_summary_refseq_historical.txt',
-  ]
-  assembly_gz_file_exts: [
-    'cds_from_genomic.fna.gz',
-    'genomic.fna.gz',
-    'genomic.gff.gz'
-  ]
+  assembly:
+    summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
+    summary_filenames: [
+      'assembly_summary_genbank.txt',
+      'assembly_summary_genbank_historical.txt',
+      'assembly_summary_refseq.txt',
+      'assembly_summary_refseq_historical.txt',
+    ]
+    gz_file_exts: [
+      'cds_from_genomic.fna.gz',
+      'genomic.fna.gz',
+      'genomic.gff.gz'
+    ]
+    gz_file_job_backend: "loky"
+    gz_file_job_verbosity: 1
+    gz_file_debug: true
+
+
 
 uniprot:
-  proteome_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
+  proteome:
+    metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'

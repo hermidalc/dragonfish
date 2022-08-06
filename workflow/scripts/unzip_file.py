@@ -1,19 +1,13 @@
-import zipfile
-from argparse import ArgumentParser
-from os.path import basename, dirname
+import gzip
+from os.path import basename, dirname, splitext
+from shutil import copyfileobj
+from zipfile import ZipFile
 
-if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("--file", type=str, help="Zip file archive")
-    parser.add_argument(
-        "--members", type=str, nargs="+", help="Archive members to unzip"
-    )
-    parser.add_argument("--out-dir", type=str, help="Output directory")
-    args = parser.parse_args()
-
-    out_dir = dirname(args.file) if not args.out_dir else args.out_dir
-
-    zfile = zipfile.ZipFile(args.file)
-    for member in args.members:
-        zfile.extract(basename(member), path=out_dir)
-    zfile.close()
+if snakemake.input[0].endswith((".zip", ".ZIP")):
+    with ZipFile(snakemake.input[0]) as zf:
+        for member in snakemake.output[0]:
+            zf.extract(basename(member), path=dirname(member))
+elif snakemake.input[0].endswith((".gz", ".GZ")):
+    with gzip.open(snakemake.input[0], "rb") as f_in:
+        with open(splitext(snakemake.output[0])[0], "wb") as f_out:
+            copyfileobj(f_in, f_out)
