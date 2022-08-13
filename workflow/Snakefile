@@ -1,8 +1,10 @@
 import re
 from glob import glob
-from os import getcwd, mkdir, remove, walk
+from os import getcwd, remove, walk
 from os.path import exists, isdir, join, splitext
 from shutil import rmtree
+
+from snakemake.utils import makedirs
 
 CONFIG_DIR = "config"
 DATA_DIR = "data"
@@ -22,11 +24,11 @@ UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
 
-NCBI_ACC2TAXID_URL = config["ncbi"]["acc2taxid_url"]
-NCBI_ACC2TAXID_GZ_FILENAMES = config["ncbi"]["acc2taxid"]["gz_filenames"]
-NCBI_TAXDUMP_URL = config["ncbi"]["taxdump"]["url"]
-NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxdump"]["zip_filename"]
-NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxdump"]["filenames"]
+NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
+NCBI_ACC2TAXID_GZ_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["gz_filenames"]
+NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
+NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
+NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
@@ -79,14 +81,13 @@ NCBI_ASSEMBLY_FILE_LOG = join(LOG_DIR, "gunzip_{asm_basename}_{asm_ext}_gz.log")
 include: "rules/resources.smk"
 
 
-if not exists(LOG_DIR):
-    mkdir(LOG_DIR, mode=0o755)
+makedirs(LOG_DIR)
 
 
 wildcard_constraints:
-    asu_basename="|".join(set(re.escape(NCBI_ASSEMBLY_SUMMARY_BASENAMES))),
-    asu_ext="|".join(set(re.escape(NCBI_ASSEMBLY_SUMMARY_EXTS))),
-    a2t_filename="|".join(set(re.escape(NCBI_ACC2TAXID_FILENAMES))),
+    asu_basename="|".join(set(re.escape(x) for x in NCBI_ASSEMBLY_SUMMARY_BASENAMES)),
+    asu_ext="|".join(set(re.escape(x) for x in NCBI_ASSEMBLY_SUMMARY_EXTS)),
+    a2t_filename="|".join(set(re.escape(x) for x in NCBI_ACC2TAXID_FILENAMES)),
 
 
 rule all:

@@ -3,25 +3,23 @@ ncbi:
   api_email: 'leandro@leandrohermida.com'
   api_key: '3e48f690c8007a7c8424a3c0ff3d18757808'
 
-  acc2taxid:
-    url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
-    gz_filenames: [
-    'dead_nucl.accession2taxid.gz',
-    'dead_wgs.accession2taxid.gz',
-    'nucl_gb.accession2taxid.gz',
-    'nucl_wgs.accession2taxid.gz',
-  ]
-
-  taxdump:
-    url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
-    zip_filename: 'new_taxdump.zip'
-    filenames: [
-      'names.dmp',
-      'nodes.dmp',
-      'rankedlineage.dmp'
-    ]
-
   taxonomy:
+    acc2taxid:
+      url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
+      gz_filenames: [
+        'dead_nucl.accession2taxid.gz',
+        'dead_wgs.accession2taxid.gz',
+        'nucl_gb.accession2taxid.gz',
+        'nucl_wgs.accession2taxid.gz',
+      ]
+    taxdump:
+      url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
+      zip_filename: 'new_taxdump.zip'
+      filenames: [
+        'names.dmp',
+        'nodes.dmp',
+        'rankedlineage.dmp'
+      ]
     microeukaryote_genera: [
       'Aspergillus',
       'Blastocystis',
@@ -55,11 +53,12 @@ ncbi:
     gz_file_exts: [
       'cds_from_genomic.fna.gz',
       'genomic.fna.gz',
-      'genomic.gff.gz'
+      # no Pufferfish GFF/GTF support yet
+      # 'genomic.gff.gz'
     ]
     gz_file_job_backend: "loky"
     gz_file_job_verbosity: 1
-    gz_file_debug: true
+    gz_file_job_debug: true
 
 
 

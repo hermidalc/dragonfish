@@ -75,20 +75,20 @@ rule get_uniprot_proteome_metadata:
     log:
         UNIPROT_PROTEOME_METADATA_LOG,
     run:
-        pd.read_csv(input[0], sep="\t").to_csv(output[0], sep="\t", index=False)
+        pd.read_csv(params[0], sep="\t").to_csv(output[0], sep="\t", index=False)
 
 
 checkpoint get_ncbi_assembly_gz_files:
     conda:
-        "../envs/get_ncbi_assembly_gz_files.yaml"
+        "../envs/resources.yaml"
     input:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
         summary_file=NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
     params:
         file_exts=NCBI_ASSEMBLY_GZ_FILE_EXTS,
-        parallel_backend=config["assembly"]["gz_file_job_backend"],
-        verbosity=config["assembly"]["gz_file_job_verbosity"],
-        debug=config["assembly"]["gz_file_job_debug"],
+        parallel_backend=config["ncbi"]["assembly"]["gz_file_job_backend"],
+        verbosity=config["ncbi"]["assembly"]["gz_file_job_verbosity"],
+        debug=config["ncbi"]["assembly"]["gz_file_job_debug"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
