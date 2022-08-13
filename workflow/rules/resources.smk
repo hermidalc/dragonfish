@@ -93,7 +93,7 @@ checkpoint get_ncbi_assembly_gz_files:
         directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_GZ_FILES_LOG,
-    threads: 10
+    threads: config["ncbi"]["assembly"]["gz_file_job_threads"]
     script:
         "../scripts/get_ncbi_assembly_gz_files.py"
 
