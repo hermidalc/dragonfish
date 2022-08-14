@@ -69,8 +69,10 @@ rule merge_ncbi_assembly_summaries:
 
 rule get_uniprot_proteome_metadata:
     params:
-        ref_url=UNIPROT_REF_PROTEOME_METADATA_URL,
-        other_url=UNIPROT_OTHER_PROTEOME_METADATA_URL,
+        ref_url=config["uniprot"]["proteome"]["ref_metadata_url"],
+        other_url=config["uniprot"]["proteome"]["other_metadata_url"],
+        low_quality_regex=config["ncbi"]["taxonomy"]["low_quality_regex"],
+        eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
     output:
         UNIPROT_PROTEOME_METADATA_FILE,
     log:

@@ -20,7 +20,7 @@ ncbi:
         'nodes.dmp',
         'rankedlineage.dmp'
       ]
-    microeukaryote_genera: [
+    eukaryote_genera: [
       'Aspergillus',
       'Blastocystis',
       'Candida',
@@ -41,6 +41,7 @@ ncbi:
       'Trichomonas',
       'Trypanosoma'
     ]
+    low_quality_regex: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
 
   assembly:
     summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
