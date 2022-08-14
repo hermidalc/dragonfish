@@ -33,7 +33,10 @@ NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
 NCBI_ASSEMBLY_GZ_FILE_EXTS = config["ncbi"]["assembly"]["gz_file_exts"]
-UNIPROT_PROTEOME_METADATA_URL = config["uniprot"]["proteome"]["metadata_url"]
+UNIPROT_REF_PROTEOME_METADATA_URL = config["uniprot"]["proteome"]["ref_metadata_url"]
+UNIPROT_OTHER_PROTEOME_METADATA_URL = config["uniprot"]["proteome"][
+    "other_metadata_url"
+]
 
 NCBI_ACC2TAXID_FILENAMES = [
     splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES

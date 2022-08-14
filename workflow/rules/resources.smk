@@ -69,13 +69,14 @@ rule merge_ncbi_assembly_summaries:
 
 rule get_uniprot_proteome_metadata:
     params:
-        UNIPROT_PROTEOME_METADATA_URL,
+        ref_url=UNIPROT_REF_PROTEOME_METADATA_URL,
+        other_url=UNIPROT_OTHER_PROTEOME_METADATA_URL,
     output:
         UNIPROT_PROTEOME_METADATA_FILE,
     log:
         UNIPROT_PROTEOME_METADATA_LOG,
-    run:
-        pd.read_csv(params[0], sep="\t").to_csv(output[0], sep="\t", index=False)
+    script:
+        "../scripts/get_uniprot_proteome_metadata.py"
 
 
 checkpoint get_ncbi_assembly_gz_files:

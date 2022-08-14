@@ -47,7 +47,7 @@ summary_df = pd.read_csv(
 genome_names = set()
 gz_file_urls, gz_files = [], []
 md5_file_urls, md5_files = [], []
-for acc in proteome_df["Genome assembly ID"].dropna():
+for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
         if pd.notna(ftp_dir_url):
