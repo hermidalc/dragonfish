@@ -82,8 +82,16 @@ cmake ../
 make
 ```
 
-Install the base `conda` environment:
+Create and activate the base Dragonfish `conda` environment (provides
+`snakemake`):
 
 ```
 mamba env create -f envs/dragonfish.yaml
+mamba activate dragonfish
+```
+
+Run Dragonfish:
+
+```
+snakemake --use-conda --printshellcmds --cores all
 ```
