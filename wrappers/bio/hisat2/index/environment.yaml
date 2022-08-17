@@ -1,6 +1,6 @@
-name: resources
 channels:
   - conda-forge
+  - bioconda
 dependencies:
-  - joblib
-  - pandas
+  - hisat2
+  - samtools

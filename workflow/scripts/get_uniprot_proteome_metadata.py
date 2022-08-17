@@ -1,5 +1,7 @@
 import pandas as pd
 
+print("\nGetting UniProt Proteomes metadata", flush=True)
+
 ref_df = pd.read_csv(snakemake.params.ref_url, sep="\t")
 other_df = pd.read_csv(snakemake.params.other_url, sep="\t")
 
@@ -30,5 +32,18 @@ merged_df = merged_df[
         .str.startswith(tuple(snakemake.params.eukaryote_genera))
     )
 ]
+
+if snakemake.params.n_sample > 0:
+    merged_df = merged_df[
+        merged_df["Taxonomic lineage"]
+        .str.split("\s*,\s*", n=2, expand=True)[0]
+        .str.capitalize()
+        == "Bacteria"
+    ].sample(
+        n=snakemake.params.n_sample,
+        random_state=777,
+        axis=0,
+        ignore_index=True,
+    )
 
 merged_df.to_csv(snakemake.output[0], sep="\t", index=False)

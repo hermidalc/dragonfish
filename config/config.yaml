@@ -1,4 +1,10 @@
 ---
+wrapper:
+  base_url: 'file:wrappers/'
+
+pufferfish:
+  binary: './external/pufferfish/build/src/pufferfish'
+
 ncbi:
   api_email: 'leandro@leandrohermida.com'
   api_key: '3e48f690c8007a7c8424a3c0ff3d18757808'
@@ -57,12 +63,16 @@ ncbi:
       # no Pufferfish GFF/GTF support yet
       # 'genomic.gff.gz'
     ]
-    gz_file_job_threads: 12
-    gz_file_job_backend: "loky"
-    gz_file_job_verbosity: 1
-    gz_file_job_debug: true
+    download_threads: 16
+    download_backend: 'loky'
+    download_verbosity: 1
+    download_debug: true
+    fasta_id_regex: '^(?:\w+\|)?(\S+)'
+    fasta_line_width: 80
+    seqkit_threads: 8
 
 uniprot:
   proteome:
     ref_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
     other_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
+    n_sample: 10000

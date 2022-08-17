@@ -11,6 +11,7 @@ DATA_DIR = "data"
 LOG_DIR = "logs"
 RESOURCES_DIR = "resources"
 RESULTS_DIR = "results"
+RULES_DIR = "rules"
 
 
 configfile: join(CONFIG_DIR, "config.yaml")
@@ -20,6 +21,7 @@ NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
+PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
 
 NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
@@ -33,6 +35,9 @@ NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
 NCBI_ASSEMBLY_GZ_FILE_EXTS = config["ncbi"]["assembly"]["gz_file_exts"]
+NCBI_ASSEMBLY_FASTA_ID_REGEX = config["ncbi"]["assembly"]["fasta_id_regex"]
+NCBI_REFERENCE_FASTA_LINE_WIDTH = config["ncbi"]["assembly"]["fasta_line_width"]
+PUFFERFISH_TEMP_DIR = config["pufferfish"]["tmp_dir"]
 
 NCBI_ACC2TAXID_FILENAMES = [
     splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES
@@ -60,24 +65,45 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
-NCBI_ASSEMBLY_GZ_FILE = join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}.gz")
-NCBI_ASSEMBLY_FILE = join(NCBI_ASSEMBLY_DIR, "{asm_basename}.{asm_ext}")
-NCBI_ASSEMBLY_EXTS = [
-    splitext(ext)[1].replace(".", "", 1) for ext in NCBI_ASSEMBLY_GZ_FILE_EXTS
-]
+NCBI_REFERENCE_FASTA_GZ_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
+PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 
-NCBI_ACC2TAXID_GZ_LOG = join(LOG_DIR, "get_{a2t_filename}_gz.log")
-NCBI_ACC2TAXID_LOG = join(LOG_DIR, "gunzip_{a2t_filename}_gz.log")
-NCBI_TAXDUMP_ZIP_LOG = join(LOG_DIR, "get_ncbi_taxdump_zip.log")
-NCBI_TAXDUMP_FILES_LOG = join(LOG_DIR, "unzip_ncbi_taxdump.log")
-NCBI_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "get_{asu_basename}_{asu_ext}.log")
-NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(LOG_DIR, "merge_ncbi_assembly_summaries.log")
-UNIPROT_PROTEOME_METADATA_LOG = join(LOG_DIR, "get_uniprot_proteome_metadata.log")
-NCBI_ASSEMBLY_GZ_FILES_LOG = join(LOG_DIR, "get_ncbi_assembly_gz_files.log")
-NCBI_ASSEMBLY_FILE_LOG = join(LOG_DIR, "gunzip_{asm_basename}_{asm_ext}_gz.log")
+NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
+NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
+NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
+UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
+PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
+
+NCBI_ACC2TAXID_GZ_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_filename}_gz.log")
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "gunzip_{a2t_filename}_gz.log")
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_ncbi_taxdump_zip.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_ncbi_taxdump.log")
+NCBI_ASSEMBLY_SUMMARY_LOG = join(
+    NCBI_GENOME_LOG_DIR, "get_{asu_basename}_{asu_ext}.log"
+)
+NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(
+    NCBI_GENOME_LOG_DIR, "merge_ncbi_assembly_summaries.log"
+)
+UNIPROT_PROTEOME_METADATA_LOG = join(
+    UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
+)
+NCBI_ASSEMBLY_GZ_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_ncbi_assembly_gz_files.log")
+NCBI_ASSEMBLY_FILE_LOG = join(
+    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}", "gunzip_{asm_basename}_{asm_ext}_gz.log"
+)
+NCBI_REFERENCE_FASTA_GZ_LOG = join(
+    NCBI_GENOME_LOG_DIR, "create_ncbi_reference_fasta_gz.log"
+)
+PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
+
+SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
+PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 
 
-include: "rules/resources.smk"
+include: join(RULES_DIR, "proteomes.smk")
+include: join(RULES_DIR, "genomes.smk")
+include: join(RULES_DIR, "taxonomy.smk")
+include: join(RULES_DIR, "pufferfish.smk")
 
 
 makedirs(LOG_DIR)
@@ -103,7 +129,8 @@ rule all:
         ),
         NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
-        join(NCBI_GENOME_DIR, "aggregated.txt"),
+        NCBI_REFERENCE_FASTA_GZ_FILE,
+        PUFFERFISH_INDEX_DIR,
 
 
 def clean(*dirs):

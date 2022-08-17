@@ -1,0 +1,5 @@
+# XXX: workaround for wrapper environment.yaml requirement
+channels:
+  - conda-forge
+dependencies:
+  - python

@@ -1,6 +1,5 @@
-name: resources
 channels:
   - conda-forge
+  - bioconda
 dependencies:
-  - joblib
-  - pandas
+  - seqkit
