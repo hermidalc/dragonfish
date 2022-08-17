@@ -1,3 +1,7 @@
+from operator import itemgetter
+from os.path import split
+
+
 rule get_ncbi_assembly_summary:
     params:
         NCBI_ASSEMBLY_SUMMARY_FILE_URL,
@@ -62,8 +66,12 @@ rule create_ncbi_assembly_fasta_list_file:
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     run:
+        parts = [split(f) for f in input]
+        parts.sort(key=itemgetter(0))
+        parts.sort(key=itemgetter(1), reverse=True)
+        files = [join(*p) for p in parts]
         with open(output[0], "w") as fh:
-            fh.write("\n".join(input), "\n")
+            fh.write("{}\n".format("\n".join(files)))
 
 
 rule create_ncbi_reference_fasta:
