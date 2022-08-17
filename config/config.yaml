@@ -4,7 +4,7 @@ wrapper:
 
 pufferfish:
   binary: './external/pufferfish/build/src/pufferfish'
-  tmp_dir: "~/tmp"
+  tmp_dir: "/home/hermidalc/tmp"
   index:
     threads: 16
   align:
