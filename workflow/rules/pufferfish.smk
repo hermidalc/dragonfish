@@ -9,5 +9,6 @@ rule create_pufferfish_index:
         out_dir=directory(PUFFERFISH_INDEX_DIR),
     log:
         PUFFERFISH_INDEX_LOG,
+    threads: config["pufferfish"]["index"]["threads"]
     wrapper:
         PUFFERFISH_INDEX_WRAPPER
