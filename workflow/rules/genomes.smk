@@ -57,13 +57,13 @@ def gather_ncbi_assembly_fasta_files(wildcards):
 
 
 rule create_ncbi_assembly_fasta_list_file:
-    params:
+    input:
         gather_ncbi_assembly_fasta_files,
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     run:
         with open(output[0], "w") as fh:
-            fh.write("\n".join(params[0]), "\n")
+            fh.write("\n".join(input), "\n")
 
 
 rule create_ncbi_reference_fasta:
