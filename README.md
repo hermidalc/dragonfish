@@ -17,11 +17,10 @@ accurate alignment-based approach, that this toolkit will offer significant
 advantages to existing functional meta-omic profiling tools that are
 available.
 
-An exclusively taxonomic profiler called
-[AGAMEMNON](https://github.com/ivlachos/agamemnon) exists and was
-built using the same underlying COMBINE-lab toolkit. Dragonfish's design goals
-and functionality are complementary and different that AGAMEMNON's, since we
-are focused primarily on functional profiling.
+An exclusively taxonomic profiler leveraging the above COMBINE-lab tools
+exists called [AGAMEMNON](https://github.com/ivlachos/agamemnon), but
+Dragonfish's design goals and functionality are complementary and different
+that AGAMEMNON's, since we are focused primarily on functional profiling.
 
 ## Installation
 
