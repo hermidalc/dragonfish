@@ -4,8 +4,8 @@ rule create_pufferfish_index:
     params:
         pufferfish=config["pufferfish"]["binary"],
         extra="--keepDuplicates",
-    output:
         tmp_dir=PUFFERFISH_TEMP_DIR,
+    output:
         out_dir=directory(PUFFERFISH_INDEX_DIR),
     log:
         PUFFERFISH_INDEX_LOG,
