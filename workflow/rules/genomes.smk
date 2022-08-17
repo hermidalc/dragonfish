@@ -1,5 +1,5 @@
-from operator import itemgetter
-from os.path import split
+from os.path import join, split
+import pandas as pd
 
 
 rule get_ncbi_assembly_summary:
@@ -67,8 +67,14 @@ rule create_ncbi_assembly_fasta_list_file:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     run:
         parts = [split(f) for f in input]
-        parts.sort(key=itemgetter(0))
-        parts.sort(key=itemgetter(1), reverse=True)
+        parts_df = pd.DataFrame.from_records(parts, columns=["dir", "name"])
+        parts_df.sort_values(
+            by=["dir", "name"],
+            ascending=[True, False],
+            inplace=True,
+            ignore_index=True,
+        )
+        parts = parts_df.to_records(index=False).tolist()
         files = [join(*p) for p in parts]
         with open(output[0], "w") as fh:
             fh.write("{}\n".format("\n".join(files)))
