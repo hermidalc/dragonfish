@@ -34,7 +34,7 @@ NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
-NCBI_ASSEMBLY_GZ_FILE_EXTS = config["ncbi"]["assembly"]["gz_file_exts"]
+NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
 NCBI_ASSEMBLY_FASTA_ID_REGEX = config["ncbi"]["assembly"]["fasta_id_regex"]
 NCBI_REFERENCE_FASTA_LINE_WIDTH = config["ncbi"]["assembly"]["fasta_line_width"]
 PUFFERFISH_TEMP_DIR = config["pufferfish"]["tmp_dir"]
@@ -65,7 +65,8 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
-NCBI_REFERENCE_FASTA_GZ_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
+NCBI_ASSEMBLY_FASTA_LIST_FILE = join(GENOME_DIR, "assembly_fastas.txt")
+NCBI_REFERENCE_FASTA_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
@@ -87,13 +88,8 @@ NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(
 UNIPROT_PROTEOME_METADATA_LOG = join(
     UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
 )
-NCBI_ASSEMBLY_GZ_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_ncbi_assembly_gz_files.log")
-NCBI_ASSEMBLY_FILE_LOG = join(
-    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}", "gunzip_{asm_basename}_{asm_ext}_gz.log"
-)
-NCBI_REFERENCE_FASTA_GZ_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_ncbi_reference_fasta_gz.log"
-)
+NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_ncbi_assembly_files.log")
+NCBI_REFERENCE_FASTA_LOG = join(NCBI_GENOME_LOG_DIR, "create_ncbi_reference_fasta.log")
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
 
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
@@ -129,7 +125,7 @@ rule all:
         ),
         NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
-        NCBI_REFERENCE_FASTA_GZ_FILE,
+        NCBI_REFERENCE_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
 
 

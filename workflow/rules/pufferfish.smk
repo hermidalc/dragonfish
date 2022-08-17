@@ -1,6 +1,6 @@
 rule create_pufferfish_index:
     input:
-        ref=NCBI_REFERENCE_FASTA_GZ_FILE,
+        ref=NCBI_REFERENCE_FASTA_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
         extra="--keepDuplicates",

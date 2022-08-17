@@ -22,28 +22,28 @@ rule merge_ncbi_assembly_summaries:
         "../scripts/merge_ncbi_assembly_summaries.py"
 
 
-checkpoint get_ncbi_assembly_gz_files:
+checkpoint get_ncbi_assembly_files:
     conda:
         "../envs/resources.yaml"
     input:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
         summary_file=NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
     params:
-        file_exts=NCBI_ASSEMBLY_GZ_FILE_EXTS,
+        file_exts=NCBI_ASSEMBLY_FILE_EXTS,
         backend=config["ncbi"]["assembly"]["download_backend"],
         verbosity=config["ncbi"]["assembly"]["download_verbosity"],
         debug=config["ncbi"]["assembly"]["download_debug"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
-        NCBI_ASSEMBLY_GZ_FILES_LOG,
+        NCBI_ASSEMBLY_FILES_LOG,
     threads: config["ncbi"]["assembly"]["download_threads"]
     script:
-        "../scripts/get_ncbi_assembly_gz_files.py"
+        "../scripts/get_ncbi_assembly_files.py"
 
 
-def gather_ncbi_assembly_fasta_gz_files(wildcards):
-    out_dir = checkpoints.get_ncbi_assembly_gz_files.get(**wildcards).output[0]
+def gather_ncbi_assembly_fasta_files(wildcards):
+    out_dir = checkpoints.get_ncbi_assembly_files.get(**wildcards).output[0]
     dirs, basenames, exts = glob_wildcards(
         join(out_dir, "{asm_dir}", "{asm_basename}.{asm_ext}.gz")
     )
@@ -56,9 +56,19 @@ def gather_ncbi_assembly_fasta_gz_files(wildcards):
     )
 
 
+rule create_ncbi_assembly_fasta_list_file:
+    params:
+        gather_ncbi_assembly_fasta_files,
+    output:
+        NCBI_ASSEMBLY_FASTA_LIST_FILE,
+    run:
+        with open(output[0], "w") as fh:
+            fh.write("\n".join(params[0]), "\n")
+
+
 rule create_ncbi_reference_fasta:
     input:
-        gather_ncbi_assembly_fasta_gz_files,
+        list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
         extra=(
             " --only-id"
@@ -66,9 +76,9 @@ rule create_ncbi_reference_fasta:
             f" --line-width {NCBI_REFERENCE_FASTA_LINE_WIDTH}"
         ),
     output:
-        NCBI_REFERENCE_FASTA_GZ_FILE,
+        NCBI_REFERENCE_FASTA_FILE,
     log:
-        NCBI_REFERENCE_FASTA_GZ_LOG,
+        NCBI_REFERENCE_FASTA_LOG,
     threads: config["ncbi"]["assembly"]["seqkit_threads"]
     wrapper:
         SEQKIT_SEQ_WRAPPER

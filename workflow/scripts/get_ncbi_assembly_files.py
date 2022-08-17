@@ -59,7 +59,7 @@ proteome_df = pd.read_csv(
 )
 
 genome_names = []
-gz_file_urls, gz_files = [], []
+file_urls, files = [], []
 md5_file_urls, md5_files = [], []
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
@@ -70,12 +70,12 @@ for acc in proteome_df["Genome assembly ID"]:
             # genome_dir_name = genome_name.removesuffix(".gz").removesuffix(".GZ")
             genome_dir_name = genome_name
             genome_dir = join(snakemake.output[0], genome_dir_name)
-            for gz_file_ext in snakemake.params.file_exts:
-                gz_file_url = join(ftp_dir_url, "_".join([genome_name, gz_file_ext]))
-                gz_file_urls.append(gz_file_url)
-                gz_file_name = "_".join([genome_dir_name, gz_file_ext])
-                gz_file = join(genome_dir, gz_file_name)
-                gz_files.append(gz_file)
+            for file_ext in snakemake.params.file_exts:
+                file_url = join(ftp_dir_url, "_".join([genome_name, file_ext]))
+                file_urls.append(file_url)
+                file_name = "_".join([genome_dir_name, file_ext])
+                file = join(genome_dir, file_name)
+                files.append(file)
             md5_file_url = join(ftp_dir_url, md5_file_name)
             md5_file_urls.append(md5_file_url)
             md5_file = join(genome_dir, md5_file_name)
@@ -101,7 +101,7 @@ Parallel(
     verbose=snakemake.params.verbosity,
 )(
     delayed(download_file)(url, file, snakemake.params.debug)
-    for url, file in zip(gz_file_urls, gz_files)
+    for url, file in zip(file_urls, files)
 )
 
 print("\nDownloading NCBI genome assembly md5sum files")
@@ -117,13 +117,13 @@ Parallel(
 
 print("\nChecking NCBI genome assembly md5sum files")
 
-downloaded_gz_files = [f for f in gz_files if exists(f)]
+downloaded_files = [f for f in files if exists(f)]
 
 Parallel(
     n_jobs=snakemake.threads,
     backend=snakemake.params.backend,
     verbose=snakemake.params.verbosity,
-)(delayed(check_md5)(file, snakemake.params.debug) for file in downloaded_gz_files)
+)(delayed(check_md5)(file, snakemake.params.debug) for file in downloaded_files)
 
 # XXX: not sure yet if to include genomes with missing CDSs or GTF/GFF
 # remove incomplete file groups
@@ -136,8 +136,8 @@ for genome_name in genome_names:
     genome_dir = join(snakemake.output[0], genome_dir_name)
     invalid_file_group = False
     genome_file_names = listdir(genome_dir)
-    for gz_file_ext in snakemake.params.file_exts:
-        if not np.any([n.endswith(gz_file_ext) for n in genome_file_names]):
+    for file_ext in snakemake.params.file_exts:
+        if not np.any([n.endswith(file_ext) for n in genome_file_names]):
             invalid_file_group = True
             break
     if invalid_file_group:
