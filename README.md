@@ -21,7 +21,8 @@ that are available.
 An exclusively taxonomic profiler leveraging the above COMBINE-lab tools
 exists called [AGAMEMNON](https://github.com/ivlachos/agamemnon), but
 Dragonfish's design goals and functionality are different and complementary to
-that of AGAMEMNON's, since we are focused primarily on functional profiling.
+that of AGAMEMNON's, since we are focused primarily on functional profiling
+across taxonomy.
 
 ## Installation
 
