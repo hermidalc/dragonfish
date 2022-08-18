@@ -83,7 +83,7 @@ make
 Create and activate the base Dragonfish conda environment, which only
 provides snakemake. All the rest of the dependencies are automatically
 provided via snakemake and conda when running Dragonfish. If using Miniforge3
-replace `mamba` with `conda`):
+replace `mamba` with `conda`:
 
 ```
 mamba env create -f envs/dragonfish.yaml
