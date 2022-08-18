@@ -1,10 +1,11 @@
 import re
 from glob import glob
 from os import getcwd, remove, walk
-from os.path import exists, isdir, join, splitext
+from os.path import dirname, exists, isdir, join, splitext
 from shutil import rmtree
 
-from snakemake.utils import makedirs
+import pandas as pd
+from snakemake.utils import makedirs, validate
 
 CONFIG_DIR = "config"
 DATA_DIR = "data"
@@ -17,6 +18,40 @@ RULES_DIR = "rules"
 configfile: join(CONFIG_DIR, "config.yaml")
 
 
+STUDY_NAME = config["study"]["name"]
+SAMPLE_CONFIG_FILE = config["study"]["samples"]
+UNIT_CONFIG_FILE = config["study"]["units"]
+
+SAMPLE_DF = pd.read_csv(
+    SAMPLE_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "sample_label": str}
+).set_index("sample_name", drop=False, verify_integrity=True)
+validate(SAMPLE_DF, schema="schemas/samples.schema.yaml")
+
+UNIT_DF = pd.read_csv(
+    UNIT_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "unit_name": str}
+)
+validate(UNIT_DF, schema="schemas/units.schema.yaml")
+
+if UNIT_DF["unit_name"].isna().all():
+    UNIT_DF = UNIT_DF.set_index("sample_name", drop=False, verify_integrity=True)
+    RUN_ID_WILDCARD_STR = "{sample}"
+    SAMPLES = UNIT_DF["sample_name"].tolist()
+    EXPAND_PARAMS = {"sample": SAMPLES}
+else:
+    UNIT_DF.set_index(["sample_name", "unit_name"], drop=False, verify_integrity=True)
+    RUN_ID_WILDCARD_STR = "{sample}_{unit}"
+    SAMPLES = UNIT_DF["sample_name"].tolist()
+    UNITS = UNIT_DF["unit_name"].tolist()
+    EXPAND_PARAMS = {"sample": SAMPLES, "unit": UNITS}
+
+SAMPLE_DF = SAMPLE_DF.loc[SAMPLES]
+
+SAMPLE_LABELS = [
+    n if pd.isna(l) else l
+    for n, l in zip(SAMPLE_DF["sample_name"], SAMPLE_DF["sample_label"])
+]
+
+GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
@@ -24,6 +59,10 @@ UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
 
 TEMP_DIR = config["tmp_dir"]
+
+GENCODE_PROTOCOL = config["gencode"]["protocol"]
+GENCODE_REGIONS = config["gencode"]["regions"]
+GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
 
 NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
@@ -40,9 +79,29 @@ NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
 NCBI_ASSEMBLY_FASTA_ID_REGEX = config["ncbi"]["assembly"]["fasta_id_regex"]
 NCBI_REFERENCE_FASTA_LINE_WIDTH = config["ncbi"]["assembly"]["fasta_line_width"]
 
+FASTQ_DATA_DIR = config["fastq"]["data_dir"]
+FASTQ_PAIRS = config["fastq"]["pairs"]
+FASTQ_EXT = config["fastq"]["ext"]
+FASTQ_PLATFORM = config["fastq"]["platform"]
+
+GENCODE_SPECIES = "{gc_species}"
+GENCODE_RELEASE = "{gc_release}"
+GENCODE_BUILD = "{gc_build}"
+
+GENCODE_GENOME_NAME = "gencode_{gc_species}_{gc_release}_{gc_build}"
+GENCODE_GENOME_SEQ_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}.fa")
+GENCODE_GENOME_ANNOT_FILE = join(
+    GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}"
+)
+EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
+EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
+EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
+
 NCBI_ACC2TAXID_FILENAMES = [
     splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES
 ]
+EXPAND_PARAMS["a2t_filename"] = NCBI_ACC2TAXID_FILENAMES
+
 NCBI_ACC2TAXID_GZ_URL = join(NCBI_ACC2TAXID_URL, "{a2t_filename}.gz")
 NCBI_ACC2TAXID_GZ_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}.gz")
 NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}")
@@ -57,6 +116,9 @@ NCBI_ASSEMBLY_SUMMARY_BASENAMES, NCBI_ASSEMBLY_SUMMARY_EXTS = zip(
         for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
     )
 )
+EXPAND_PARAMS["asu_basename"] = NCBI_ASSEMBLY_SUMMARY_BASENAMES
+EXPAND_PARAMS["asu_ext"] = NCBI_ASSEMBLY_SUMMARY_EXTS
+
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(
     NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.{asu_ext}"
 )
@@ -70,11 +132,34 @@ NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 NCBI_REFERENCE_FASTA_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 
+TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", RUN_ID_WILDCARD_STR)
+
+FASTQ1_FILE = join(FASTQ_DATA_DIR, f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[0]}{FASTQ_EXT}")
+FASTQ2_FILE = join(FASTQ_DATA_DIR, f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[1]}{FASTQ_EXT}")
+TRIMMED_FASTQ1_FILE = join(
+    TRIMMED_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[0]}{FASTQ_EXT}",
+)
+TRIMMED_FASTQ2_FILE = join(
+    TRIMMED_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[1]}{FASTQ_EXT}",
+)
+
+TRIMMED_UNPAIR1_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_U1{FASTQ_EXT}")
+TRIMMED_UNPAIR2_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_U2{FASTQ_EXT}")
+FAILED_READS_FILE = join(
+    TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}.failed{FASTQ_EXT}"
+)
+FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
+FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
+
+GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
 NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
 NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
+FASTP_LOG_DIR = join(LOG_DIR, "fastp")
 
 NCBI_ACC2TAXID_GZ_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_filename}_gz.log")
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "gunzip_{a2t_filename}_gz.log")
@@ -92,43 +177,51 @@ UNIPROT_PROTEOME_METADATA_LOG = join(
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_ncbi_assembly_files.log")
 NCBI_REFERENCE_FASTA_LOG = join(NCBI_GENOME_LOG_DIR, "create_ncbi_reference_fasta.log")
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
+FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
+GENCODE_GENOME_SEQ_WRAPPER = join(
+    config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
+)
+GENCODE_GENOME_ANNOT_WRAPPER = join(
+    config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
+)
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
+FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 
 
+include: join(RULES_DIR, "common.smk")
 include: join(RULES_DIR, "proteomes.smk")
-include: join(RULES_DIR, "genomes.smk")
+include: join(RULES_DIR, "microbe_genomes.smk")
 include: join(RULES_DIR, "taxonomy.smk")
-include: join(RULES_DIR, "pufferfish.smk")
+include: join(RULES_DIR, "host_genomes.smk")
+include: join(RULES_DIR, "index.smk")
+include: join(RULES_DIR, "trim.smk")
 
 
 makedirs(LOG_DIR)
 
 
 wildcard_constraints:
-    asu_basename="|".join(set(re.escape(x) for x in NCBI_ASSEMBLY_SUMMARY_BASENAMES)),
-    asu_ext="|".join(set(re.escape(x) for x in NCBI_ASSEMBLY_SUMMARY_EXTS)),
-    a2t_filename="|".join(set(re.escape(x) for x in NCBI_ACC2TAXID_FILENAMES)),
+    **{w: "|".join(set([re.escape(v) for v in l])) for w, l in EXPAND_PARAMS.items()},
 
 
 rule all:
     input:
-        expand(NCBI_ACC2TAXID_GZ_FILE, zip, a2t_filename=NCBI_ACC2TAXID_FILENAMES),
-        expand(NCBI_ACC2TAXID_FILE, zip, a2t_filename=NCBI_ACC2TAXID_FILENAMES),
+        expand(NCBI_ACC2TAXID_GZ_FILE, zip, **EXPAND_PARAMS),
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
-        expand(
-            NCBI_ASSEMBLY_SUMMARY_FILE,
-            zip,
-            asu_basename=NCBI_ASSEMBLY_SUMMARY_BASENAMES,
-            asu_ext=NCBI_ASSEMBLY_SUMMARY_EXTS,
-        ),
+        expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
         NCBI_REFERENCE_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
+        expand(GENCODE_GENOME_SEQ_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
+        expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
+        expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
 
 
 def clean(*dirs):

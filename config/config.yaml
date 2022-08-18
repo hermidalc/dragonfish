@@ -4,6 +4,22 @@ wrapper:
 
 tmp_dir: '/home/hermidalc/tmp'
 
+study:
+  name: "test"
+  samples: "config/samples.tsv"
+  units: "config/units.tsv"
+
+gencode:
+  protocol: "ftp"
+  species: ["human", "mouse"]
+  releases: ["41", "M30"]
+  builds: ["GRCh38", "GRCm39"]
+  regions: "PRI"
+  annot:
+    fmt: "gtf"
+  gene_annot:
+    length_col: "Length"
+
 pufferfish:
   binary: './external/pufferfish/build/src/pufferfish'
   index:
@@ -82,3 +98,15 @@ uniprot:
     ref_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
     other_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
     n_sample: 1000
+
+fastq:
+  data_dir: "data/fastq"
+  pairs: ["R1_001", "R2_001"]
+  ext: ".fq"
+  platform: "Illumina"
+
+trimming:
+  activate: true
+  fastp:
+    threads: 8
+    extra_params: "--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis"

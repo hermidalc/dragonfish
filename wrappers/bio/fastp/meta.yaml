@@ -1,0 +1,6 @@
+name: "fastp"
+description: FASTQ QC and trimming with fastp
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more inforamtion see, https://github.com/OpenGene/fastp

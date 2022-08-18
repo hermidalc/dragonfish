@@ -1,0 +1,17 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: Sample sheet entry
+properties:
+  sample_name:
+    type: string
+    description: Sample name/identifier
+  sample_label:
+    type: string
+    description: Sample label
+  condition:
+    type: string
+    description: Experimental condition to compare in differential expression analysis
+
+required:
+  - sample_name
+  - condition

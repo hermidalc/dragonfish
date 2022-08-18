@@ -1,0 +1,6 @@
+name: "gencode sequence"
+description: GENCODE genome sequence download and gunzip
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information, see https://www.gencodegenes.org/
