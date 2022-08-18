@@ -1,4 +1,4 @@
-name: resources
+name: joblib
 channels:
   - conda-forge
 dependencies:

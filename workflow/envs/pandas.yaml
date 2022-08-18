@@ -1,4 +1,4 @@
-name: resources
+name: pandas
 channels:
   - conda-forge
 dependencies:
