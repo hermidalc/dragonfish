@@ -23,6 +23,8 @@ NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
 
+TEMP_DIR = config["tmp_dir"]
+
 NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
 
@@ -37,7 +39,6 @@ NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"
 NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
 NCBI_ASSEMBLY_FASTA_ID_REGEX = config["ncbi"]["assembly"]["fasta_id_regex"]
 NCBI_REFERENCE_FASTA_LINE_WIDTH = config["ncbi"]["assembly"]["fasta_line_width"]
-PUFFERFISH_TEMP_DIR = config["pufferfish"]["tmp_dir"]
 
 NCBI_ACC2TAXID_FILENAMES = [
     splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES

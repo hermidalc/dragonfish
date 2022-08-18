@@ -1,10 +1,11 @@
 ---
 wrapper:
-  base_url: 'file:wrappers/'
+  base_url: 'file:wrappers'
+
+tmp_dir: '/home/hermidalc/tmp'
 
 pufferfish:
   binary: './external/pufferfish/build/src/pufferfish'
-  tmp_dir: "/home/hermidalc/tmp"
   index:
     threads: 16
   align:
