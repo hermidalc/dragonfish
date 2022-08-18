@@ -3,7 +3,7 @@ rule create_pufferfish_index:
         ref=NCBI_REFERENCE_FASTA_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
-        extra="--keepDuplicates",
+        extra=config["pufferfish"]["index"]["extra_params"],
     output:
         directory(PUFFERFISH_INDEX_DIR),
     log:

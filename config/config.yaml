@@ -24,6 +24,7 @@ pufferfish:
   binary: './external/pufferfish/build/src/pufferfish'
   index:
     threads: 16
+    extra_params: '--keepDuplicates --sparse'
   align:
     threads: 16
 
