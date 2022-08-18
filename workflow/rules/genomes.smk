@@ -1,7 +1,3 @@
-from os.path import join, split
-import pandas as pd
-
-
 rule get_ncbi_assembly_summary:
     params:
         NCBI_ASSEMBLY_SUMMARY_FILE_URL,
@@ -61,23 +57,14 @@ def gather_ncbi_assembly_fasta_files(wildcards):
 
 
 rule create_ncbi_assembly_fasta_list_file:
+    conda:
+        "../envs/pandas.yaml"
     input:
         gather_ncbi_assembly_fasta_files,
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
-    run:
-        parts = [split(f) for f in input]
-        parts_df = pd.DataFrame.from_records(parts, columns=["dir", "name"])
-        parts_df.sort_values(
-            by=["dir", "name"],
-            ascending=[True, False],
-            inplace=True,
-            ignore_index=True,
-        )
-        parts = parts_df.to_records(index=False).tolist()
-        files = [join(*p) for p in parts]
-        with open(output[0], "w") as fh:
-            fh.write("{}\n".format("\n".join(files)))
+    script:
+        "../scripts/create_ncbi_assembly_fasta_list_file.py"
 
 
 rule create_ncbi_reference_fasta:
