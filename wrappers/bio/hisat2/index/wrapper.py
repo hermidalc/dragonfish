@@ -2,6 +2,8 @@ __author__ = "Leandro C. Hermida"
 __email__ = "hermidalc@pitt.edu"
 __license__ = "BSD 3-Clause"
 
+from os.path import normpath, sep
+
 from snakemake.shell import shell
 from snakemake.utils import makedirs
 
@@ -21,9 +23,12 @@ else:
     seqs = [seqs] if isinstance(seqs, str) else seqs
     seqs = f"-c {seqs}"
 
-out_dir = snakemake.params.get("out_dir", "")
-if out_dir:
-    makedirs(out_dir)
+prefix = snakemake.params.get("prefix", "")
+if prefix and prefix.endswith(sep):
+    assert normpath(prefix) == normpath(
+        snakemake.output[0]
+    ), "params: prefix directory doesn't match output directory"
+    makedirs(prefix)
 
 shell(
     "hisat2-build"
@@ -31,6 +36,6 @@ shell(
     " {extra}"
     " {fastas}"
     " {seqs}"
-    " {out_dir}"
+    " {prefix}"
     " {log}"
 )
