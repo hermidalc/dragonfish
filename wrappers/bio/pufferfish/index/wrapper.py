@@ -19,7 +19,7 @@ out_dir = snakemake.output.get("out_dir", snakemake.output[0])
 
 extra = snakemake.params.get("extra", "")
 
-makedirs(out_dir)
+# makedirs(out_dir)
 
 tmp_base_dir = snakemake.resources.get("tmpdir", gettempdir())
 

@@ -197,7 +197,7 @@ include: join(RULES_DIR, "index.smk")
 include: join(RULES_DIR, "trim.smk")
 
 
-makedirs(LOG_DIR)
+# makedirs(LOG_DIR)
 
 
 wildcard_constraints:
