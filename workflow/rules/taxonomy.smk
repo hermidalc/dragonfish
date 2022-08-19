@@ -1,23 +1,14 @@
-rule get_ncbi_acc2taxid_gz:
+rule get_ncbi_acc2taxid_file:
     params:
-        NCBI_ACC2TAXID_GZ_URL,
-    output:
-        NCBI_ACC2TAXID_GZ_FILE,
-    log:
-        NCBI_ACC2TAXID_GZ_LOG,
-    script:
-        "../scripts/get_url_file.py"
-
-
-rule gunzip_acc2taxid:
-    input:
-        NCBI_ACC2TAXID_GZ_FILE,
+        NCBI_ACC2TAXID_URL,
     output:
         NCBI_ACC2TAXID_FILE,
     log:
         NCBI_ACC2TAXID_LOG,
+    message:
+        "{params}"
     script:
-        "../scripts/unzip_file.py"
+        "../scripts/get_url_file.py"
 
 
 rule get_ncbi_taxdump_zip:
@@ -27,6 +18,8 @@ rule get_ncbi_taxdump_zip:
         NCBI_TAXDUMP_ZIP_FILE,
     log:
         NCBI_TAXDUMP_ZIP_LOG,
+    message:
+        "{params}"
     script:
         "../scripts/get_url_file.py"
 

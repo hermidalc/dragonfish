@@ -14,3 +14,16 @@ rule get_uniprot_proteome_metadata:
         UNIPROT_PROTEOME_METADATA_LOG,
     script:
         "../scripts/get_uniprot_proteome_metadata.py"
+
+
+rule get_uniprot_kb_file:
+    params:
+        UNIPROT_KB_FILE_URL,
+    output:
+        UNIPROT_KB_FILE,
+    log:
+        UNIPROT_KB_LOG,
+    message:
+        "{params}"
+    script:
+        "../scripts/get_url_file.py"

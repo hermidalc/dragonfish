@@ -38,7 +38,7 @@ ncbi:
   taxonomy:
     acc2taxid:
       url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
-      gz_filenames: [
+      filenames: [
         'dead_nucl.accession2taxid.gz',
         'dead_wgs.accession2taxid.gz',
         'nucl_gb.accession2taxid.gz',
@@ -103,6 +103,18 @@ uniprot:
     other_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
     n_sample: 1000
     random_seed: 797
+
+  kb:
+    url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
+    filenames: [
+      'uniprot_sprot.xml.gz'
+    ]
+
+  uniparc:
+    url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniparc/'
+    filenames: [
+      'uniparc_all.xml.gz'
+    ]
 
 seqkit:
   seq:

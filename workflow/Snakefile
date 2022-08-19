@@ -71,7 +71,7 @@ NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
 
 NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
-NCBI_ACC2TAXID_GZ_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["gz_filenames"]
+NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
 NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
 NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
 NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
@@ -82,6 +82,9 @@ NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
 NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX = config["ncbi"]["assembly"]["seqkit"]["seq"][
     "id_regex"
 ]
+
+UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
+UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
 
 SEQKIT_FASTA_LINE_WIDTH = config["seqkit"]["line_width"]
 
@@ -106,37 +109,35 @@ EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
 EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
 EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
 
-NCBI_ACC2TAXID_FILENAMES = [
-    splitext(filename)[0] for filename in NCBI_ACC2TAXID_GZ_FILENAMES
+EXPAND_PARAMS["a2t_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
 ]
-EXPAND_PARAMS["a2t_filename"] = NCBI_ACC2TAXID_FILENAMES
 
-NCBI_ACC2TAXID_GZ_URL = join(NCBI_ACC2TAXID_URL, "{a2t_filename}.gz")
-NCBI_ACC2TAXID_GZ_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}.gz")
-NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_filename}")
+NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
 NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
 NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
 NCBI_TAXDUMP_FILES = [
     join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
 ]
-NCBI_ASSEMBLY_SUMMARY_BASENAMES, NCBI_ASSEMBLY_SUMMARY_EXTS = zip(
-    *(
-        (splitext(filename)[0], splitext(filename)[1].replace(".", "", 1))
-        for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
-    )
-)
-EXPAND_PARAMS["asu_basename"] = NCBI_ASSEMBLY_SUMMARY_BASENAMES
-EXPAND_PARAMS["asu_ext"] = NCBI_ASSEMBLY_SUMMARY_EXTS
+EXPAND_PARAMS["asu_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
+]
 
-NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(
-    NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.{asu_ext}"
-)
-NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.{asu_ext}")
+NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
+NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
 NCBI_ASSEMBLY_SUMMARY_FILES = [
     join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
+
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
+EXPAND_PARAMS["ukb_basename"] = [
+    splitext(filename)[0] for filename in UNIPROT_KB_FILENAMES
+]
+UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.gz")
+UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.gz")
+
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 NCBI_REFERENCE_FASTA_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
@@ -172,19 +173,17 @@ GENCODE_GENOME_FIXED_SEQ_LOG = join(
     GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
 )
 GENCODE_GENOME_MERGED_SEQ_LOG = join(GENCODE_LOG_DIR, "merge_genomes.log")
-NCBI_ACC2TAXID_GZ_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_filename}_gz.log")
-NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "gunzip_{a2t_filename}_gz.log")
-NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_ncbi_taxdump_zip.log")
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_ncbi_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_ncbi_taxdump.log")
-NCBI_ASSEMBLY_SUMMARY_LOG = join(
-    NCBI_GENOME_LOG_DIR, "get_{asu_basename}_{asu_ext}.log"
-)
+NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "merge_ncbi_assembly_summaries.log"
 )
 UNIPROT_PROTEOME_METADATA_LOG = join(
     UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
 )
+UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_ncbi_assembly_files.log")
 NCBI_REFERENCE_FASTA_LOG = join(NCBI_GENOME_LOG_DIR, "create_ncbi_reference_fasta.log")
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
@@ -217,13 +216,13 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand(NCBI_ACC2TAXID_GZ_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
+        expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
         NCBI_REFERENCE_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
