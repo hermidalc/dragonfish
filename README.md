@@ -18,10 +18,10 @@ functional features.
 
 We believe that utilizing using modern computational genomics methods, that now
 make it feasible to efficiently index tens of thousands of full reference
-sequences, rapidly align reads against an index of full references, and perform
-accurate quantification of reads from these alignments, that this profiler will
-offer significant advantages to existing functional meta-omic profiling tools
-that are available.
+sequences, rapidly align reads against an index of full references, and
+accurately quantify reads from these alignments, that this profiler will offer
+significant advantages to existing functional meta-omic profiling tools that
+are available.
 
 An exclusively taxonomic profiler leveraging the above COMBINE-lab tools
 exists called [AGAMEMNON](https://github.com/ivlachos/agamemnon), but
