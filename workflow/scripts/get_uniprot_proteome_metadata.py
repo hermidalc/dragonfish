@@ -41,7 +41,7 @@ if snakemake.params.n_sample > 0:
         == "Bacteria"
     ].sample(
         n=snakemake.params.n_sample,
-        random_state=777,
+        random_state=snakemake.params.random_seed,
         axis=0,
         ignore_index=True,
     )
