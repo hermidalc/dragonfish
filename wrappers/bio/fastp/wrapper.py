@@ -3,10 +3,8 @@ __email__ = "hermidalc@pitt.edu"
 __license__ = "BSD 3-Clause"
 
 import re
-from os.path import dirname
 
 from snakemake.shell import shell
-from snakemake.utils import makedirs
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 extra = snakemake.params.get("extra", "")
@@ -54,8 +52,6 @@ assert json is not None, "output: json is a required output parameter"
 
 run_id = snakemake.params.get("run_id")
 title = f"{run_id} fastp report" if run_id else "fastp report"
-
-# makedirs(dirname(html))
 
 shell(
     "fastp"

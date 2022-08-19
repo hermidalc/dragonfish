@@ -4,10 +4,6 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import urlcleanup, urlretrieve
 
-from snakemake.utils import makedirs
-
-# makedirs(dirname(snakemake.output[0]))
-
 urlretrieve(snakemake.params[0], filename=snakemake.output[0])
 urlcleanup()
 
