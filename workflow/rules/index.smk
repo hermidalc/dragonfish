@@ -1,6 +1,7 @@
 rule create_pufferfish_index:
     input:
         ref=NCBI_REFERENCE_FASTA_FILE,
+        decoys=GENCODE_GENOME_MERGED_SEQ_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
         extra=config["pufferfish"]["index"]["extra_params"],

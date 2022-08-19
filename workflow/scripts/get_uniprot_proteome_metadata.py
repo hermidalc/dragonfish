@@ -33,6 +33,8 @@ merged_df = merged_df[
     )
 ]
 
+print(f"\n{merged_df.shape[0]} UniProt proteomes", flush=True)
+
 if snakemake.params.n_sample > 0:
     merged_df = merged_df[
         merged_df["Taxonomic lineage"]

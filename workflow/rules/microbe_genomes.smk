@@ -15,9 +15,9 @@ rule merge_ncbi_assembly_summaries:
     input:
         NCBI_ASSEMBLY_SUMMARY_FILES,
     output:
-        NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
+        NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     log:
-        NCBI_MERGED_ASSEMBLY_SUMMARY_LOG,
+        NCBI_ASSEMBLY_MERGED_SUMMARY_LOG,
     script:
         "../scripts/merge_ncbi_assembly_summaries.py"
 
@@ -27,7 +27,7 @@ checkpoint get_ncbi_assembly_files:
         "../envs/joblib.yaml"
     input:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
-        summary_file=NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
+        summary_file=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     params:
         file_exts=NCBI_ASSEMBLY_FILE_EXTS,
         backend=config["ncbi"]["assembly"]["download_backend"],
@@ -73,13 +73,14 @@ rule create_ncbi_reference_fasta:
     params:
         extra=(
             " --only-id"
-            f" --id-regexp '{NCBI_ASSEMBLY_FASTA_ID_REGEX}'"
-            f" --line-width {NCBI_REFERENCE_FASTA_LINE_WIDTH}"
+            f" --id-regexp '{NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX}'"
+            f" --line-width {SEQKIT_FASTA_LINE_WIDTH}"
+            " " + config["seqkit"]["seq"]["extra_params"]
         ),
     output:
         NCBI_REFERENCE_FASTA_FILE,
     log:
         NCBI_REFERENCE_FASTA_LOG,
-    threads: config["ncbi"]["assembly"]["seqkit_threads"]
+    threads: config["seqkit"]["seq"]["threads"]
     wrapper:
         SEQKIT_SEQ_WRAPPER

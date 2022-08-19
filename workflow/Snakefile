@@ -1,6 +1,6 @@
 import re
 from glob import glob
-from os import getcwd, remove, walk
+from os import getcwd, walk
 from os.path import dirname, exists, isdir, join, splitext
 from shutil import rmtree
 
@@ -63,6 +63,9 @@ TEMP_DIR = config["tmp_dir"]
 GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
 GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
+GENCODE_SEQKIT_REPLACE_SEARCH_REGEX = config["gencode"]["seqkit"]["replace"][
+    "search_regex"
+]
 
 NCBI_API_EMAIL = config["ncbi"]["api_email"]
 NCBI_API_KEY = config["ncbi"]["api_key"]
@@ -76,8 +79,11 @@ NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
 NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
-NCBI_ASSEMBLY_FASTA_ID_REGEX = config["ncbi"]["assembly"]["fasta_id_regex"]
-NCBI_REFERENCE_FASTA_LINE_WIDTH = config["ncbi"]["assembly"]["fasta_line_width"]
+NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX = config["ncbi"]["assembly"]["seqkit"]["seq"][
+    "id_regex"
+]
+
+SEQKIT_FASTA_LINE_WIDTH = config["seqkit"]["line_width"]
 
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_PAIRS = config["fastq"]["pairs"]
@@ -88,11 +94,14 @@ GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
 GENCODE_BUILD = "{gc_build}"
 
-GENCODE_GENOME_NAME = "gencode_{gc_species}_{gc_release}_{gc_build}"
+GENCODE_GENOME_NAME = "{gc_species}_{gc_release}_{gc_build}"
 GENCODE_GENOME_SEQ_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}.fa")
+GENCODE_GENOME_FIXED_SEQ_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed.fa")
 GENCODE_GENOME_ANNOT_FILE = join(
     GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}"
 )
+GENCODE_GENOME_MERGED_SEQ_FILE = join(GENCODE_DIR, "merged.fa")
+
 EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
 EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
 EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
@@ -126,7 +135,7 @@ NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.{asu_ext}")
 NCBI_ASSEMBLY_SUMMARY_FILES = [
     join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
-NCBI_MERGED_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
+NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 NCBI_REFERENCE_FASTA_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
@@ -159,6 +168,10 @@ UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp")
 
+GENCODE_GENOME_FIXED_SEQ_LOG = join(
+    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
+)
+GENCODE_GENOME_MERGED_SEQ_LOG = join(GENCODE_LOG_DIR, "merge_genomes.log")
 NCBI_ACC2TAXID_GZ_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_filename}_gz.log")
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "gunzip_{a2t_filename}_gz.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_ncbi_taxdump_zip.log")
@@ -166,7 +179,7 @@ NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_ncbi_taxdump.log")
 NCBI_ASSEMBLY_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "get_{asu_basename}_{asu_ext}.log"
 )
-NCBI_MERGED_ASSEMBLY_SUMMARY_LOG = join(
+NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "merge_ncbi_assembly_summaries.log"
 )
 UNIPROT_PROTEOME_METADATA_LOG = join(
@@ -184,6 +197,7 @@ GENCODE_GENOME_ANNOT_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
 )
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
+SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 
@@ -208,12 +222,14 @@ rule all:
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
-        NCBI_MERGED_ASSEMBLY_SUMMARY_FILE,
+        NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
         NCBI_REFERENCE_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
         expand(GENCODE_GENOME_SEQ_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FIXED_SEQ_FILE, zip, **EXPAND_PARAMS),
+        GENCODE_GENOME_MERGED_SEQ_FILE,
         expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
@@ -221,15 +237,14 @@ rule all:
 
 def clean(*dirs):
     for clean_dir in dirs:
-        for file in glob(join(clean_dir, "*")):
-            if isdir(file):
-                rmtree(file)
-            else:
-                remove(file)
+        if exists(clean_dir):
+            rmtree(clean_dir)
         for dirpath, dirnames, filenames in sorted(walk(getcwd())):
             for name in dirnames:
                 if name == "__pycache__":
-                    rmtree(join(dirpath, name))
+                    pycache_dir = join(dirpath, name)
+                    if exists(pycache_dir):
+                        rmtree(pycache_dir)
 
 
 rule clean:

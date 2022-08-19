@@ -16,6 +16,10 @@ assert ref is not None, "input: ref is a required input parameter"
 
 out_dir = snakemake.output.get("out_dir", snakemake.output[0])
 
+decoys = snakemake.input.get("decoys", "")
+if decoys:
+    decoys = "--decoys " + (decoys if isinstance(decoys, str) else f"<({decoys})")
+
 extra = snakemake.params.get("extra", "")
 
 tmp_base_dir = snakemake.resources.get("tmpdir", gettempdir())
@@ -27,6 +31,7 @@ with TemporaryDirectory(dir=tmp_base_dir) as tmp_dir:
         " --ref {ref}"
         " --output {out_dir}"
         " --tmpdir {tmp_dir}"
+        " {decoys}"
         " {extra}"
         " {log}"
     )
