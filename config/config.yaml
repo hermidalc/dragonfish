@@ -21,7 +21,7 @@ gencode:
     length_col: "Length"
   seqkit:
     replace:
-      search_regex: '^(?:\w+\|)?(\S+)(\s.*)?'
+      search_regex: '^(\S+)(\s.*)?'
 
 pufferfish:
   binary: './external/pufferfish/build/src/pufferfish'

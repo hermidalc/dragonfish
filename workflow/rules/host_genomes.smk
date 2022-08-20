@@ -29,7 +29,9 @@ rule fix_gencode_genome_seq_ids:
         GENCODE_GENOME_SEQ_FILE,
     params:
         pattern=GENCODE_SEQKIT_REPLACE_SEARCH_REGEX,
-        replacement=lambda wildcards: f"{wildcards.gc_build}_${{1}}",
+        replacement=lambda w: (
+            f"{w.gc_species.title()}_{w.gc_release}_{w.gc_build}_${{1}}"
+        ),
         extra=config["seqkit"]["replace"]["extra_params"],
     output:
         GENCODE_GENOME_FIXED_SEQ_FILE,
