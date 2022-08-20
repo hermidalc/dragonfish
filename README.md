@@ -37,6 +37,20 @@ Install and set up
 [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) or
 [Miniforge3](https://github.com/conda-forge/miniforge#miniforge3)
 
+```bash
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+bash Mambaforge-Linux-x86_64.sh
+```
+
+After installation, close the terminal and open a new one to get the updated
+environment, then:
+
+```bash
+conda config --set auto_activate_base false
+conda config --set channel_priority strict
+mamba update --all
+```
+
 ### Project source
 
 Obtain the latest released project source code:
