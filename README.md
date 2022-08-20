@@ -110,7 +110,7 @@ mamba env create -f envs/dragonfish.yaml
 mamba activate dragonfish
 ```
 
-Run Dragonfish:
+### Running Dragonfish
 
 ```
 snakemake --use-conda --printshellcmds --cores all
