@@ -74,9 +74,6 @@ deactivated**_. In RHEL/Fedora install the following dependencies:
 
 ```bash
 sudo dnf install \
-autoconf \
-boost-devel \
-ca-certificates \
 cmake \
 curl \
 bzip2-devel \
@@ -84,8 +81,6 @@ gcc \
 gcc-c++ \
 git \
 jemalloc-devel \
-make \
-time \
 wget \
 xz-devel \
 zlib-devel
