@@ -63,14 +63,14 @@ cd dragonfish
 
 ### Pufferfish, Puffaligner, and Cedar
 
-I could not get pufferfish to build within a conda envrionment using the
-required dependencies already installed into that environment. This appears
-to be due to the specifics of how conda-forge built their C++ and related
-packages. Therefore, currently you have to install pufferfish using
-dependencies from your system-wide package manager, e.g. for RHEL/Fedora
-Linux `dnf` or Ubuntu `apt`, and _**with any conda environment
-deactivated**_. In RHEL/Fedora install the following dependencies:
-
+I could not get Pufferfish to build within a conda envrionment using the
+required dependencies already installed into that environment. The main
+issue appears to be with the SeqLib dependency failing to see its required
+conda dependency C files or having other compilation issues. Therefore,
+you currently have to build Pufferfish using dependencies from your
+system-wide package manager (and therefore sudo/root permissions), e.g.
+for RHEL/Fedora Linux `dnf` or Ubuntu `apt`. SeqLib successfully builds
+this way. In RHEL/Fedora install the following dependencies:
 
 ```bash
 sudo dnf install \
@@ -87,7 +87,7 @@ xz-devel \
 zlib-devel
 ```
 
-Install Pufferfish, Puffaligner, and Cedar:
+Build Pufferfish, Puffaligner, and Cedar:
 
 ```bash
 mkdir external/pufferfish/build
@@ -98,8 +98,8 @@ make
 
 Create and activate the base Dragonfish conda environment, which only
 provides snakemake. All the rest of the dependencies are automatically
-provided via snakemake and conda when running Dragonfish. If using Miniforge3
-replace `mamba` with `conda`:
+provided via snakemake and conda when running Dragonfish. If using
+Miniforge3 replace `mamba` with `conda`:
 
 ```
 mamba env create -f envs/dragonfish.yaml
