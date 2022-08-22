@@ -80,6 +80,7 @@ bzip2-devel \
 gcc \
 gcc-c++ \
 git \
+jsoncpp-devel \
 jemalloc-devel \
 wget \
 xz-devel \
