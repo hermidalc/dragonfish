@@ -36,12 +36,14 @@ merged_df = merged_df[
 print(f"\n{merged_df.shape[0]} UniProt proteomes", flush=True)
 
 if snakemake.params.n_sample > 0:
-    merged_df = merged_df[
-        merged_df["Taxonomic lineage"]
-        .str.split("\s*,\s*", n=2, expand=True)[0]
-        .str.capitalize()
-        == "Bacteria"
-    ].sample(
+    if snakemake.params.bacteria_only:
+        merged_df = merged_df[
+            merged_df["Taxonomic lineage"]
+            .str.split("\s*,\s*", n=2, expand=True)[0]
+            .str.capitalize()
+            == "Bacteria"
+        ]
+    merged_df = merged_df.sample(
         n=snakemake.params.n_sample,
         random_state=snakemake.params.random_seed,
         axis=0,

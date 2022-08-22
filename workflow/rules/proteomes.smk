@@ -8,6 +8,7 @@ rule get_uniprot_proteome_metadata:
         eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
         random_seed=config["uniprot"]["proteome"]["random_seed"],
+        bacteria_only=config["uniprot"]["proteome"]["bacteria_only"],
     output:
         UNIPROT_PROTEOME_METADATA_FILE,
     log:
