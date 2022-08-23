@@ -11,6 +11,6 @@ rule create_pufferfish_index:
         PUFFERFISH_INDEX_LOG,
     resources:
         tmpdir=TEMP_DIR,
-    threads: config["pufferfish"]["index"]["threads"]
+    threads: PUFFERFISH_INDEX_THREADS
     wrapper:
         PUFFERFISH_INDEX_WRAPPER

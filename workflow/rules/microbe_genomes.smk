@@ -29,15 +29,17 @@ checkpoint get_ncbi_assembly_files:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
         summary_file=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     params:
-        file_exts=NCBI_ASSEMBLY_FILE_EXTS,
-        backend=config["ncbi"]["assembly"]["download_backend"],
-        verbosity=config["ncbi"]["assembly"]["download_verbosity"],
-        debug=config["ncbi"]["assembly"]["download_debug"],
+        genome_ext=config["ncbi"]["assembly"]["file"]["genome_ext"],
+        other_exts=config["ncbi"]["assembly"]["file"]["other_exts"],
+        retries=config["ncbi"]["assembly"]["file"]["download"]["retries"],
+        backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
+        verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
+        debug=config["ncbi"]["assembly"]["file"]["download"]["debug"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_FILES_LOG,
-    threads: config["ncbi"]["assembly"]["download_threads"]
+    threads: config["ncbi"]["assembly"]["file"]["download"]["threads"]
     script:
         "../scripts/get_ncbi_assembly_files.py"
 
@@ -61,10 +63,13 @@ rule create_ncbi_assembly_fasta_list_file:
         "../envs/pandas.yaml"
     input:
         gather_ncbi_assembly_fasta_files,
+    params:
+        sort_by=["dir", "name"],
+        sort_ascending=[True, False],
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     script:
-        "../scripts/create_ncbi_assembly_fasta_list_file.py"
+        "../scripts/create_file_list_from_paths.py"
 
 
 rule create_ncbi_reference_fasta:

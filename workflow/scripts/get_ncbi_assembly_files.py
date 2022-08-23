@@ -1,9 +1,10 @@
 from hashlib import md5
-from os import listdir
+from os import listdir, remove
 from os.path import basename, dirname, exists, join
 from pathlib import Path
 from shutil import rmtree
-from urllib.error import URLError
+from time import sleep
+from urllib.error import ContentTooShortError, HTTPError
 from urllib.parse import urlparse
 from urllib.request import urlcleanup, urlretrieve
 
@@ -13,24 +14,34 @@ from joblib import delayed, Parallel
 from snakemake.utils import makedirs
 
 md5_file_name = "md5checksums.txt"
+sleep_seconds = 5
 
 
-def download_file(url, file, debug):
+def download_file(url, file, retries, debug):
     if debug:
         print(f"Downloading {url}", flush=True)
     makedirs(dirname(file))
-    try:
-        urlretrieve(url, filename=file)
-    except URLError as e:
-        print(f"Skipped: {url}: {e}", flush=True)
-    else:
-        urlcleanup()
+    while retries > 0:
+        try:
+            urlretrieve(url, filename=file)
+        except HTTPError as e:
+            print(f"Skipped: {url}: {e}", flush=True)
+            break
+        except ContentTooShortError as e:
+            remove(file)
+            print(f"Error: {url}: {e}", flush=True)
+            retries = retries - 1
+            sleep(sleep_seconds)
+        else:
+            break
+        finally:
+            urlcleanup()
 
 
 def check_md5(file, debug):
     md5_file = join(dirname(file), md5_file_name)
     if debug:
-        print(f"Checking {md5_file}", flush=True)
+        print(f"Checking {file}", flush=True)
     try:
         md5_df = pd.read_csv(
             md5_file, delim_whitespace=True, header=None, names=["md5", "name"]
@@ -38,10 +49,13 @@ def check_md5(file, debug):
         md5_df["name"] = md5_df["name"].apply(lambda n: basename(n))
         actual_md5 = md5_df["md5"][md5_df["name"] == basename(file)].values[0]
         file_md5 = md5(Path(file).read_bytes()).hexdigest()
-        if file_md5 != actual_md5:
-            print(f"{basename(file)} md5 {file_md5} != {actual_md5}")
     except Exception as e:
-        print(f"MD5 Error: {md5_file}: {e}")
+        remove(file)
+        print(f"Error: {md5_file}: {e}")
+    else:
+        if file_md5 != actual_md5:
+            remove(file)
+            print(f"Error: {basename(file)} {file_md5} != {actual_md5}")
 
 
 print(
@@ -61,19 +75,18 @@ proteome_df = pd.read_csv(
 genome_names = []
 file_urls, files = [], []
 md5_file_urls, md5_files = [], []
+file_exts = [snakemake.params.genome_ext] + snakemake.params.other_exts
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
         if pd.notna(ftp_dir_url):
             genome_name = basename(urlparse(ftp_dir_url).path)
             genome_names.append(genome_name)
-            # genome_dir_name = genome_name.removesuffix(".gz").removesuffix(".GZ")
-            genome_dir_name = genome_name
-            genome_dir = join(snakemake.output[0], genome_dir_name)
-            for file_ext in snakemake.params.file_exts:
+            genome_dir = join(snakemake.output[0], genome_name)
+            for file_ext in file_exts:
                 file_url = join(ftp_dir_url, "_".join([genome_name, file_ext]))
                 file_urls.append(file_url)
-                file_name = "_".join([genome_dir_name, file_ext])
+                file_name = "_".join([genome_name, file_ext])
                 file = join(genome_dir, file_name)
                 files.append(file)
             md5_file_url = join(ftp_dir_url, md5_file_name)
@@ -100,7 +113,7 @@ Parallel(
     backend=snakemake.params.backend,
     verbose=snakemake.params.verbosity,
 )(
-    delayed(download_file)(url, file, snakemake.params.debug)
+    delayed(download_file)(url, file, snakemake.params.retries, snakemake.params.debug)
     for url, file in zip(file_urls, files)
 )
 
@@ -111,7 +124,7 @@ Parallel(
     backend=snakemake.params.backend,
     verbose=snakemake.params.verbosity,
 )(
-    delayed(download_file)(url, file, snakemake.params.debug)
+    delayed(download_file)(url, file, snakemake.params.retries, snakemake.params.debug)
     for url, file in zip(md5_file_urls, md5_files)
 )
 
@@ -125,21 +138,18 @@ Parallel(
     verbose=snakemake.params.verbosity,
 )(delayed(check_md5)(file, snakemake.params.debug) for file in downloaded_files)
 
-# XXX: not sure yet if to include genomes with missing CDSs or GTF/GFF
-# remove incomplete file groups
-# testing if URLs exist (via request HEAD) before downloading is very slow so actually
-# faster to download everything and then check/remove incomplete file groups
+# remove genomes with missing genome sequence file
+# testing if URLs exist (via request HEAD) before downloading is very slow so
+# faster to download everything and then check/remove incomplete genomes
 print("\nChecking for incomplete genome files")
 for genome_name in genome_names:
-    # genome_dir_name = genome_name.removesuffix(".gz").removesuffix(".GZ")
-    genome_dir_name = genome_name
-    genome_dir = join(snakemake.output[0], genome_dir_name)
-    invalid_file_group = False
+    complete_genome = False
+    genome_dir = join(snakemake.output[0], genome_name)
     genome_file_names = listdir(genome_dir)
-    for file_ext in snakemake.params.file_exts:
-        if not np.any([n.endswith(file_ext) for n in genome_file_names]):
-            invalid_file_group = True
+    for file_name in genome_file_names:
+        if file_name.endswith(snakemake.params.genome_ext):
+            complete_genome = True
             break
-    if invalid_file_group:
-        print(f"Incomplete {genome_dir}")
-        rmtree(genome_dir)
+    if not complete_genome:
+        print(f"Removing incomplete {genome_name}")
+        rmtree(genome_dir, ignore_errors=True)

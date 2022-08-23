@@ -26,10 +26,10 @@ gencode:
 pufferfish:
   binary: './bin/pufferfish'
   index:
-    threads: 16
+    threads: all
     extra_params: '--keepDuplicates'
   align:
-    threads: 16
+    threads: all
 
 ncbi:
   api_email: 'leandro@leandrohermida.com'
@@ -76,32 +76,36 @@ ncbi:
     low_quality_regex: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
 
   assembly:
-    summary_url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
-    summary_filenames: [
+    summary:
+      url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
+      filenames: [
       'assembly_summary_genbank.txt',
       'assembly_summary_genbank_historical.txt',
       'assembly_summary_refseq.txt',
       'assembly_summary_refseq_historical.txt',
     ]
-    file_exts: [
-      'cds_from_genomic.fna.gz',
-      'genomic.fna.gz',
-      # no Pufferfish GFF/GTF support yet
-      # 'genomic.gff.gz'
-    ]
-    download_threads: 16
-    download_backend: 'loky'
-    download_verbosity: 1
-    download_debug: true
-    seqkit:
-      seq:
-        id_regex: '^(?:\w+\|)?(\S+)'
+    file:
+      genome_ext: 'genomic.fna.gz'
+      other_exts: [
+        'cds_from_genomic.fna.gz',
+        # no Pufferfish GFF/GTF support yet
+        # 'genomic.gff.gz'
+      ]
+      download:
+        threads: 16
+        retries: 5
+        backend: 'loky'
+        verbosity: 1
+        debug: true
+      seqkit:
+        seq:
+          id_regex: '^(?:\w+\|)?(\S+)'
 
 uniprot:
   proteome:
     ref_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
     other_metadata_url: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
-    n_sample: 1000
+    n_sample: 100
     random_seed: 777
     bacteria_only: false
 

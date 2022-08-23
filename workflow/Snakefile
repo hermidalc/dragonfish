@@ -76,12 +76,11 @@ NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
 NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
 NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 
-NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary_url"]
-NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary_filenames"]
-NCBI_ASSEMBLY_FILE_EXTS = config["ncbi"]["assembly"]["file_exts"]
-NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX = config["ncbi"]["assembly"]["seqkit"]["seq"][
-    "id_regex"
-]
+NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary"]["url"]
+NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenames"]
+NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX = config["ncbi"]["assembly"]["file"]["seqkit"][
+    "seq"
+]["id_regex"]
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
@@ -140,7 +139,20 @@ UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.gz")
 
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 NCBI_REFERENCE_FASTA_FILE = join(NCBI_GENOME_DIR, "reference.fa.gz")
+
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
+PUFFERFISH_INDEX_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["index"]["threads"] == "all"
+    else config["pufferfish"]["index"]["threads"]
+)
+PUFFERFISH_ALIGN_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["align"]["threads"] == "all"
+    else config["pufferfish"]["align"]["threads"]
+)
+
+config["pufferfish"]["index"]["threads"]
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", RUN_ID_WILDCARD_STR)
 
