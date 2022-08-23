@@ -36,7 +36,6 @@ checkpoint get_ncbi_assembly_files:
         force=config["ncbi"]["assembly"]["file"]["download"]["force"],
         backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
         verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
-        debug=config["ncbi"]["assembly"]["file"]["download"]["debug"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
