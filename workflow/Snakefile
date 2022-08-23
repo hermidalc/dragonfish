@@ -130,6 +130,12 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 
+NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
+    workflow.cores
+    if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
+    else config["ncbi"]["assembly"]["file"]["download"]["threads"]
+)
+
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
     splitext(filename)[0] for filename in UNIPROT_KB_FILENAMES

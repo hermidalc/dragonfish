@@ -39,7 +39,7 @@ checkpoint get_ncbi_assembly_files:
         directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_FILES_LOG,
-    threads: config["ncbi"]["assembly"]["file"]["download"]["threads"]
+    threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
     script:
         "../scripts/get_ncbi_assembly_files.py"
 
