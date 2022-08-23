@@ -130,7 +130,7 @@ Parallel(
 
 print("\nChecking NCBI genome assembly md5sum files")
 
-downloaded_files = [f for f in files if exists(f)]
+downloaded_files = [f for f in files if exists(files)]
 
 Parallel(
     n_jobs=snakemake.threads,
