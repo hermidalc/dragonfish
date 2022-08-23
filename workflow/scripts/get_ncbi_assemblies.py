@@ -77,6 +77,9 @@ for acc in proteome_df["Genome assembly ID"]:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
         if pd.notna(ftp_dir_url):
             genome_name = basename(urlparse(ftp_dir_url).path)
+            if genome_name in snakemake.params.skip:
+                print(f"Skipping {genome_name}")
+                continue
             genome_names.append(genome_name)
             genome_dir = join(snakemake.output[0], genome_name)
             for file_ext in file_exts:
