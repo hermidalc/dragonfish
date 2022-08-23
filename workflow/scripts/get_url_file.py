@@ -1,5 +1,4 @@
 from hashlib import md5
-from os.path import dirname
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import urlcleanup, urlretrieve

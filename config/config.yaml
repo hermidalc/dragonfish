@@ -93,10 +93,11 @@ ncbi:
       ]
       download:
         threads: 16
+        md5_name: 'md5checksums.txt'
         retries: 5
+        force: false
         backend: 'loky'
         verbosity: 1
-        debug: true
       seqkit:
         seq:
           id_regex: '^(?:\w+\|)?(\S+)'

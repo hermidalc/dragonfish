@@ -31,7 +31,9 @@ checkpoint get_ncbi_assembly_files:
     params:
         genome_ext=config["ncbi"]["assembly"]["file"]["genome_ext"],
         other_exts=config["ncbi"]["assembly"]["file"]["other_exts"],
+        md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["retries"],
+        force=config["ncbi"]["assembly"]["file"]["download"]["force"],
         backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
         verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
         debug=config["ncbi"]["assembly"]["file"]["download"]["debug"],
