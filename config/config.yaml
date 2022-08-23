@@ -25,6 +25,12 @@ gencode:
 
 pufferfish:
   binary: './bin/pufferfish'
+  ref:
+    seqkit:
+      seq:
+        id_regex: '^(?:\w+\|)?(\S+)'
+        line_width: 100
+        extra_params: '--upper-case'
   index:
     threads: all
     extra_params: '--keepDuplicates'
@@ -98,9 +104,6 @@ ncbi:
         force: false
         backend: 'loky'
         verbosity: 1
-      seqkit:
-        seq:
-          id_regex: '^(?:\w+\|)?(\S+)'
 
 uniprot:
   proteome:
@@ -125,11 +128,8 @@ uniprot:
 seqkit:
   seq:
     threads: 6
-    extra_params: '--upper-case'
   replace:
     threads: 6
-    extra_params: ''
-  line_width: 100
 
 fastq:
   data_dir: "data/fastq"

@@ -22,7 +22,7 @@ rule merge_ncbi_assembly_summaries:
         "../scripts/merge_ncbi_assembly_summaries.py"
 
 
-checkpoint get_ncbi_assembly_files:
+checkpoint get_ncbi_assemblies:
     conda:
         "../envs/joblib.yaml"
     input:
@@ -42,11 +42,11 @@ checkpoint get_ncbi_assembly_files:
         NCBI_ASSEMBLY_FILES_LOG,
     threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
     script:
-        "../scripts/get_ncbi_assembly_files.py"
+        "../scripts/get_ncbi_assemblies.py"
 
 
 def gather_ncbi_assembly_fasta_files(wildcards):
-    out_dir = checkpoints.get_ncbi_assembly_files.get(**wildcards).output[0]
+    out_dir = checkpoints.get_ncbi_assemblies.get(**wildcards).output[0]
     dirs, basenames, exts = glob_wildcards(
         join(out_dir, "{asm_dir}", "{asm_basename}.{asm_ext}.gz")
     )
@@ -59,7 +59,7 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     )
 
 
-rule create_ncbi_assembly_fasta_list_file:
+rule create_ncbi_assembly_fasta_list:
     conda:
         "../envs/pandas.yaml"
     input:
@@ -69,24 +69,7 @@ rule create_ncbi_assembly_fasta_list_file:
         sort_ascending=[True, False],
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
+    log:
+        NCBI_ASSEMBLY_FASTA_LIST_LOG,
     script:
         "../scripts/create_file_list_from_paths.py"
-
-
-rule create_ncbi_reference_fasta:
-    input:
-        list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
-    params:
-        extra=(
-            " --only-id"
-            f" --id-regexp '{NCBI_ASSEMBLY_FASTA_SEQKIT_SEQ_ID_REGEX}'"
-            f" --line-width {SEQKIT_FASTA_LINE_WIDTH}"
-            " " + config["seqkit"]["seq"]["extra_params"]
-        ),
-    output:
-        NCBI_REFERENCE_FASTA_FILE,
-    log:
-        NCBI_REFERENCE_FASTA_LOG,
-    threads: config["seqkit"]["seq"]["threads"]
-    wrapper:
-        SEQKIT_SEQ_WRAPPER
