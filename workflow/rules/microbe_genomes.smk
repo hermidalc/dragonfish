@@ -33,14 +33,15 @@ checkpoint get_ncbi_assemblies:
         other_exts=config["ncbi"]["assembly"]["file"]["other_exts"],
         skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
-        retries=config["ncbi"]["assembly"]["file"]["download"]["retries"],
-        retry_wait=config["ncbi"]["assembly"]["file"]["download"]["retry_wait"],
+        retries=config["ncbi"]["assembly"]["file"]["download"]["file_retries"],
+        retry_wait=config["ncbi"]["assembly"]["file"]["download"]["file_retry_wait"],
         backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
         verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_FILES_LOG,
+    retries: config["ncbi"]["assembly"]["file"]["download"]["job_retries"]
     threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
     script:
         "../scripts/get_ncbi_assemblies.py"

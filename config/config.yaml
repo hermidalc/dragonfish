@@ -103,8 +103,9 @@ ncbi:
         ]
         threads: 16
         md5_name: 'md5checksums.txt'
-        retries: 5
-        retry_wait: 5
+        job_retries: 5
+        file_retries: 5
+        file_retry_wait: 5
         backend: 'loky'
         verbosity: 1
 
