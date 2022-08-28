@@ -27,6 +27,7 @@ SAMPLE_DF = pd.read_csv(
 ).set_index("sample_name", drop=False, verify_integrity=True)
 validate(SAMPLE_DF, schema="schemas/samples.schema.yaml")
 
+
 UNIT_DF = pd.read_csv(
     UNIT_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "unit_name": str}
 )
@@ -127,18 +128,18 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 
-NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
-    workflow.cores
-    if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
-    else config["ncbi"]["assembly"]["file"]["download"]["threads"]
-)
-
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
     splitext(filename)[0] for filename in UNIPROT_KB_FILENAMES
 ]
 UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.gz")
 UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.gz")
+
+NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
+    workflow.cores
+    if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
+    else config["ncbi"]["assembly"]["file"]["download"]["threads"]
+)
 
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 

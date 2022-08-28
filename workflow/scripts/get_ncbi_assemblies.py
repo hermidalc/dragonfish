@@ -12,10 +12,8 @@ import pandas as pd
 from joblib import delayed, Parallel
 from snakemake.utils import makedirs
 
-sleep_seconds = 5
 
-
-def download_file(url, file, retries):
+def download_file(url, file, retries, retry_wait):
     print(f"Downloading {url}", flush=True)
     makedirs(dirname(file))
     while retries > 0:
@@ -28,7 +26,7 @@ def download_file(url, file, retries):
             remove(file)
             print(f"Error: {url}: {e}", flush=True)
             retries = retries - 1
-            sleep(sleep_seconds)
+            sleep(retry_wait)
         else:
             break
         finally:
@@ -112,7 +110,9 @@ Parallel(
     backend=snakemake.params.backend,
     verbose=snakemake.params.verbosity,
 )(
-    delayed(download_file)(url, file, snakemake.params.retries)
+    delayed(download_file)(
+        url, file, snakemake.params.retries, snakemake.params.retry_wait
+    )
     for url, file in zip(file_urls, files)
 )
 
@@ -123,7 +123,9 @@ Parallel(
     backend=snakemake.params.backend,
     verbose=snakemake.params.verbosity,
 )(
-    delayed(download_file)(url, file, snakemake.params.retries)
+    delayed(download_file)(
+        url, file, snakemake.params.retries, snakemake.params.retry_wait
+    )
     for url, file in zip(md5_file_urls, md5_files)
 )
 

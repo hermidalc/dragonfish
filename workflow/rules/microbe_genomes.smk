@@ -34,6 +34,7 @@ checkpoint get_ncbi_assemblies:
         skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["retries"],
+        retry_wait=config["ncbi"]["assembly"]["file"]["download"]["retry_wait"],
         backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
         verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
     output:
