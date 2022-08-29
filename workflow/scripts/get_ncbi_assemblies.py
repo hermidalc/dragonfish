@@ -4,7 +4,7 @@ from os.path import basename, dirname, exists, join
 from pathlib import Path
 from shutil import rmtree
 from time import sleep
-from urllib.error import ContentTooShortError, HTTPError, URLError
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import urlcleanup, urlretrieve
 
