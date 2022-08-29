@@ -15,13 +15,19 @@ if replacement:
 
 extra = snakemake.params.get("extra", "")
 
+fastas = snakemake.input.get("list_file")
+if fastas is not None:
+    fastas = f"--infile-list {fastas}"
+else:
+    fastas = snakemake.input
+
 shell(
     "seqkit replace"
     " --threads {snakemake.threads}"
     " --pattern {pattern:q}"
     " {replacement}"
     " {extra}"
-    " {snakemake.input}"
+    " {fastas}"
     " --out-file {snakemake.output}"
     " {log}"
 )
