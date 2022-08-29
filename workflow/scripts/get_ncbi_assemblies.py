@@ -22,12 +22,9 @@ def download_file(url, file, retries, retry_wait):
         except HTTPError as e:
             print(f"Skipped: {url}: {e}", flush=True)
             break
-        except ContentTooShortError as e:
-            remove(file)
-            print(f"Error: {url}: {e}", flush=True)
-            retries = retries - 1
-            sleep(retry_wait)
         except URLError as e:
+            if exists(file):
+                remove(file)
             print(f"Error: {url}: {e}", flush=True)
             retries = retries - 1
             sleep(retry_wait)
