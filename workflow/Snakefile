@@ -229,6 +229,9 @@ PUFFERFISH_REFERENCE_FASTA_LIST_LOG = join(
     "create_reference_fasta_list.log",
 )
 PUFFERFISH_REFERENCE_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_reference_fasta.log")
+PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_LOG = join(
+    PUFFERFISH_LOG_DIR, "create_reference_deduped_id_fasta.log"
+)
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
@@ -239,6 +242,7 @@ GENCODE_GENOME_ANNOT_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
 )
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
+SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
 SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
@@ -276,6 +280,7 @@ rule all:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
         PUFFERFISH_REFERENCE_FASTA_LIST_FILE,
         PUFFERFISH_REFERENCE_FASTA_FILE,
+        PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),

@@ -29,9 +29,23 @@ rule create_pufferfish_reference_fasta:
         SEQKIT_SEQ_WRAPPER
 
 
+rule create_pufferfish_reference_deduped_id_fasta:
+    input:
+        PUFFERFISH_REFERENCE_FASTA_FILE,
+    params:
+        extra=config["pufferfish"]["ref"]["seqkit"]["rename"]["extra_params"],
+    output:
+        PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
+    log:
+        PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_LOG,
+    threads: config["seqkit"]["rename"]["threads"]
+    wrapper:
+        SEQKIT_RENAME_WRAPPER
+
+
 rule create_pufferfish_index:
     input:
-        ref=PUFFERFISH_REFERENCE_FASTA_FILE,
+        ref=PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
         decoys=GENCODE_GENOME_MERGED_FIXED_SEQ_ID_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
