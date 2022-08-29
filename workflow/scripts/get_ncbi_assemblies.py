@@ -45,11 +45,11 @@ def check_md5(file):
         file_md5 = md5(Path(file).read_bytes()).hexdigest()
     except Exception as e:
         remove(file)
-        print(f"Error: {md5_file}: {e}")
+        print(f"Error: {md5_file}: {e}", flush=True)
     else:
         if file_md5 != actual_md5:
             remove(file)
-            print(f"Error: {file}: {file_md5} != {actual_md5}")
+            print(f"Error: {file}: {file_md5} != {actual_md5}", flush=True)
 
 
 print(
