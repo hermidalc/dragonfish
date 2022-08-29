@@ -26,7 +26,7 @@ def download_file(url, file, retries, retry_wait):
             if exists(file):
                 remove(file)
             print(f"Error: {url}: {e}", flush=True)
-            retries = retries - 1
+            retries -= 1
             sleep(retry_wait)
         else:
             break
