@@ -1,20 +1,18 @@
 # Dragonfish
 
-A new **functional** metagenomic and metatranscriptomic profiler and toolkit
+A **functional** metagenomic and metatranscriptomic profiler and toolkit
 that leverages recent modern methodological advances in the field of
 computational and algorithmic genomics and relevant leading software tools.
-Dragonfish uses
-[Pufferfish, Puffaligner, and Cedar](https://github.com/COMBINE-lab/pufferfish)
-at it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab), and
-therefore a colored and compacted de-Bruijn Graph (ccdBG) indexing data
-structure. The underlying data structure and software tools can efficiently
-represent, store, and index large collections of genomes and transcriptomes,
-and perform fast and accurate alignment of short reads from whole shotgun
-metagenomic and metatranscriptomic sequencing experiments to its index.
-Dragonfish accurately quantifies the abundance of mapped reads to functional
-features across genomes and transcriptomes in the index, while also providing
-strain-, species-, and genus-level taxonomic abundance contribution to
-functional features.
+Dragonfish uses [Pufferfish](https://github.com/COMBINE-lab/pufferfish) at
+it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab), and
+therefore a colored and compacted de-Bruijn Graph (ccdBG) representation and
+index data structure. Pufferfish can efficiently store and index large
+collections of genomes and transcriptomes and perform fast and accurate
+alignment of short reads from whole shotgun metagenomic and metatranscriptomic
+sequencing experiments to its index. Dragonfish accurately quantifies the
+abundance of mapped reads to functional features across genomes and
+transcriptomes in the index, while also providing strain-, species-, and
+genus-level taxonomic abundance contribution to functional features.
 
 We believe that utilizing using modern computational genomics methods, that now
 make it feasible to efficiently index tens of thousands of full reference
@@ -61,7 +59,7 @@ cd dragonfish
 ```
 
 
-### Pufferfish, Puffaligner, and Cedar
+### Pufferfish
 
 I could not get Pufferfish to build within a conda envrionment using the
 required dependencies already installed into that environment. The main
@@ -87,7 +85,7 @@ xz-devel \
 zlib-devel
 ```
 
-Build Pufferfish, Puffaligner, and Cedar:
+Build Pufferfish:
 
 ```bash
 mkdir external/pufferfish/build
@@ -106,7 +104,7 @@ mamba env create -f envs/dragonfish.yaml
 mamba activate dragonfish
 ```
 
-### Running Dragonfish
+### Run Dragonfish
 
 ```
 snakemake --use-conda --printshellcmds --cores all
