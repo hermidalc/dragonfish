@@ -4,7 +4,7 @@ from os.path import basename, dirname, exists, join
 from pathlib import Path
 from shutil import rmtree
 from time import sleep
-from urllib.error import ContentTooShortError, HTTPError
+from urllib.error import ContentTooShortError, HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import urlcleanup, urlretrieve
 
@@ -24,6 +24,10 @@ def download_file(url, file, retries, retry_wait):
             break
         except ContentTooShortError as e:
             remove(file)
+            print(f"Error: {url}: {e}", flush=True)
+            retries = retries - 1
+            sleep(retry_wait)
+        except URLError as e:
             print(f"Error: {url}: {e}", flush=True)
             retries = retries - 1
             sleep(retry_wait)
