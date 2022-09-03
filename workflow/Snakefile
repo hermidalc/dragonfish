@@ -149,6 +149,9 @@ PUFFERFISH_REFERENCE_SEQKIT_SEQ_LINE_WIDTH = config["pufferfish"]["ref"]["seqkit
     "seq"
 ]["line_width"]
 PUFFERFISH_REFERENCE_FASTA_FILE = join(PUFFERFISH_DIR, "reference.fa.gz")
+PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE = join(
+    PUFFERFISH_DIR, "reference_deduped_ids.fa.gz"
+)
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 PUFFERFISH_INDEX_THREADS = (
     workflow.cores
