@@ -78,6 +78,7 @@ bzip2-devel \
 gcc \
 gcc-c++ \
 git \
+hwloc-devel \
 jsoncpp-devel \
 jemalloc-devel \
 wget \
