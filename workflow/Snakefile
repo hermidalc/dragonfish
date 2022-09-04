@@ -142,10 +142,8 @@ NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(NCBI_GENOME_DIR, "assembly_fasta_list.txt")
 
 PUFFERFISH_REFERENCE_FASTA_LIST_FILE = join(PUFFERFISH_DIR, "reference_fasta_list.txt")
-PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX = config["pufferfish"]["ref"]["seqkit"]["id_regex"]
-PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH = config["pufferfish"]["ref"]["seqkit"][
-    "line_width"
-]
+PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX = config["seqkit"]["id_regex"]
+PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH = config["seqkit"]["line_width"]
 PUFFERFISH_REFERENCE_FASTA_FILE = join(PUFFERFISH_DIR, "reference.fa.gz")
 PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE = join(
     PUFFERFISH_DIR, "reference_deduped_ids.fa.gz"
