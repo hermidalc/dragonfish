@@ -16,8 +16,8 @@ rule create_pufferfish_reference_fasta:
     params:
         extra=(
             " --only-id"
-            f" --id-regexp '{PUFFERFISH_REFERENCE_SEQKIT_SEQ_ID_REGEX}'"
-            f" --line-width {PUFFERFISH_REFERENCE_SEQKIT_SEQ_LINE_WIDTH}"
+            f" --id-regexp '{PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX}'"
+            f" --line-width {PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH}"
             " " + config["pufferfish"]["ref"]["seqkit"]["seq"]["extra_params"]
         ),
     output:
@@ -33,7 +33,11 @@ rule create_pufferfish_reference_deduped_id_fasta:
     input:
         PUFFERFISH_REFERENCE_FASTA_FILE,
     params:
-        extra=config["pufferfish"]["ref"]["seqkit"]["rename"]["extra_params"],
+        extra=(
+            f" --id-regexp '{PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX}'"
+            f" --line-width {PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH}"
+            " " + config["pufferfish"]["ref"]["seqkit"]["rename"]["extra_params"]
+        ),
     output:
         PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
     log:

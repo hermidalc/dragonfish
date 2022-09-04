@@ -28,8 +28,6 @@ pufferfish:
   ref:
     seqkit:
       seq:
-        id_regex: '^(?:\w+\|)?(\S+)'
-        line_width: 100
         extra_params: '--upper-case'
       rename:
         extra_params: ''
@@ -130,6 +128,8 @@ uniprot:
     ]
 
 seqkit:
+  id_regex: '^(?:\w+\|)?(\S+)'
+  line_width: 100
   seq:
     threads: 6
   rename:
