@@ -1,5 +1,5 @@
-name: "seqkit rename"
-description: Ultrafast FASTA/Q sequence ID renaming
+name: "seqkit"
+description: Ultrafast FASTA/Q toolkit
 authors:
   - Leandro C. Hermida
 notes: |

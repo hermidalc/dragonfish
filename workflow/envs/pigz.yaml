@@ -1,5 +1,5 @@
+name: pigz
 channels:
   - conda-forge
-  - bioconda
 dependencies:
-  - seqkit
+  - pigz
