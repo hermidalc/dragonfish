@@ -9,11 +9,19 @@ log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 cmd = snakemake.params.get("cmd")
 assert cmd is not None, "input: cmd is a required input parameter"
 
-flags = snakemake.params.get("flags", "")
-
 id_regexp = snakemake.params.get("id_regexp")
-if id_regexp is not None:
-    flags = f"--id-regexp '{id_regexp}' {flags}"
+flags = f"--id-regexp '{id_regexp}'" if id_regexp is not None else ""
+
+pattern = snakemake.params.get("pattern")
+if pattern is not None:
+    flags += f" --pattern '{pattern}'"
+    replacement = snakemake.params.get("replacement")
+    if replacement is not None:
+        flags += f" --replacement '{replacement}'"
+
+extra = snakemake.params.get("extra")
+if extra is not None:
+    flags += f" {extra}"
 
 infiles = snakemake.input.get("list_file")
 if infiles is not None:

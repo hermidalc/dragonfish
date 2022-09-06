@@ -70,7 +70,7 @@ proteome_df = pd.read_csv(
 genome_names = []
 file_urls, files = [], []
 md5_file_urls, md5_files = [], []
-file_exts = [snakemake.params.genome_ext] + snakemake.params.other_exts
+file_exts = [snakemake.params.genome_ext, snakemake.params.cds_ext]
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]

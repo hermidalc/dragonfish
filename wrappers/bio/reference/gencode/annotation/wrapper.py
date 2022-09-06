@@ -2,11 +2,9 @@ __author__ = "Leandro C. Hermida"
 __email__ = "hermidalc@pitt.edu"
 __license__ = "BSD 3-Clause"
 
-import gzip
 from hashlib import md5
 from os.path import join
 from pathlib import Path
-from shutil import copyfileobj
 from urllib.request import urlretrieve, urlcleanup
 
 regions2suffix = {
@@ -43,7 +41,8 @@ gz_filename = (
     else f"gencode.v{release}.{regions2suffix[regions]}.annotation.{annot_fmt}.gz"
 )
 gz_file_url = join(release_url, gz_filename)
-gz_file = urlretrieve(gz_file_url)[0]
+
+urlretrieve(gz_file_url, filename=snakemake.output[0])
 
 name2md5 = {}
 md5sums_url = join(release_url, "MD5SUMS")
@@ -53,13 +52,9 @@ with open(md5sums_file, "r") as fh:
         md5sum, filename = line.strip().split(maxsplit=2)
         name2md5[filename] = md5sum
 
-gz_file_md5 = md5(Path(gz_file).read_bytes()).hexdigest()
+gz_file_md5 = md5(Path(snakemake.output[0]).read_bytes()).hexdigest()
 assert (
     gz_file_md5 == name2md5[gz_filename]
 ), f"File md5sum {gz_file_md5} doesn't match actual {name2md5[gz_filename]}"
-
-with gzip.open(gz_file, "rb") as f_in:
-    with open(snakemake.output[0], "wb") as f_out:
-        copyfileobj(f_in, f_out)
 
 urlcleanup()

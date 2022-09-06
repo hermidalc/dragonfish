@@ -7,7 +7,7 @@ sort_by = snakemake.params.get("sort_by")
 if sort_by:
     file_parts = [split(f) for f in snakemake.input]
     file_parts_df = pd.DataFrame.from_records(file_parts, columns=sort_by)
-    sort_ascending = snakemake.params.get("sort_ascending")
+    sort_ascending = snakemake.params.get("sort_ascending", True)
     file_parts_df.sort_values(
         by=sort_by,
         ascending=sort_ascending,

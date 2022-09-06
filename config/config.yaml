@@ -26,14 +26,17 @@ gencode:
 pufferfish:
   binary: './bin/pufferfish'
   ref:
+    pigz:
+      threads: 16
     seqkit:
       seq:
-        extra_params: '--upper-case'
+        cds_id_regex: '^\w+\|.*?\[protein_id=(.+?)\]'
+        extra: '--upper-case'
       rename:
-        extra_params: ''
+        extra: ''
   index:
     threads: all
-    extra_params: '--keepDuplicates'
+    extra: '--keepDuplicates'
   align:
     threads: all
 
@@ -91,12 +94,11 @@ ncbi:
       'assembly_summary_refseq_historical.txt',
     ]
     file:
-      genome_ext: 'genomic.fna.gz'
-      other_exts: [
-        'cds_from_genomic.fna.gz',
-        # no Pufferfish GFF/GTF support yet
-        # 'genomic.gff.gz'
-      ]
+      types: ["genomic", "cds_from_genomic_no_pseudo"]
+      ext:
+        genome: 'genomic.fna.gz'
+        cds: 'cds_from_genomic.fna.gz'
+        gff: 'genomic.gff.gz'
       download:
         skip: []
         threads: 16
@@ -118,7 +120,8 @@ uniprot:
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     filenames: [
-      'uniprot_sprot.xml.gz'
+      'uniprot_sprot.xml.gz',
+      # 'uniprot_trembl.xml.gz'
     ]
 
   uniparc:
@@ -128,14 +131,8 @@ uniprot:
     ]
 
 seqkit:
-  id_regex: '^(?:\w+\|)?(\S+)'
   line_width: 100
-  seq:
-    threads: 6
-  rename:
-    threads: 6
-  replace:
-    threads: 6
+  threads: 6
 
 fastq:
   data_dir: "data/fastq"
@@ -143,8 +140,8 @@ fastq:
   ext: "fq"
   platform: "Illumina"
 
-trimming:
+trim:
   activate: true
   fastp:
     threads: 8
-    extra_params: "--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis"
+    extra: "--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis"

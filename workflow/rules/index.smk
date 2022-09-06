@@ -1,59 +1,71 @@
-rule create_pufferfish_reference_fasta_list:
+rule create_pufferfish_ref_fasta:
     input:
-        NCBI_ASSEMBLY_FASTA_LIST_FILE,
-        GENCODE_GENOME_FIXED_FASTA_LIST_FILE,
+        list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
+    params:
+        cmd="seq",
+        id_regexp=lambda w: config["pufferfish"]["ref"]["seqkit"]["seq"][
+            "cds_id_regex"
+        ]
+        if w.asm_type in ["cds_from_genomic", "cds_from_genomic_no_pseudo"]
+        else None,
+        extra=(
+            "--only-id"
+            f' --line-width {config["seqkit"]["line_width"]}'
+            f' {config["pufferfish"]["ref"]["seqkit"]["seq"]["extra"]}'
+        ),
     output:
-        PUFFERFISH_REFERENCE_FASTA_LIST_FILE,
+        PUFFERFISH_REF_FASTA_FILE,
     log:
-        PUFFERFISH_REFERENCE_FASTA_LIST_LOG,
+        PUFFERFISH_REF_FASTA_LOG,
+    threads: config["seqkit"]["threads"]
+    wrapper:
+        SEQKIT_WRAPPER
+
+
+rule merge_pufferfish_ref_fastas:
+    conda:
+        "../envs/pigz.yaml"
+    input:
+        expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS)
+        + expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
+    output:
+        PUFFERFISH_REF_MERGED_FASTA_FILE,
+    log:
+        PUFFERFISH_REF_MERGED_FASTA_LOG,
+    # less one for decompress thread
+    threads: config["pufferfish"]["ref"]["pigz"]["threads"] - 1
     shell:
-        "cat {input} 1> {output} 2> {log}"
+        # creates a smaller gzip file than gzip cat
+        # don't specify threads for decompress
+        "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
 
 
-rule create_pufferfish_reference_fasta:
+rule create_pufferfish_ref_deduped_id_fasta:
     input:
-        list_file=PUFFERFISH_REFERENCE_FASTA_LIST_FILE,
+        PUFFERFISH_REF_MERGED_FASTA_FILE,
     params:
+        cmd="rename",
         extra=(
-            " --only-id"
-            f" --id-regexp '{PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX}'"
-            f" --line-width {PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH}"
-            " " + config["pufferfish"]["ref"]["seqkit"]["seq"]["extra_params"]
+            "--only-id"
+            f' --line-width {config["seqkit"]["line_width"]}'
+            f' {config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"]}'
         ),
     output:
-        PUFFERFISH_REFERENCE_FASTA_FILE,
+        PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE,
     log:
-        PUFFERFISH_REFERENCE_FASTA_LOG,
-    threads: config["seqkit"]["seq"]["threads"]
+        PUFFERFISH_REF_DEDUPED_ID_FASTA_LOG,
+    threads: config["seqkit"]["threads"]
     wrapper:
-        SEQKIT_SEQ_WRAPPER
-
-
-rule create_pufferfish_reference_deduped_id_fasta:
-    input:
-        PUFFERFISH_REFERENCE_FASTA_FILE,
-    params:
-        extra=(
-            f" --id-regexp '{PUFFERFISH_REFERENCE_SEQKIT_ID_REGEX}'"
-            f" --line-width {PUFFERFISH_REFERENCE_SEQKIT_LINE_WIDTH}"
-            " " + config["pufferfish"]["ref"]["seqkit"]["rename"]["extra_params"]
-        ),
-    output:
-        PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
-    log:
-        PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_LOG,
-    threads: config["seqkit"]["rename"]["threads"]
-    wrapper:
-        SEQKIT_RENAME_WRAPPER
+        SEQKIT_WRAPPER
 
 
 rule create_pufferfish_index:
     input:
-        ref=PUFFERFISH_REFERENCE_DEDUPED_ID_FASTA_FILE,
-        decoys=GENCODE_GENOME_MERGED_FIXED_SEQ_ID_FILE,
+        ref=PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE,
+        decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
-        extra=config["pufferfish"]["index"]["extra_params"],
+        extra=config["pufferfish"]["index"]["extra"],
     output:
         directory(PUFFERFISH_INDEX_DIR),
     log:

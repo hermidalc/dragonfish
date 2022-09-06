@@ -29,8 +29,8 @@ checkpoint get_ncbi_assemblies:
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
         summary_file=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     params:
-        genome_ext=config["ncbi"]["assembly"]["file"]["genome_ext"],
-        other_exts=config["ncbi"]["assembly"]["file"]["other_exts"],
+        genome_ext=config["ncbi"]["assembly"]["file"]["ext"]["genome"],
+        cds_ext=config["ncbi"]["assembly"]["file"]["ext"]["cds"],
         skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["file_retries"],
@@ -48,17 +48,31 @@ checkpoint get_ncbi_assemblies:
 
 
 def gather_ncbi_assembly_fasta_files(wildcards):
-    out_dir = checkpoints.get_ncbi_assemblies.get(**wildcards).output[0]
-    dirs, basenames, exts = glob_wildcards(
-        join(out_dir, "{asm_dir}", "{asm_basename}.{asm_ext}.gz")
-    )
+    ncbi_assembly_dir = checkpoints.get_ncbi_assemblies.get(**wildcards).output[0]
+    # XXX: workaround for snakemake issue #1849, using two of same wildcard names in
+    # glob_wildcards pattern doesn't work even though for regular rules it does and
+    # also couldn't get negative assertion wildcard contraints on asm_dir to work
+    dirs, _ = glob_wildcards(join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz"))
     return expand(
-        f"{out_dir}/{{asm_dir}}/{{asm_basename}}.{{asm_ext}}.gz",
-        zip,
+        f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_{wildcards.asm_type}.fna.gz",
         asm_dir=dirs,
-        asm_basename=basenames,
-        asm_ext=exts,
     )
+
+
+rule create_ncbi_assembly_cds_no_pseudo_fasta:
+    input:
+        NCBI_ASSEMBLY_CDS_FASTA_FILE,
+    params:
+        cmd="grep",
+        pattern="\[pseudo=true\]",
+        extra="--by-name --use-regexp --invert-match --ignore-case",
+    output:
+        NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_FILE,
+    log:
+        NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG,
+    threads: config["seqkit"]["threads"]
+    wrapper:
+        SEQKIT_WRAPPER
 
 
 rule create_ncbi_assembly_fasta_list:
@@ -68,7 +82,6 @@ rule create_ncbi_assembly_fasta_list:
         gather_ncbi_assembly_fasta_files,
     params:
         sort_by=["dir", "name"],
-        sort_ascending=[True, False],
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     log:
