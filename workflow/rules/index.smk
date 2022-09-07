@@ -3,11 +3,11 @@ rule create_pufferfish_ref_fasta:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
         cmd="seq",
-        id_regexp=lambda w: config["pufferfish"]["ref"]["seqkit"]["seq"][
-            "cds_id_regex"
-        ]
-        if w.asm_type.startswith("cds_from_genomic")
-        else None,
+        id_regexp=(
+            lambda w: config["pufferfish"]["ref"]["seqkit"]["seq"]["cds_id_regex"]
+            if w.asm_type.startswith("cds_from_genomic")
+            else None
+        ),
         extra=(
             "--only-id"
             f' --line-width {config["seqkit"]["line_width"]}'
@@ -61,7 +61,7 @@ rule create_pufferfish_ref_deduped_id_fasta:
 
 rule create_pufferfish_index:
     input:
-        ref=PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE,
+        ref=PUFFERFISH_REF_MERGED_FASTA_FILE,
         decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
