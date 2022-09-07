@@ -14,9 +14,9 @@ from snakemake.utils import makedirs
 
 
 def download_file(url, file, retries, retry_wait):
-    print(f"Downloading {url}", flush=True)
     makedirs(dirname(file))
     while retries > 0:
+        print(f"Downloading {url}", flush=True)
         try:
             urlretrieve(url, filename=file)
         except HTTPError as e:
