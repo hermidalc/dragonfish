@@ -100,9 +100,9 @@ ncbi:
         cds: 'cds_from_genomic.fna.gz'
         gff: 'genomic.gff.gz'
       download:
+        md5_name: 'md5checksums.txt'
         skip: []
         threads: 16
-        md5_name: 'md5checksums.txt'
         job_retries: 5
         file_retries: 5
         file_retry_wait: 5
@@ -132,7 +132,7 @@ uniprot:
 
 seqkit:
   line_width: 100
-  threads: 6
+  threads: 4
 
 fastq:
   data_dir: "data/fastq"
