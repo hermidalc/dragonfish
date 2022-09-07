@@ -6,7 +6,7 @@ rule create_pufferfish_ref_fasta:
         id_regexp=lambda w: config["pufferfish"]["ref"]["seqkit"]["seq"][
             "cds_id_regex"
         ]
-        if w.asm_type in ["cds_from_genomic", "cds_from_genomic_no_pseudo"]
+        if w.asm_type.startswith("cds_from_genomic")
         else None,
         extra=(
             "--only-id"
