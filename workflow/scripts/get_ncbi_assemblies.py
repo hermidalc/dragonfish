@@ -4,7 +4,7 @@ from os.path import basename, dirname, exists, join
 from pathlib import Path
 from shutil import rmtree
 from time import sleep
-from urllib.error import HTTPError, URLError
+from urllib.error import HTTPError
 from urllib.parse import urlparse
 from urllib.request import urlcleanup, urlretrieve
 
@@ -22,7 +22,7 @@ def download_file(url, file, retries, retry_wait):
         except HTTPError as e:
             print(f"Skipped: {url}: {e}", flush=True)
             break
-        except URLError as e:
+        except Exception as e:
             if exists(file):
                 remove(file)
             print(f"Error: {url}: {e}", flush=True)
