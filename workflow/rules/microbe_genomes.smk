@@ -49,10 +49,27 @@ checkpoint get_ncbi_assemblies:
 
 def gather_ncbi_assembly_fasta_files(wildcards):
     ncbi_assembly_dir = checkpoints.get_ncbi_assemblies.get(**wildcards).output[0]
-    # XXX: workaround for snakemake issue #1849, using two of same wildcard names in
-    # glob_wildcards pattern doesn't work even though for regular rules it does and
-    # also couldn't get negative assertion wildcard contraints on asm_dir to work
-    dirs, _ = glob_wildcards(join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz"))
+    # XXX: workaround using separate unused asm_name wildcard for snakemake issue
+    # #1849, using two of same wildcards in glob_wildcards pattern seems to be broken,
+    # even though for regular rules it works. Also couldn't get asm_name wildcard
+    # constraint regex patterns to work
+    dirs, names = glob_wildcards(
+        join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz")
+    )
+    # required since some genome assemblies do not have cds_from_genomic files and
+    # cannot use these dirs in expand for cds_from_genomic(_no_pseudo) create fasta
+    # list input, also cds_from_genomic_no_pseudo files don't exist yet when this
+    # function is called so need to use cds_from_genomic dirs for this call
+    dirs = [
+        d
+        for d, n in zip(dirs, names)
+        if n.replace(f"{d}_", "", 1)
+        == (
+            "cds_from_genomic"
+            if wildcards.asm_type.startswith("cds_from_genomic")
+            else wildcards.asm_type
+        )
+    ]
     return expand(
         f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_{wildcards.asm_type}.fna.gz",
         asm_dir=dirs,
