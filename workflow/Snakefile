@@ -233,9 +233,7 @@ NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
 )
 PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
-PUFFERFISH_REF_MERGED_FASTA_LOG = join(
-    PUFFERFISH_LOG_DIR, "merge_pufferfish_ref_fastas.log"
-)
+PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
 PUFFERFISH_REF_DEDUPED_ID_FASTA_LOG = join(
     PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_deduped_id_fasta.log"
 )
