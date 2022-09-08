@@ -41,7 +41,7 @@ checkpoint get_ncbi_assemblies:
         directory(NCBI_ASSEMBLY_DIR),
     log:
         NCBI_ASSEMBLY_FILES_LOG,
-    retries: config["ncbi"]["assembly"]["file"]["download"]["job_retries"]
+    retries: config["download"]["retries"]
     threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
     script:
         "../scripts/get_ncbi_assemblies.py"

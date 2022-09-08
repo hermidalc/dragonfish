@@ -4,6 +4,9 @@ wrapper:
 
 tmp_dir: '/home/hermidalc/tmp'
 
+download:
+  retries: 5
+
 study:
   name: "test"
   samples: "config/samples.tsv"
@@ -103,7 +106,6 @@ ncbi:
         md5_name: 'md5checksums.txt'
         skip: []
         threads: 16
-        job_retries: 5
         file_retries: 5
         file_retry_wait: 5
         backend: 'loky'

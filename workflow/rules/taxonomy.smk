@@ -7,6 +7,7 @@ rule get_ncbi_acc2taxid_file:
         NCBI_ACC2TAXID_LOG,
     message:
         "{params}"
+    retries: config["download"]["retries"]
     script:
         "../scripts/get_url_file.py"
 
@@ -20,6 +21,7 @@ rule get_ncbi_taxdump_zip:
         NCBI_TAXDUMP_ZIP_LOG,
     message:
         "{params}"
+    retries: config["download"]["retries"]
     script:
         "../scripts/get_url_file.py"
 
