@@ -30,7 +30,7 @@ pufferfish:
   binary: './bin/pufferfish'
   ref:
     pigz:
-      threads: 16
+      threads: 64
     seqkit:
       seq:
         cds_id_regex: '^\w+\|.*?\[protein_id=(.+?)\]'
