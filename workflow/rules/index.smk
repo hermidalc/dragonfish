@@ -46,7 +46,6 @@ rule create_pufferfish_ref_merged_deduped_id_fasta:
     params:
         cmd="rename",
         extra=(
-            "--only-id"
             f' --line-width {config["seqkit"]["line_width"]}'
             f' {config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"]}'
         ),
