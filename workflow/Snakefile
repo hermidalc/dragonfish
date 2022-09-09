@@ -156,8 +156,8 @@ EXPAND_PARAMS["asm_type"] = config["ncbi"]["assembly"]["file"]["types"]
 
 PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_DIR, "ref_{asm_type}.fa.gz")
 PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_DIR, "ref_merged.fa.gz")
-PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE = join(
-    PUFFERFISH_DIR, "ref_{asm_type}_deduped_ids.fa.gz"
+PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
+    PUFFERFISH_DIR, "ref_merged_deduped_ids.fa.gz"
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 PUFFERFISH_INDEX_THREADS = (
@@ -234,8 +234,8 @@ NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
 )
 PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
 PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
-PUFFERFISH_REF_DEDUPED_ID_FASTA_LOG = join(
-    PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_deduped_id_fasta.log"
+PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
+    PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
 )
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
@@ -281,7 +281,7 @@ rule all:
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,
-        # PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE,
+        PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),

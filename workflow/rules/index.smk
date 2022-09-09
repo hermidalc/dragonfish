@@ -40,7 +40,7 @@ rule merge_pufferfish_ref_fastas:
         "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
 
 
-rule create_pufferfish_ref_deduped_id_fasta:
+rule create_pufferfish_ref_merged_deduped_id_fasta:
     input:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     params:
@@ -51,9 +51,9 @@ rule create_pufferfish_ref_deduped_id_fasta:
             f' {config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"]}'
         ),
     output:
-        PUFFERFISH_REF_DEDUPED_ID_FASTA_FILE,
+        PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
     log:
-        PUFFERFISH_REF_DEDUPED_ID_FASTA_LOG,
+        PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_WRAPPER
@@ -61,7 +61,7 @@ rule create_pufferfish_ref_deduped_id_fasta:
 
 rule create_pufferfish_index:
     input:
-        ref=PUFFERFISH_REF_MERGED_FASTA_FILE,
+        ref=PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
     params:
         pufferfish=config["pufferfish"]["binary"],
