@@ -7,6 +7,10 @@ tmp_dir: '/home/hermidalc/tmp'
 download:
   retries: 5
 
+joblib:
+  backend: 'loky'
+  verbosity: 1
+
 study:
   name: "test"
   samples: "config/samples.tsv"
@@ -30,7 +34,7 @@ pufferfish:
   binary: './bin/pufferfish'
   ref:
     pigz:
-      threads: 64
+      threads: all
     seqkit:
       seq:
         cds_id_regex: '^\w+\|.*?\[protein_id=(.+?)\]'
@@ -44,9 +48,6 @@ pufferfish:
     threads: all
 
 ncbi:
-  api_email: 'leandro@leandrohermida.com'
-  api_key: '3e48f690c8007a7c8424a3c0ff3d18757808'
-
   taxonomy:
     acc2taxid:
       url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/'
@@ -91,11 +92,11 @@ ncbi:
     summary:
       url: 'https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/'
       filenames: [
-      'assembly_summary_genbank.txt',
-      'assembly_summary_genbank_historical.txt',
-      'assembly_summary_refseq.txt',
-      'assembly_summary_refseq_historical.txt',
-    ]
+        'assembly_summary_genbank.txt',
+        'assembly_summary_genbank_historical.txt',
+        'assembly_summary_refseq.txt',
+        'assembly_summary_refseq_historical.txt',
+      ]
     file:
       types: ["genomic", "cds_from_genomic_no_pseudo"]
       ext:
@@ -108,8 +109,6 @@ ncbi:
         threads: 16
         file_retries: 5
         file_retry_wait: 5
-        backend: 'loky'
-        verbosity: 1
 
 uniprot:
   proteome:
@@ -118,14 +117,33 @@ uniprot:
     n_sample: 0
     random_seed: 777
     bacteria_only: false
-
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     filenames: [
       'uniprot_sprot.xml.gz',
       # 'uniprot_trembl.xml.gz'
     ]
-
+    idmap:
+      url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
+      filename: 'idmapping_selected.tab.gz'
+      parse:
+        chunk_size: 1e8
+    dbxref:
+      names: [
+        "BioCyc",
+        "GO",
+        "EC",
+        "eggNOG",
+        "InterPro",
+        "KEGG",
+        "Pfam",
+        "PROSITE",
+        "Reactome",
+    ]
+    parse:
+      split_size: 200000
+      threads: all
+      xml_parser: false
   uniparc:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniparc/'
     filenames: [

@@ -5,6 +5,9 @@ rule get_ncbi_assembly_summary:
         NCBI_ASSEMBLY_SUMMARY_FILE,
     log:
         NCBI_ASSEMBLY_SUMMARY_LOG,
+    message:
+        "{params}"
+    retries: config["download"]["retries"]
     script:
         "../scripts/get_url_file.py"
 
@@ -35,8 +38,8 @@ checkpoint get_ncbi_assemblies:
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["file_retries"],
         retry_wait=config["ncbi"]["assembly"]["file"]["download"]["file_retry_wait"],
-        backend=config["ncbi"]["assembly"]["file"]["download"]["backend"],
-        verbosity=config["ncbi"]["assembly"]["file"]["download"]["verbosity"],
+        backend=config["joblib"]["backend"],
+        verbosity=config["joblib"]["verbosity"],
     output:
         directory(NCBI_ASSEMBLY_DIR),
     log:
@@ -87,7 +90,6 @@ rule create_ncbi_assembly_cds_no_pseudo_fasta:
         NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_FILE,
     log:
         NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG,
-    threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_WRAPPER
 

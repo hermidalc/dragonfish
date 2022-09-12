@@ -32,8 +32,8 @@ rule merge_pufferfish_ref_fastas:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     log:
         PUFFERFISH_REF_MERGED_FASTA_LOG,
-    # less one for decompress thread
-    threads: config["pufferfish"]["ref"]["pigz"]["threads"] - 1
+    # decompress takes ~1 thread so subtract 1
+    threads: PUFFERFISH_REF_PIGZ_THREADS - 1
     shell:
         # creates a smaller gzip file than gzip cat
         # don't specify threads for decompress

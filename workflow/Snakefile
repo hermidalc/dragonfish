@@ -64,8 +64,6 @@ TEMP_DIR = config["tmp_dir"]
 GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
 GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
-NCBI_API_EMAIL = config["ncbi"]["api_email"]
-NCBI_API_KEY = config["ncbi"]["api_key"]
 
 NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
 NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
@@ -78,6 +76,8 @@ NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenam
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
+UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
+UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
 
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_PAIRS = config["fastq"]["pairs"]
@@ -131,10 +131,22 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merg
 
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
-    splitext(filename)[0] for filename in UNIPROT_KB_FILENAMES
+    filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
 ]
-UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.gz")
-UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.gz")
+UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
+UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
+UNIPROT_KB_XML_SPLIT_DIR = join(UNIPROT_DIR, "xml", "{ukb_basename}")
+UNIPROT_KB_MAIN_METADATA_FILE = join(UNIPROT_DIR, "{ukb_basename}_main_metadata.tsv")
+UNIPROT_KB_DBXREF_METADATA_FILE = join(
+    UNIPROT_DIR, "{ukb_basename}_dbxref_metadata.tsv"
+)
+UNIPROT_KB_METADATA_FILE = join(UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv")
+UNIPROT_KB_MERGED_METADATA_FILE = join(UNIPROT_DIR, "merged_{ukb_mtype}_metadata.tsv")
+EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
+UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_IDMAP_FILE_BASENAME = UNIPROT_KB_IDMAP_FILENAME.partition(".")[0]
+UNIPROT_KB_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmap")
 
 NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
     workflow.cores
@@ -160,16 +172,6 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
     PUFFERFISH_DIR, "ref_merged_deduped_ids.fa.gz"
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
-PUFFERFISH_INDEX_THREADS = (
-    workflow.cores
-    if config["pufferfish"]["index"]["threads"] == "all"
-    else config["pufferfish"]["index"]["threads"]
-)
-PUFFERFISH_ALIGN_THREADS = (
-    workflow.cores
-    if config["pufferfish"]["align"]["threads"] == "all"
-    else config["pufferfish"]["align"]["threads"]
-)
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", RUN_ID_WILDCARD_STR)
 
@@ -225,6 +227,11 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
 )
 UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
+UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
+UNIPROT_KB_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_metadata.log")
+UNIPROT_KB_MERGED_METADATA_LOG = join(UNIPROT_LOG_DIR, "merge_{ukb_mtype}_metadata.log")
+UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
+UNIPROT_KB_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap_hdf.log")
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
 NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_no_pseudo_fasta.log"
@@ -239,6 +246,27 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
 )
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
+
+UNIPROT_KB_PARSE_THREADS = (
+    workflow.cores
+    if config["uniprot"]["kb"]["parse"]["threads"] == "all"
+    else config["uniprot"]["kb"]["parse"]["threads"]
+)
+PUFFERFISH_REF_PIGZ_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["ref"]["pigz"]["threads"] == "all"
+    else config["pufferfish"]["ref"]["pigz"]["threads"]
+)
+PUFFERFISH_INDEX_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["index"]["threads"] == "all"
+    else config["pufferfish"]["index"]["threads"]
+)
+PUFFERFISH_ALIGN_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["align"]["threads"] == "all"
+    else config["pufferfish"]["align"]["threads"]
+)
 
 GENCODE_GENOME_SEQ_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
@@ -278,6 +306,11 @@ rule all:
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_METADATA_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_MERGED_METADATA_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_IDMAP_FILE,
+        UNIPROT_KB_IDMAP_HDF_DIR,
+        NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,

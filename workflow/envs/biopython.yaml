@@ -1,5 +1,5 @@
-name: pigz
+name: biopython
 channels:
   - conda-forge
 dependencies:
-  - pigz
+  - biopython
