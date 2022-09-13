@@ -10,7 +10,7 @@ file_basename = basename(snakemake.input[0]).partition(".")[0]
 for n, df in enumerate(
     vx.from_csv(
         snakemake.input[0],
-        chunk_size=snakemake.params.chunk_size,
+        chunk_size=float(snakemake.params.chunk_size),
         sep="\t",
         names=["uniparc", "genbank"],
         usecols=[10, 17],
