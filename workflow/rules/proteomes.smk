@@ -34,19 +34,28 @@ rule get_uniprot_kb:
 
 checkpoint split_uniprot_kb_xml:
     conda:
-        "../envs/lxml.yaml"
+        "../envs/split-xml.yaml"
     input:
         UNIPROT_KB_FILE,
     params:
         basename="{ukb_basename}",
-        split_size=config["uniprot"]["kb"]["parse"]["split_size"],
-        xml_parser=config["uniprot"]["kb"]["parse"]["xml_parser"],
+        split_size=lambda w: config["uniprot"]["kb"]["parse"]["split_size"][
+            w.ukb_basename.split("_")[1]
+        ],
+        parser=config["uniprot"]["kb"]["parse"]["parser"],
     output:
         directory(UNIPROT_KB_XML_SPLIT_DIR),
     log:
         UNIPROT_KB_XML_SPLIT_LOG,
-    script:
-        "../scripts/split_uniprot_xml_file.py"
+    shell:
+        """
+        ARGS='-i {input[0]} -o {output[0]} -b {params.basename} -s {params.split_size} -p {params.parser}'
+        if [[ "{params.parser}" == "perl"* ]]; then
+            ../scripts/split_uniprot_xml_file.pl $ARGS
+        else
+            ../scripts/split_uniprot_xml_file.py $ARGS
+        fi
+        """
 
 
 def gather_uniprot_split_kb_files(wildcards):
@@ -91,13 +100,13 @@ rule merge_uniprot_kb_metadata:
         "cat {input} 1> {output} 2> {log}"
 
 
-rule get_uniprot_kb_idmap:
+rule get_uniprot_idmap:
     params:
-        UNIPROT_KB_IDMAP_FILE_URL,
+        UNIPROT_IDMAP_FILE_URL,
     output:
-        UNIPROT_KB_IDMAP_FILE,
+        UNIPROT_IDMAP_FILE,
     log:
-        UNIPROT_KB_IDMAP_LOG,
+        UNIPROT_IDMAP_LOG,
     message:
         "{params}"
     retries: config["download"]["retries"]
@@ -105,22 +114,22 @@ rule get_uniprot_kb_idmap:
         "../scripts/get_url_file.py"
 
 
-checkpoint create_uniprot_kb_idmap_hdf:
+checkpoint create_uniprot_idmap_hdf:
     conda:
         "../envs/vaex.yaml"
     input:
-        UNIPROT_KB_IDMAP_FILE,
+        UNIPROT_IDMAP_FILE,
     params:
-        chunk_size=config["uniprot"]["kb"]["idmap"]["parse"]["chunk_size"],
+        chunk_size=config["uniprot"]["idmap"]["parse"]["chunk_size"],
     output:
-        directory(UNIPROT_KB_IDMAP_HDF_DIR),
+        directory(UNIPROT_IDMAP_HDF_DIR),
     log:
-        UNIPROT_KB_IDMAP_HDF_LOG,
+        UNIPROT_IDMAP_HDF_LOG,
     script:
-        "../scripts/create_uniprot_kb_idmap_hdf.py"
+        "../scripts/create_uniprot_idmap_hdf.py"
 
 
-def gather_uniprot_kb_idmap_hdf_files(wildcards):
-    hdf_dir = checkpoints.create_uniprot_kb_idmap_hdf.get(**wildcards).output[0]
-    file_wc_path = join(hdf_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
+def gather_uniprot_idmap_hdf_files(wildcards):
+    hdf_dir = checkpoints.create_uniprot_idmap_hdf.get(**wildcards).output[0]
+    file_wc_path = join(hdf_dir, f"{UNIPROT_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
     return expand(file_wc_path, i=glob_wildcards(file_wc_path).i)

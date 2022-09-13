@@ -121,13 +121,14 @@ uniprot:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     filenames: [
       'uniprot_sprot.xml.gz',
-      # 'uniprot_trembl.xml.gz'
+      'uniprot_trembl.xml.gz'
     ]
-    idmap:
-      url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
-      filename: 'idmapping_selected.tab.gz'
-      parse:
-        chunk_size: 1e8
+    parse:
+      split_size:
+        sprot: 50000
+        trembl: 1000000
+      threads: all
+      parser: perl_regex
     dbxref:
       names: [
         "BioCyc",
@@ -140,10 +141,11 @@ uniprot:
         "PROSITE",
         "Reactome",
     ]
+  idmap:
+    url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
+    filename: 'idmapping_selected.tab.gz'
     parse:
-      split_size: 200000
-      threads: all
-      xml_parser: false
+      chunk_size: 1e8
   uniparc:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniparc/'
     filenames: [

@@ -76,8 +76,8 @@ NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenam
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
-UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
-UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
+UNIPROT_IDMAP_URL = config["uniprot"]["idmap"]["url"]
+UNIPROT_IDMAP_FILENAME = config["uniprot"]["idmap"]["filename"]
 
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_PAIRS = config["fastq"]["pairs"]
@@ -143,10 +143,10 @@ UNIPROT_KB_DBXREF_METADATA_FILE = join(
 UNIPROT_KB_METADATA_FILE = join(UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv")
 UNIPROT_KB_MERGED_METADATA_FILE = join(UNIPROT_DIR, "merged_{ukb_mtype}_metadata.tsv")
 EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
-UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_IDMAP_FILE_BASENAME = UNIPROT_KB_IDMAP_FILENAME.partition(".")[0]
-UNIPROT_KB_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmap")
+UNIPROT_IDMAP_FILE_URL = join(UNIPROT_IDMAP_URL, UNIPROT_IDMAP_FILENAME)
+UNIPROT_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_IDMAP_FILENAME)
+UNIPROT_IDMAP_FILE_BASENAME = UNIPROT_IDMAP_FILENAME.partition(".")[0]
+UNIPROT_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmap")
 
 NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
     workflow.cores
@@ -230,8 +230,8 @@ UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
 UNIPROT_KB_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_metadata.log")
 UNIPROT_KB_MERGED_METADATA_LOG = join(UNIPROT_LOG_DIR, "merge_{ukb_mtype}_metadata.log")
-UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
-UNIPROT_KB_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap_hdf.log")
+UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
+UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
 NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_no_pseudo_fasta.log"
@@ -294,30 +294,30 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
-        GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
-        expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        NCBI_TAXDUMP_ZIP_FILE,
-        NCBI_TAXDUMP_FILES,
-        expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
-        NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
-        UNIPROT_PROTEOME_METADATA_FILE,
+        # expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
+        # expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
+        # expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
+        # GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
+        # expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
+        # expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        # NCBI_TAXDUMP_ZIP_FILE,
+        # NCBI_TAXDUMP_FILES,
+        # expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
+        # NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        # UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_METADATA_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_MERGED_METADATA_FILE, zip, **EXPAND_PARAMS),
-        UNIPROT_KB_IDMAP_FILE,
-        UNIPROT_KB_IDMAP_HDF_DIR,
-        NCBI_ASSEMBLY_DIR,
-        expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
-        PUFFERFISH_REF_MERGED_FASTA_FILE,
-        PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
-        PUFFERFISH_INDEX_DIR,
-        expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
-        expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_IDMAP_FILE,
+        UNIPROT_IDMAP_HDF_DIR,
+        # NCBI_ASSEMBLY_DIR,
+        # expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
+        # expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
+        # PUFFERFISH_REF_MERGED_FASTA_FILE,
+        # PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
+        # PUFFERFISH_INDEX_DIR,
+        # expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
+        # expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
 
 
 def clean(*dirs):
