@@ -16,16 +16,10 @@ genus-level taxonomic abundance contribution to functional features.
 
 We believe that utilizing using modern computational genomics methods, that now
 make it feasible to efficiently index tens of thousands of full reference
-sequences and millions of their respective CDSs, rapidly align reads against an
-index of full references and CDSs, and accurately quantify reads from these
+sequences and millions of their respective CDSes, rapidly align reads against
+an index of full references and CDSes, and accurately quantify reads from these
 alignments, that this profiler will offer significant advantages to existing
 functional meta-omic profiling tools that are available.
-
-An exclusively taxonomic profiler leveraging the above COMBINE-lab tools
-exists called [AGAMEMNON](https://github.com/ivlachos/agamemnon), but
-Dragonfish's design goals and functionality are broader and complementary to
-that of AGAMEMNON's, since we are focused on functional profiling across
-taxonomy and taxonomic contributions to community function.
 
 ## Installation
 
