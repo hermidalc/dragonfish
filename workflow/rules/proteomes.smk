@@ -51,9 +51,9 @@ checkpoint split_uniprot_kb_xml:
         """
         ARGS='-i {input[0]} -o {output[0]} -b {params.basename} -s {params.split_size} -p {params.parser}'
         if [[ "{params.parser}" == "perl"* ]]; then
-            ../scripts/split_uniprot_xml_file.pl $ARGS
+            perl ../scripts/split_uniprot_xml_file.pl $ARGS
         else
-            ../scripts/split_uniprot_xml_file.py $ARGS
+            python ../scripts/split_uniprot_xml_file.py $ARGS
         fi
         """
 
