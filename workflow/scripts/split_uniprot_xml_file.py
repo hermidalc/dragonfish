@@ -1,11 +1,9 @@
 import gzip
-from os import getcwd
+from os import getcwd, makedirs
 import re
 from argparse import ArgumentParser
 from lxml import etree
 from os.path import join
-
-from snakemake.utils import makedirs
 
 xmlns = "http://uniprot.org/uniprot"
 
@@ -25,7 +23,7 @@ Copyrighted by the UniProt Consortium, see https://www.uniprot.org/terms Distrib
 def write_split_file(elems, out_dir, file_basename, num, sep):
     split_filename = f"{file_basename}_{num:04}.xml.gz"
     file = join(out_dir, split_filename)
-    makedirs(out_dir)
+    makedirs(out_dir, exist_ok=True)
     print(f"Writing {split_filename}")
     with gzip.open(file, "wt") as fh:
         fh.write(xml_header)

@@ -128,7 +128,7 @@ else {
 }
 close($xml_fh);
 write_split_file(\@split_elems, $out_dir, $file_basename, $split_num, $elem_sep);
-print "Parsed $num_total_elems uniprot_trembl records\n";
+print "Parsed $num_total_elems $file_basename records\n";
 exit(0);
 
 __END__
