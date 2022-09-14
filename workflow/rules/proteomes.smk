@@ -44,7 +44,7 @@ checkpoint split_uniprot_kb_xml:
         ],
         parser=config["uniprot"]["kb"]["parse"]["parser"],
     output:
-        directory(UNIPROT_KB_XML_SPLIT_DIR),
+        directory(UNIPROT_KB_SPLIT_DIR),
     log:
         UNIPROT_KB_XML_SPLIT_LOG,
     shell:
@@ -58,22 +58,24 @@ checkpoint split_uniprot_kb_xml:
         """
 
 
-def gather_uniprot_split_kb_files(wildcards):
+def gather_uniprot_kb_split_metadata_files(wildcards):
     split_dir = checkpoints.split_uniprot_kb_xml.get(**wildcards).output[0]
-    file_wc_path = join(split_dir, f"{wildcards.ukb_basename}_{{i}}.xml.gz")
-    return expand(file_wc_path, i=glob_wildcards(file_wc_path).i)
+    basenames, nums = glob_wildards(join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz"))
+    return expand(
+        join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.xml.gz"),
+        zip,
+        ukb_basename=basenames,
+        ukb_snum=nums,
+        allow_missing=True,
+    )
 
 
-rule get_uniprot_kb_metadata:
-    conda:
-        "../envs/joblib.yaml"
+rule create_uniprot_split_kb_metadata:
     input:
-        kb_file=gather_uniprot_split_kb_files,
+        kb_file=UNIPROT_KB_SPLIT_FILE,
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
     params:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
-        backend=config["joblib"]["backend"],
-        verbosity=config["joblib"]["verbosity"],
     output:
         main=UNIPROT_KB_MAIN_METADATA_FILE,
         dbxref=UNIPROT_KB_DBXREF_METADATA_FILE,
@@ -81,17 +83,12 @@ rule get_uniprot_kb_metadata:
         UNIPROT_KB_METADATA_LOG,
     threads: UNIPROT_KB_PARSE_THREADS
     script:
-        "../scripts/get_uniprot_kb_metadata.py"
+        "../scripts/create_uniprot_kb_metadata.py"
 
 
 rule merge_uniprot_kb_metadata:
     input:
-        # partial expand to keep ukb_mtype wildcard
-        expand(
-            UNIPROT_KB_METADATA_FILE,
-            ukb_basename=EXPAND_PARAMS["ukb_basename"],
-            allow_missing=True,
-        ),
+        gather_uniprot_kb_split_metadata_files,
     output:
         UNIPROT_KB_MERGED_METADATA_FILE,
     log:
