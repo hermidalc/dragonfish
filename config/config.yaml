@@ -63,7 +63,7 @@ ncbi:
       filenames: [
         'names.dmp',
         'nodes.dmp',
-        'rankedlineage.dmp'
+        'rankedlineage.dmp',
       ]
     eukaryote_genera: [
       'Aspergillus',
@@ -84,7 +84,7 @@ ncbi:
       'Trachipleistophora',
       'Trichinella',
       'Trichomonas',
-      'Trypanosoma'
+      'Trypanosoma',
     ]
     low_quality_regex: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
 
@@ -121,13 +121,12 @@ uniprot:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     filenames: [
       'uniprot_sprot.xml.gz',
-      'uniprot_trembl.xml.gz'
+      'uniprot_trembl.xml.gz',
     ]
     parse:
       split_size:
         sprot: 50000
         trembl: 1000000
-      threads: all
       parser: perl_regex
     dbxref:
       names: [
@@ -140,7 +139,7 @@ uniprot:
         "Pfam",
         "PROSITE",
         "Reactome",
-    ]
+      ]
   idmap:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
     filename: 'idmapping_selected.tab.gz'

@@ -129,30 +129,6 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
 ]
 NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
 
-UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
-EXPAND_PARAMS["ukb_basename"] = [
-    filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
-]
-UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
-UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
-UNIPROT_KB_SPLIT_DIR = join(UNIPROT_DIR, "splits", "{ukb_basename}")
-UNIPROT_KB_SPLIT_FILE = join(UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_{ukb_snum}.xml.gz")
-UNIPROT_KB_MAIN_METADATA_FILE = join(
-    UNIPROT_DIR, "{ukb_basename}_main_metadata_{ukb_snum}.tsv"
-)
-UNIPROT_KB_DBXREF_METADATA_FILE = join(
-    UNIPROT_DIR, "{ukb_basename}_dbxref_metadata_{ukb_snum}.tsv"
-)
-UNIPROT_KB_MERGED_METADATA_FILE = join(
-    UNIPROT_DIR, "uniprot_merged_{ukb_mtype}_metadata.tsv"
-)
-EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
-
-UNIPROT_IDMAP_FILE_URL = join(UNIPROT_IDMAP_URL, UNIPROT_IDMAP_FILENAME)
-UNIPROT_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_IDMAP_FILENAME)
-UNIPROT_IDMAP_FILE_BASENAME = UNIPROT_IDMAP_FILENAME.partition(".")[0]
-UNIPROT_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmap")
-
 NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
     workflow.cores
     if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
@@ -170,6 +146,30 @@ NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
     NCBI_GENOME_DIR, "assembly_{asm_type}_fasta_list.txt"
 )
 EXPAND_PARAMS["asm_type"] = config["ncbi"]["assembly"]["file"]["types"]
+
+UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
+EXPAND_PARAMS["ukb_basename"] = [
+    filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
+]
+UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
+UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
+UNIPROT_KB_SPLIT_DIR = join(UNIPROT_DIR, "{ukb_basename}")
+UNIPROT_KB_SPLIT_FILE = join(UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_{ukb_snum}.xml.gz")
+UNIPROT_KB_MAIN_METADATA_FILE = join(
+    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_main_{ukb_snum}.tsv"
+)
+UNIPROT_KB_DBXREF_METADATA_FILE = join(
+    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv"
+)
+UNIPROT_KB_MERGED_METADATA_FILE = join(
+    UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv"
+)
+EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
+
+UNIPROT_IDMAP_FILE_URL = join(UNIPROT_IDMAP_URL, UNIPROT_IDMAP_FILENAME)
+UNIPROT_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_IDMAP_FILENAME)
+UNIPROT_IDMAP_FILE_BASENAME = UNIPROT_IDMAP_FILENAME.partition(".")[0]
+UNIPROT_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmap")
 
 PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_DIR, "ref_{asm_type}.fa.gz")
 PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_DIR, "ref_merged.fa.gz")
@@ -230,15 +230,6 @@ NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "merge_assembly_summaries.log"
 )
-UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
-UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
-UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
-UNIPROT_KB_METADATA_LOG = join(
-    UNIPROT_LOG_DIR, "create_{ukb_basename}_metadata_{ukb_snum}.log"
-)
-UNIPROT_KB_MERGED_METADATA_LOG = join(UNIPROT_LOG_DIR, "merge_{ukb_mtype}_metadata.log")
-UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
-UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
 NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_no_pseudo_fasta.log"
@@ -246,6 +237,15 @@ NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG = join(
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
 )
+UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
+UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
+UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
+UNIPROT_KB_METADATA_LOG = join(UNIPROT_LOG_DIR, "create_{ukb_basename}_{ukb_snum}.log")
+UNIPROT_KB_MERGED_METADATA_LOG = join(
+    UNIPROT_LOG_DIR, "merge_{ukb_basename}_{ukb_mtype}_metadata.log"
+)
+UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
+UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
 PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
 PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
@@ -254,11 +254,6 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
-UNIPROT_KB_PARSE_THREADS = (
-    workflow.cores
-    if config["uniprot"]["kb"]["parse"]["threads"] == "all"
-    else config["uniprot"]["kb"]["parse"]["threads"]
-)
 PUFFERFISH_REF_PIGZ_THREADS = (
     workflow.cores
     if config["pufferfish"]["ref"]["pigz"]["threads"] == "all"
@@ -311,14 +306,14 @@ rule all:
         NCBI_TAXDUMP_FILES,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        NCBI_ASSEMBLY_DIR,
+        expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
-        UNIPROT_KB_SPLIT_DIR,
+        expand(UNIPROT_KB_SPLIT_DIR, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_MERGED_METADATA_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_IDMAP_FILE,
         UNIPROT_IDMAP_HDF_DIR,
-        NCBI_ASSEMBLY_DIR,
-        expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,

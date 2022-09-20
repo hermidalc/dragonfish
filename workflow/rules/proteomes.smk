@@ -60,9 +60,11 @@ checkpoint split_uniprot_kb_xml:
 
 def gather_uniprot_kb_split_metadata_files(wildcards):
     split_dir = checkpoints.split_uniprot_kb_xml.get(**wildcards).output[0]
-    basenames, nums = glob_wildards(join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz"))
+    basenames, nums = glob_wildcards(
+        join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz")
+    )
     return expand(
-        join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.xml.gz"),
+        join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv"),
         zip,
         ukb_basename=basenames,
         ukb_snum=nums,
@@ -81,7 +83,6 @@ rule create_uniprot_split_kb_metadata:
         dbxref=UNIPROT_KB_DBXREF_METADATA_FILE,
     log:
         UNIPROT_KB_METADATA_LOG,
-    threads: UNIPROT_KB_PARSE_THREADS
     script:
         "../scripts/create_uniprot_kb_metadata.py"
 
