@@ -26,7 +26,7 @@ rule merge_pufferfish_ref_fastas:
     conda:
         "../envs/pigz.yaml"
     input:
-        expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS)
+        expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS)
         + expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
     output:
         PUFFERFISH_REF_MERGED_FASTA_FILE,

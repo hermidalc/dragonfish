@@ -22,11 +22,12 @@ STUDY_NAME = config["study"]["name"]
 SAMPLE_CONFIG_FILE = config["study"]["samples"]
 UNIT_CONFIG_FILE = config["study"]["units"]
 
+TEMP_DIR = config["tmp_dir"]
+
 SAMPLE_DF = pd.read_csv(
     SAMPLE_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "sample_label": str}
 ).set_index("sample_name", drop=False, verify_integrity=True)
 validate(SAMPLE_DF, schema="schemas/samples.schema.yaml")
-
 
 UNIT_DF = pd.read_csv(
     UNIT_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "unit_name": str}
@@ -52,14 +53,14 @@ SAMPLE_LABELS = [
     for n, l in zip(SAMPLE_DF["sample_name"], SAMPLE_DF["sample_label"])
 ]
 
+EXPAND_PARAMS["sub_dir"] = [Path(dirname(fq)).name for fq in UNIT_DF["fq1"]]
+
 GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
-
-TEMP_DIR = config["tmp_dir"]
 
 GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
@@ -178,7 +179,7 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
 
-TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", RUN_ID_WILDCARD_STR)
+TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{sub_dir}")
 
 FASTQ1_FILE = join(
     FASTQ_DATA_DIR, f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[0]}.{FASTQ_EXT}"
@@ -211,7 +212,7 @@ NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
 NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
-FASTP_LOG_DIR = join(LOG_DIR, "fastp")
+FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{sub_dir}")
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
     GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
@@ -242,7 +243,7 @@ UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
 UNIPROT_KB_METADATA_LOG = join(UNIPROT_LOG_DIR, "create_{ukb_basename}_{ukb_snum}.log")
 UNIPROT_KB_MERGED_METADATA_LOG = join(
-    UNIPROT_LOG_DIR, "merge_{ukb_basename}_{ukb_mtype}_metadata.log"
+    UNIPROT_LOG_DIR, "merge_{ukb_basename}_{ukb_mtype}.log"
 )
 UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
 UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
@@ -314,7 +315,7 @@ rule all:
         expand(UNIPROT_KB_MERGED_METADATA_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_IDMAP_FILE,
         UNIPROT_IDMAP_HDF_DIR,
-        expand(PUFFERFISH_REF_FASTA_FILE, **EXPAND_PARAMS),
+        expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
