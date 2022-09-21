@@ -63,12 +63,14 @@ def gather_uniprot_kb_split_metadata_files(wildcards):
     basenames, nums = glob_wildcards(
         join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz")
     )
-    return expand(
-        join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv"),
-        zip,
-        ukb_basename=basenames,
-        ukb_snum=nums,
-        allow_missing=True,
+    return sorted(
+        expand(
+            join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv"),
+            zip,
+            ukb_basename=basenames,
+            ukb_snum=nums,
+            allow_missing=True,
+        )
     )
 
 
