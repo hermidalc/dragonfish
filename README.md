@@ -4,14 +4,13 @@ A **functional** metagenomic and metatranscriptomic profiler and toolkit
 that leverages recent modern methodological advances in the field of
 computational and algorithmic genomics and relevant leading software tools.
 Dragonfish uses [Pufferfish](https://github.com/COMBINE-lab/pufferfish) at
-it's core, written by the [COMBINE-lab](https://github.com/COMBINE-lab), and
-therefore a colored and compacted de-Bruijn Graph (ccdBG) representation and
-index data structure. Pufferfish can efficiently store and index large
-collections of genomes and transcriptomes and perform fast and accurate
-alignment of short reads from whole shotgun metagenomic and metatranscriptomic
-sequencing experiments to its index. Dragonfish accurately quantifies the
-abundance of mapped reads to functional features across genomes and
-transcriptomes in the index, while also providing strain-, species-, and
+it's core, and therefore a colored and compacted de-Bruijn Graph (ccdBG)
+representation and index data structure. Pufferfish can efficiently store and
+index large collections of genomes and transcriptomes and perform fast and
+accurate alignment of short reads from whole shotgun metagenomic and
+metatranscriptomic sequencing experiments to its index. Dragonfish accurately
+quantifies the abundance of mapped reads to functional features across genomes
+and transcriptomes in the index, while also providing strain-, species-, and
 genus-level taxonomic abundance contribution to functional features.
 
 We believe that utilizing using modern computational genomics methods, that now
