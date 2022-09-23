@@ -32,7 +32,7 @@ rule get_uniprot_kb:
         "../scripts/get_url_file.py"
 
 
-checkpoint split_uniprot_kb_xml:
+checkpoint split_uniprot_kb:
     conda:
         "../envs/split-xml.yaml"
     input:
@@ -46,7 +46,7 @@ checkpoint split_uniprot_kb_xml:
     output:
         directory(UNIPROT_KB_SPLIT_DIR),
     log:
-        UNIPROT_KB_XML_SPLIT_LOG,
+        UNIPROT_KB_SPLIT_LOG,
     shell:
         """
         ARGS='-i {input[0]} -o {output[0]} -b {params.basename} -s {params.split_size} -p {params.parser}'
@@ -58,8 +58,8 @@ checkpoint split_uniprot_kb_xml:
         """
 
 
-def gather_uniprot_kb_split_metadata_files(wildcards):
-    split_dir = checkpoints.split_uniprot_kb_xml.get(**wildcards).output[0]
+def gather_uniprot_kb_type_split_metadata_files(wildcards):
+    split_dir = checkpoints.split_uniprot_kb.get(**wildcards).output[0]
     basenames, nums = glob_wildcards(
         join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz")
     )
@@ -74,7 +74,7 @@ def gather_uniprot_kb_split_metadata_files(wildcards):
     )
 
 
-rule create_uniprot_split_kb_metadata:
+rule create_uniprot_kb_split_metadata:
     input:
         kb_file=UNIPROT_KB_SPLIT_FILE,
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
@@ -89,9 +89,27 @@ rule create_uniprot_split_kb_metadata:
         "../scripts/create_uniprot_kb_metadata.py"
 
 
+rule merge_uniprot_kb_type_metadata_splits:
+    input:
+        gather_uniprot_kb_type_split_metadata_files,
+    output:
+        UNIPROT_KB_TYPE_MERGED_METADATA_FILE,
+    log:
+        UNIPROT_KB_TYPE_MERGED_METADATA_LOG,
+    shell:
+        "cat {input} 1> {output} 2> {log}"
+
+
 rule merge_uniprot_kb_metadata:
     input:
-        gather_uniprot_kb_split_metadata_files,
+        sorted(
+            expand(
+                UNIPROT_KB_TYPE_MERGED_METADATA_FILE,
+                ukb_basename=EXPAND_PARAMS["ukb_basename"],
+                allow_missing=True,
+            ),
+            reverse=True,
+        ),
     output:
         UNIPROT_KB_MERGED_METADATA_FILE,
     log:

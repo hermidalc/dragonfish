@@ -162,8 +162,11 @@ UNIPROT_KB_MAIN_METADATA_FILE = join(
 UNIPROT_KB_DBXREF_METADATA_FILE = join(
     UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv"
 )
-UNIPROT_KB_MERGED_METADATA_FILE = join(
+UNIPROT_KB_TYPE_MERGED_METADATA_FILE = join(
     UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv"
+)
+UNIPROT_KB_MERGED_METADATA_FILE = join(
+    UNIPROT_DIR, "uniprot_merged_{ukb_mtype}_metadata.tsv"
 )
 EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
 
@@ -240,10 +243,15 @@ NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
 )
 UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
-UNIPROT_KB_XML_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_xml.log")
-UNIPROT_KB_METADATA_LOG = join(UNIPROT_LOG_DIR, "create_{ukb_basename}_{ukb_snum}.log")
+UNIPROT_KB_SPLIT_LOG = join(UNIPROT_LOG_DIR, "split_{ukb_basename}_kb.log")
+UNIPROT_KB_METADATA_LOG = join(
+    UNIPROT_LOG_DIR, "create_{ukb_basename}_{ukb_snum}_metadata.log"
+)
+UNIPROT_KB_TYPE_MERGED_METADATA_LOG = join(
+    UNIPROT_LOG_DIR, "merge_{ukb_basename}_{ukb_mtype}_metadata.log"
+)
 UNIPROT_KB_MERGED_METADATA_LOG = join(
-    UNIPROT_LOG_DIR, "merge_{ukb_basename}_{ukb_mtype}.log"
+    UNIPROT_LOG_DIR, "merge_uniprot_{ukb_mtype}_metadata.log"
 )
 UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
 UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
@@ -312,7 +320,8 @@ rule all:
         UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_SPLIT_DIR, zip, **EXPAND_PARAMS),
-        expand(UNIPROT_KB_MERGED_METADATA_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_TYPE_MERGED_METADATA_FILE, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_MERGED_METADATA_FILE, **EXPAND_PARAMS),
         UNIPROT_IDMAP_FILE,
         UNIPROT_IDMAP_HDF_DIR,
         expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
