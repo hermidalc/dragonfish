@@ -136,7 +136,9 @@ uniprot:
         "eggNOG",
         "InterPro",
         "KEGG",
+        "PANTHER",
         "Pfam",
+        "PRINTS",
         "PROSITE",
         "Reactome",
       ]
