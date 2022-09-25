@@ -1,0 +1,5 @@
+name: lxml
+channels:
+  - conda-forge
+dependencies:
+  - lxml

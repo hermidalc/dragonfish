@@ -34,7 +34,7 @@ rule get_uniprot_kb:
 
 checkpoint split_uniprot_kb:
     conda:
-        "../envs/split-xml.yaml"
+        "../envs/lxml.yaml"
     input:
         UNIPROT_KB_FILE,
     params:
@@ -47,15 +47,8 @@ checkpoint split_uniprot_kb:
         directory(UNIPROT_KB_SPLIT_DIR),
     log:
         UNIPROT_KB_SPLIT_LOG,
-    shell:
-        """
-        ARGS='-i {input[0]} -o {output[0]} -b {params.basename} -s {params.split_size} -p {params.parser}'
-        if [[ "{params.parser}" == "perl"* ]]; then
-            perl workflow/scripts/split_uniprot_xml_file.pl $ARGS
-        else
-            python workflow/scripts/split_uniprot_xml_file.py $ARGS
-        fi
-        """
+    script:
+        "../scripts/split_uniprot_xml_file.py"
 
 
 def gather_uniprot_kb_type_split_metadata_files(wildcards):

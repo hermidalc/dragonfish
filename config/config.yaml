@@ -127,7 +127,7 @@ uniprot:
       split_size:
         sprot: 50000
         trembl: 1000000
-      parser: perl_regex
+      parser: python_regex
     dbxref:
       names: [
         "BioCyc",

@@ -1,9 +1,9 @@
 import gzip
-from os import getcwd, makedirs
 import re
-from argparse import ArgumentParser
 from lxml import etree
 from os.path import join
+
+from snakemake.utils import makedirs
 
 xmlns = "http://uniprot.org/uniprot"
 
@@ -23,7 +23,7 @@ Copyrighted by the UniProt Consortium, see https://www.uniprot.org/terms Distrib
 def write_split_file(elems, out_dir, file_basename, num, sep):
     split_filename = f"{file_basename}_{num:04}.xml.gz"
     file = join(out_dir, split_filename)
-    makedirs(out_dir, exist_ok=True)
+    makedirs(out_dir)
     print(f"Writing {split_filename}")
     with gzip.open(file, "wt") as fh:
         fh.write(xml_header)
@@ -31,56 +31,18 @@ def write_split_file(elems, out_dir, file_basename, num, sep):
         fh.write(sep + xml_footer)
 
 
-parser = ArgumentParser()
-parser.add_argument(
-    "--in-file",
-    "-i",
-    type=str,
-    required=True,
-    help="Input UniProt gzipped XML file",
-)
-parser.add_argument(
-    "--out-dir",
-    "-o",
-    type=str,
-    default=getcwd(),
-    help="Output directory",
-)
-parser.add_argument(
-    "--basename",
-    "-b",
-    type=str,
-    default="uniprot",
-    help="Output file basename",
-)
-parser.add_argument(
-    "--split-size",
-    "-s",
-    type=int,
-    default=1000000,
-    help="Number of elements in each split file",
-)
-parser.add_argument(
-    "--parser",
-    "-p",
-    type=str,
-    default="python_regex",
-    help="Number of elements in each split file",
-)
-args = parser.parse_args()
-
 split_num = 1
 split_elems = []
 num_split_elems = 0
 num_total_elems = 0
-if args.parser == "python_lxml":
+if snakemake.params.parser == "python_lxml":
     elem_sep = ""
     open_mode = "rb"
 else:
     elem_sep = "\n"
     open_mode = "rt"
-with gzip.open(args.in_file, open_mode) as xml_fh:
-    if args.parser == "python_lxml":
+with gzip.open(snakemake.input.in_file, open_mode) as xml_fh:
+    if snakemake.params.parser == "python_lxml":
         for _, elem in etree.iterparse(
             xml_fh, events=("end",), tag=f"{{{xmlns}}}entry"
         ):
@@ -89,9 +51,9 @@ with gzip.open(args.in_file, open_mode) as xml_fh:
             del elem
             num_split_elems += 1
             num_total_elems += 1
-            if num_split_elems == args.split_size:
+            if num_split_elems == snakemake.params.split_size:
                 write_split_file(
-                    split_elems, args.out_dir, args.basename, split_num, elem_sep
+                    split_elems, snakemake.output.out_dir, snakemake.params.basename, split_num, elem_sep
                 )
                 split_num += 1
                 split_elems = []
@@ -116,14 +78,14 @@ with gzip.open(args.in_file, open_mode) as xml_fh:
                 elem_lines = []
                 num_split_elems += 1
                 num_total_elems += 1
-                if num_split_elems == args.split_size:
+                if num_split_elems == snakemake.params.split_size:
                     write_split_file(
-                        split_elems, args.out_dir, args.basename, split_num, elem_sep
+                        split_elems, snakemake.output.out_dir, snakemake.params.basename, split_num, elem_sep
                     )
                     split_num += 1
                     split_elems = []
                     num_split_elems = 0
             elif in_elem:
                 elem_lines.append(line)
-write_split_file(split_elems, args.out_dir, args.basename, split_num, elem_sep)
-print(f"Parsed {num_total_elems} {args.basename} records")
+write_split_file(split_elems, snakemake.output.out_dir, snakemake.params.basename, split_num, elem_sep)
+print(f"Parsed {num_total_elems} {snakemake.params.basename} records")
