@@ -8,6 +8,7 @@ proteome_df = pd.read_csv(
     snakemake.input.proteome_file, sep="\t", index_col="Proteome Id"
 )
 
+num_proteins = 0
 main_data = defaultdict(list)
 dbxref_data = defaultdict(list)
 with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
@@ -26,11 +27,16 @@ with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
         main_data["id"].append(rec.id)
         main_data["name"].append(rec.name)
         main_data["description"].append(rec.description)
+        num_proteins += 1
+        if num_proteins % 1000 == 0:
+            print(f"{num_proteins} proteins included")
         for db_name in snakemake.params.dbxref_names:
             for db_id in rec_dbxrefs[db_name]:
                 dbxref_data["id"].append(rec.id)
                 dbxref_data["db"].append(db_name)
                 dbxref_data["db_id"].append(db_id)
+
+print(f"{num_proteins} proteins included")
 
 pd.DataFrame(main_data).to_csv(snakemake.output.main, sep="\t", index=False)
 pd.DataFrame(dbxref_data).to_csv(snakemake.output.dbxref, sep="\t", index=False)

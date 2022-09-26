@@ -131,7 +131,7 @@ checkpoint create_uniprot_idmap_hdf:
     input:
         UNIPROT_IDMAP_FILE,
     params:
-        chunk_size=config["uniprot"]["idmap"]["parse"]["chunk_size"],
+        split_size=config["uniprot"]["idmap"]["parse"]["split_size"],
     output:
         directory(UNIPROT_IDMAP_HDF_DIR),
     log:

@@ -53,7 +53,11 @@ with gzip.open(snakemake.input[0], open_mode) as xml_fh:
             num_total_elems += 1
             if num_split_elems == snakemake.params.split_size:
                 write_split_file(
-                    split_elems, snakemake.output[0], snakemake.params.basename, split_num, elem_sep
+                    split_elems,
+                    snakemake.output[0],
+                    snakemake.params.basename,
+                    split_num,
+                    elem_sep,
                 )
                 split_num += 1
                 split_elems = []
@@ -80,12 +84,18 @@ with gzip.open(snakemake.input[0], open_mode) as xml_fh:
                 num_total_elems += 1
                 if num_split_elems == snakemake.params.split_size:
                     write_split_file(
-                        split_elems, snakemake.output[0], snakemake.params.basename, split_num, elem_sep
+                        split_elems,
+                        snakemake.output[0],
+                        snakemake.params.basename,
+                        split_num,
+                        elem_sep,
                     )
                     split_num += 1
                     split_elems = []
                     num_split_elems = 0
             elif in_elem:
                 elem_lines.append(line)
-write_split_file(split_elems, snakemake.output[0], snakemake.params.basename, split_num, elem_sep)
+write_split_file(
+    split_elems, snakemake.output[0], snakemake.params.basename, split_num, elem_sep
+)
 print(f"Parsed {num_total_elems} {snakemake.params.basename} records")

@@ -144,9 +144,9 @@ uniprot:
       ]
   idmap:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
-    filename: 'idmapping_selected.tab.gz'
+    filename: 'idmapping.dat.gz'
     parse:
-      chunk_size: 1e8
+      split_size: 1e7
   uniparc:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/uniparc/'
     filenames: [
