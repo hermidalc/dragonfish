@@ -68,6 +68,8 @@ def gather_uniprot_kb_type_split_metadata_files(wildcards):
 
 
 rule create_uniprot_kb_split_metadata:
+    conda:
+        "../envs/biopython.yaml"
     input:
         kb_file=UNIPROT_KB_SPLIT_FILE,
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
