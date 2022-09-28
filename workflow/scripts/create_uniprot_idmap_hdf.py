@@ -34,6 +34,7 @@ with gzip.open(snakemake.input[0], "rt") as fh:
             num_split_entries = 0
             split_uniprot_ids = []
             split_genbank_ids = []
+hdf5_file = join(snakemake.output[0], f"{file_basename}_{split_num:02}.hdf5")
 print(f"Writing {hdf5_file}")
 vx.from_dict(
     {"genbank_cds_id": split_genbank_ids, "uniprot_id": split_uniprot_ids}
