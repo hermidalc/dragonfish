@@ -51,7 +51,7 @@ with gzip.open(snakemake.input[0], open_mode) as xml_fh:
             del elem
             num_split_elems += 1
             num_total_elems += 1
-            if num_split_elems == snakemake.params.split_size:
+            if num_split_elems == int(float(snakemake.params.split_size)):
                 write_split_file(
                     split_elems,
                     snakemake.output[0],
@@ -82,7 +82,7 @@ with gzip.open(snakemake.input[0], open_mode) as xml_fh:
                 elem_lines = []
                 num_split_elems += 1
                 num_total_elems += 1
-                if num_split_elems == snakemake.params.split_size:
+                if num_split_elems == int(float(snakemake.params.split_size)):
                     write_split_file(
                         split_elems,
                         snakemake.output[0],
