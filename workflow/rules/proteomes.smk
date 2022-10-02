@@ -71,12 +71,10 @@ rule create_uniprot_kb_split_metadata:
         "../envs/biopython.yaml"
     input:
         kb_file=UNIPROT_KB_SPLIT_FILE,
-        proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
     params:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
     output:
         main=UNIPROT_KB_MAIN_METADATA_FILE,
-        dbxref=UNIPROT_KB_DBXREF_METADATA_FILE,
     log:
         UNIPROT_KB_METADATA_LOG,
     script:
