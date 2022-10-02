@@ -1,6 +1,5 @@
 import gzip
 import re
-from lxml import etree
 from os.path import join
 
 from snakemake.utils import makedirs
@@ -20,82 +19,46 @@ Copyrighted by the UniProt Consortium, see https://www.uniprot.org/terms Distrib
 """
 
 
-def write_split_file(elems, out_dir, file_basename, num, sep):
+def write_split_file(entries, out_dir, file_basename, num):
     split_filename = f"{file_basename}_{num:04}.xml.gz"
     file = join(out_dir, split_filename)
     makedirs(out_dir)
     print(f"Writing {split_filename}")
     with gzip.open(file, "wt") as fh:
         fh.write(xml_header)
-        fh.write(sep.join(elems))
-        fh.write(sep + xml_footer)
+        fh.write("".join(entries))
+        fh.write("" + xml_footer)
 
 
 split_num = 1
-split_elems = []
-num_split_elems = 0
-num_total_elems = 0
-if snakemake.params.parser == "python_lxml":
-    elem_sep = ""
-    open_mode = "rb"
-else:
-    elem_sep = "\n"
-    open_mode = "rt"
-with gzip.open(snakemake.input[0], open_mode) as xml_fh:
-    if snakemake.params.parser == "python_lxml":
-        for _, elem in etree.iterparse(
-            xml_fh, events=("end",), tag=f"{{{xmlns}}}entry"
-        ):
-            split_elems.append(etree.tostring(elem, encoding="unicode"))
-            elem.clear()
-            del elem
-            num_split_elems += 1
-            num_total_elems += 1
-            if num_split_elems == int(float(snakemake.params.split_size)):
+entry_lines = []
+num_split_entries = 0
+num_total_entries = 0
+in_entry = False
+entry_s_regex = re.compile(r"\s*<\s*entry\s+.*?>")
+entry_e_regex = re.compile(r"\s*</\s*entry\s*>")
+with gzip.open(snakemake.input[0], "rt") as xml_fh:
+    for line in xml_fh:
+        if entry_s_regex.match(line):
+            in_entry = True
+            entry_lines.append(line)
+        elif entry_e_regex.match(line):
+            assert in_entry, "Closing entry tag without previously reading opening tag"
+            in_entry = False
+            entry_lines.append(line)
+            num_split_entries += 1
+            num_total_entries += 1
+            if num_split_entries == int(float(snakemake.params.split_size)):
                 write_split_file(
-                    split_elems,
+                    entry_lines,
                     snakemake.output[0],
                     snakemake.params.basename,
                     split_num,
-                    elem_sep,
                 )
+                entry_lines = []
+                num_split_entries = 0
                 split_num += 1
-                split_elems = []
-                num_split_elems = 0
-    else:
-        in_elem = False
-        elem_lines = []
-        elem_s_regex = re.compile(r"\s*<\s*entry\s+.*?>")
-        elem_e_regex = re.compile(r"\s*</\s*entry\s*>")
-        for line in xml_fh:
-            line = line.rstrip()
-            if elem_s_regex.match(line):
-                in_elem = True
-                elem_lines.append(line)
-            elif elem_e_regex.match(line):
-                assert (
-                    in_elem
-                ), "Closing entry tag without previously reading opening tag"
-                elem_lines.append(line)
-                in_elem = False
-                split_elems.append("\n".join(elem_lines))
-                elem_lines = []
-                num_split_elems += 1
-                num_total_elems += 1
-                if num_split_elems == int(float(snakemake.params.split_size)):
-                    write_split_file(
-                        split_elems,
-                        snakemake.output[0],
-                        snakemake.params.basename,
-                        split_num,
-                        elem_sep,
-                    )
-                    split_num += 1
-                    split_elems = []
-                    num_split_elems = 0
-            elif in_elem:
-                elem_lines.append(line)
-write_split_file(
-    split_elems, snakemake.output[0], snakemake.params.basename, split_num, elem_sep
-)
-print(f"Parsed {num_total_elems} {snakemake.params.basename} records")
+        elif in_entry:
+            entry_lines.append(line)
+write_split_file(entry_lines, snakemake.output[0], snakemake.params.basename, split_num)
+print(f"Parsed {num_total_entries} {snakemake.params.basename} records")

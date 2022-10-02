@@ -42,7 +42,6 @@ checkpoint split_uniprot_kb:
         split_size=lambda w: config["uniprot"]["kb"]["parse"]["split_size"][
             w.ukb_basename.split("_")[1]
         ],
-        parser=config["uniprot"]["kb"]["parse"]["parser"],
     output:
         directory(UNIPROT_KB_SPLIT_DIR),
     log:
