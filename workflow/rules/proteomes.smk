@@ -50,7 +50,7 @@ rule create_uniprot_kb_dbxref_split:
     log:
         UNIPROT_KB_DBXREF_SPLIT_LOG,
     script:
-        "../scripts/create_uniprot_kb_metadata.py"
+        "../scripts/create_uniprot_kb_dbxref_split.py"
 
 
 rule merge_uniprot_kb_dbxref_splits:
