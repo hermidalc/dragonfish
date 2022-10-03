@@ -157,16 +157,16 @@ UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
 UNIPROT_KB_SPLIT_DIR = join(UNIPROT_DIR, "{ukb_basename}")
 UNIPROT_KB_SPLIT_FILE = join(UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_{ukb_snum}.xml.gz")
 UNIPROT_KB_MAIN_METADATA_FILE = join(
-    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_main_{ukb_snum}.tsv"
+    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_main_{ukb_snum}.tsv.gz"
 )
 UNIPROT_KB_DBXREF_METADATA_FILE = join(
-    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv"
+    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv.gz"
 )
 UNIPROT_KB_TYPE_MERGED_METADATA_FILE = join(
-    UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv"
+    UNIPROT_DIR, "{ukb_basename}_{ukb_mtype}_metadata.tsv.gz"
 )
 UNIPROT_KB_MERGED_METADATA_FILE = join(
-    UNIPROT_DIR, "uniprot_merged_{ukb_mtype}_metadata.tsv"
+    UNIPROT_DIR, "uniprot_merged_{ukb_mtype}_metadata.tsv.gz"
 )
 EXPAND_PARAMS["ukb_mtype"] = ["main", "dbxref"]
 

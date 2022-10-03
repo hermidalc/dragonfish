@@ -57,7 +57,7 @@ def gather_uniprot_kb_type_split_metadata_files(wildcards):
     )
     return sorted(
         expand(
-            join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv"),
+            join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv.gz"),
             zip,
             ukb_basename=basenames,
             ukb_snum=nums,
@@ -71,6 +71,9 @@ rule create_uniprot_kb_split_metadata:
         "../envs/biopython.yaml"
     input:
         kb_file=UNIPROT_KB_SPLIT_FILE,
+        proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
+    params:
+        dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
     output:
         main=UNIPROT_KB_MAIN_METADATA_FILE,
         dbxref=UNIPROT_KB_DBXREF_METADATA_FILE,
@@ -81,6 +84,8 @@ rule create_uniprot_kb_split_metadata:
 
 
 rule merge_uniprot_kb_type_metadata_splits:
+    conda:
+        "../envs/pigz.yaml"
     input:
         gather_uniprot_kb_type_split_metadata_files,
     output:
@@ -88,10 +93,12 @@ rule merge_uniprot_kb_type_metadata_splits:
     log:
         UNIPROT_KB_TYPE_MERGED_METADATA_LOG,
     shell:
-        "cat {input} 1> {output} 2> {log}"
+        "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
 
 
 rule merge_uniprot_kb_metadata:
+    conda:
+        "../envs/pigz.yaml"
     input:
         sorted(
             expand(
@@ -106,7 +113,7 @@ rule merge_uniprot_kb_metadata:
     log:
         UNIPROT_KB_MERGED_METADATA_LOG,
     shell:
-        "cat {input} 1> {output} 2> {log}"
+        "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
 
 
 rule get_uniprot_idmap:
