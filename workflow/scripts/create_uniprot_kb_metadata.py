@@ -1,4 +1,5 @@
 import gzip
+import re
 from collections import defaultdict
 from operator import itemgetter
 
@@ -10,35 +11,49 @@ proteome_df = pd.read_csv(
     snakemake.input.proteome_file, sep="\t", index_col="Proteome Id"
 )
 
-num_elems = 0
-main_data = defaultdict(list)
-dbxref_data = defaultdict(list)
-with gzip.open(snakemake.input.kb_file, "rb") as xml_fh:
-    for _, elem in etree.iterparse(
-        xml_fh, events=("end",), tag="{http://uniprot.org/uniprot}entry"
-    ):
-        rec = Parser(elem).parse()
-        elem.clear()
-        del elem
-        rec_dbxrefs = defaultdict(list)
-        for k, v in sorted(
-            [x.split(":", maxsplit=1) for x in rec.dbxrefs], key=itemgetter(0)
-        ):
-            rec_dbxrefs[k.strip()].append(v.strip())
-        if (
-            "Proteomes" in rec_dbxrefs
-            and any(x in proteome_df.index for x in rec_dbxrefs["Proteomes"])
-            and any(x in rec_dbxrefs for x in snakemake.params.dbxref_names)
-        ):
-            main_data["id"].append(rec.id)
-            main_data["name"].append(rec.name)
-            main_data["description"].append(rec.description)
-            for db_name in snakemake.params.dbxref_names:
-                for db_id in rec_dbxrefs[db_name]:
-                    dbxref_data["id"].append(rec.id)
-                    dbxref_data["db"].append(db_name)
-                    dbxref_data["db_id"].append(db_id)
-            num_elems += 1
+split_offset = list(
+    range(0, snakemake.params.kb_size, int(float(snakemake.params.split_size)))
+)[int(snakemake.params.split_num) - 1]
 
-pd.DataFrame(main_data).to_csv(snakemake.output.main, sep="\t", index=False)
-pd.DataFrame(dbxref_data).to_csv(snakemake.output.dbxref, sep="\t", index=False)
+entry_lines = []
+entry_offset = 0
+parse_entries = False
+num_entries_parsed = 0
+entry_s_regex = re.compile(r"^\s*<\s*entry\s+.*?>")
+entry_e_regex = re.compile(r"^\s*</\s*entry\s*>")
+dbxref_data = defaultdict(list)
+with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
+    for line in xml_fh:
+        if entry_s_regex.match(line):
+            if entry_offset == split_offset:
+                parse_entries = True
+            entry_offset += 1
+            if entry_offset % 1e6 == 0:
+                print(f"[{snakemake.params.split_num}] {entry_offset}")
+        if parse_entries:
+            entry_lines.append(line)
+            if entry_e_regex.match(line):
+                entry = "".join(entry_lines)
+                elem = etree.fromstring(entry)
+                rec = Parser(elem).parse()
+                entry_lines = []
+                rec_dbxrefs = defaultdict(list)
+                for k, v in sorted(
+                    [x.split(":", maxsplit=1) for x in rec.dbxrefs], key=itemgetter(0)
+                ):
+                    rec_dbxrefs[k.strip()].append(v.strip())
+                if (
+                    "Proteomes" in rec_dbxrefs
+                    and any(x in proteome_df.index for x in rec_dbxrefs["Proteomes"])
+                    and any(x in rec_dbxrefs for x in snakemake.params.dbxref_names)
+                ):
+                    for db_name in snakemake.params.dbxref_names:
+                        for db_id in rec_dbxrefs[db_name]:
+                            dbxref_data["id"].append(rec.id)
+                            dbxref_data["db"].append(db_name)
+                            dbxref_data["db_id"].append(db_id)
+                num_entries_parsed += 1
+                if num_entries_parsed == int(float(snakemake.params.split_size)):
+                    break
+
+pd.DataFrame(dbxref_data).to_csv(snakemake.output[0], sep="\t", index=False)

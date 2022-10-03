@@ -32,86 +32,36 @@ rule get_uniprot_kb:
         "../scripts/get_url_file.py"
 
 
-checkpoint split_uniprot_kb:
-    conda:
-        "../envs/lxml.yaml"
-    input:
-        UNIPROT_KB_FILE,
-    params:
-        basename="{ukb_basename}",
-        split_size=lambda w: config["uniprot"]["kb"]["parse"]["split_size"][
-            w.ukb_basename.split("_")[1]
-        ],
-    output:
-        directory(UNIPROT_KB_SPLIT_DIR),
-    log:
-        UNIPROT_KB_SPLIT_LOG,
-    script:
-        "../scripts/split_uniprot_xml_file.py"
-
-
-def gather_uniprot_kb_type_split_metadata_files(wildcards):
-    split_dir = checkpoints.split_uniprot_kb.get(**wildcards).output[0]
-    basenames, nums = glob_wildcards(
-        join(split_dir, "{ukb_basename}_{ukb_snum}.xml.gz")
-    )
-    return sorted(
-        expand(
-            join(split_dir, "{ukb_basename}_{ukb_mtype}_{ukb_snum}.tsv.gz"),
-            zip,
-            ukb_basename=basenames,
-            ukb_snum=nums,
-            allow_missing=True,
-        )
-    )
-
-
-rule create_uniprot_kb_split_metadata:
+rule create_uniprot_kb_dbxref_split:
     conda:
         "../envs/biopython.yaml"
     input:
-        kb_file=UNIPROT_KB_SPLIT_FILE,
+        kb_file=UNIPROT_KB_FILE,
         proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
     params:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
+        kb_size=lambda wc: config["uniprot"]["kb"]["kb_sizes"][
+            0 if wc.ukb_basename == "uniprot_sprot" else 1
+        ],
+        split_size=config["uniprot"]["kb"]["parse"]["split_size"],
+        split_num="{ukb_snum}",
     output:
-        main=UNIPROT_KB_MAIN_METADATA_FILE,
-        dbxref=UNIPROT_KB_DBXREF_METADATA_FILE,
+        UNIPROT_KB_DBXREF_SPLIT_FILE,
     log:
-        UNIPROT_KB_METADATA_LOG,
+        UNIPROT_KB_DBXREF_SPLIT_LOG,
     script:
         "../scripts/create_uniprot_kb_metadata.py"
 
 
-rule merge_uniprot_kb_type_metadata_splits:
+rule merge_uniprot_kb_dbxref_splits:
     conda:
         "../envs/pigz.yaml"
     input:
-        gather_uniprot_kb_type_split_metadata_files,
+        UNIPROT_KB_DBXREF_SPLIT_FILES,
     output:
-        UNIPROT_KB_TYPE_MERGED_METADATA_FILE,
+        UNIPROT_KB_MERGED_DBXREF_FILE,
     log:
-        UNIPROT_KB_TYPE_MERGED_METADATA_LOG,
-    shell:
-        "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
-
-
-rule merge_uniprot_kb_metadata:
-    conda:
-        "../envs/pigz.yaml"
-    input:
-        sorted(
-            expand(
-                UNIPROT_KB_TYPE_MERGED_METADATA_FILE,
-                ukb_basename=EXPAND_PARAMS["ukb_basename"],
-                allow_missing=True,
-            ),
-            reverse=True,
-        ),
-    output:
-        UNIPROT_KB_MERGED_METADATA_FILE,
-    log:
-        UNIPROT_KB_MERGED_METADATA_LOG,
+        UNIPROT_KB_MERGED_DBXREF_LOG,
     shell:
         "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
 

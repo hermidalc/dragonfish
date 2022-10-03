@@ -123,10 +123,12 @@ uniprot:
       'uniprot_sprot.xml.gz',
       'uniprot_trembl.xml.gz',
     ]
+    kb_sizes: [
+      568002,
+      226771949,
+    ]
     parse:
-      split_size:
-        sprot: 5e4
-        trembl: 1e6
+      split_size: 1e6
     dbxref:
       names: [
         "BioCyc",
