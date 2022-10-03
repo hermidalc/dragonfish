@@ -28,8 +28,6 @@ with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
             if entry_offset == split_offset:
                 parse_entries = True
             entry_offset += 1
-            if entry_offset % 1e6 == 0:
-                print(f"[{snakemake.params.split_num}] {entry_offset}")
         if parse_entries:
             entry_lines.append(line)
             if entry_e_regex.match(line):
