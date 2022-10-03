@@ -21,7 +21,7 @@ parse_entries = False
 num_entries_parsed = 0
 entry_s_regex = re.compile(r"^\s*<\s*entry\s+.*?>")
 entry_e_regex = re.compile(r"^\s*</\s*entry\s*>")
-dbxref_data = defaultdict(list)
+dbxrefs = defaultdict(list)
 with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
     for line in xml_fh:
         if entry_s_regex.match(line):
@@ -47,11 +47,11 @@ with gzip.open(snakemake.input.kb_file, "rt") as xml_fh:
                 ):
                     for db_name in snakemake.params.dbxref_names:
                         for db_id in rec_dbxrefs[db_name]:
-                            dbxref_data["id"].append(rec.id)
-                            dbxref_data["db"].append(db_name)
-                            dbxref_data["db_id"].append(db_id)
+                            dbxrefs["id"].append(rec.id)
+                            dbxrefs["db"].append(db_name)
+                            dbxrefs["db_id"].append(db_id)
                 num_entries_parsed += 1
                 if num_entries_parsed == int(float(snakemake.params.split_size)):
                     break
 
-pd.DataFrame(dbxref_data).to_csv(snakemake.output[0], sep="\t", index=False)
+pd.DataFrame(dbxrefs).to_csv(snakemake.output[0], sep="\t", index=False)
