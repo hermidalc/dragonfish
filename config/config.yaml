@@ -140,6 +140,7 @@ uniprot:
         "PRINTS",
         "PROSITE",
         "Reactome",
+        "TIGRFAMs",
       ]
   idmap:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
