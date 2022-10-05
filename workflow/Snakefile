@@ -78,8 +78,8 @@ NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenam
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
-UNIPROT_IDMAP_URL = config["uniprot"]["idmap"]["url"]
-UNIPROT_IDMAP_FILENAME = config["uniprot"]["idmap"]["filename"]
+UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
+UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
 
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_PAIRS = config["fastq"]["pairs"]
@@ -155,11 +155,11 @@ EXPAND_PARAMS["ukb_basename"] = [
 ]
 UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
 UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
-UNIPROT_KB_SPLIT_DIR = join(UNIPROT_DIR, "{ukb_basename}")
+UNIPROT_KB_SPLIT_POS_FILE = join(UNIPROT_DIR, "{ukb_basename}_split_pos.txt")
+UNIPROT_KB_DBXREF_SPLIT_DIR = join(UNIPROT_DIR, "{ukb_basename}")
 UNIPROT_KB_DBXREF_SPLIT_FILE = join(
-    UNIPROT_KB_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv.gz"
+    UNIPROT_KB_DBXREF_SPLIT_DIR, "{ukb_basename}_dbxref_{ukb_snum}.tsv.gz"
 )
-UNIPROT_KB_MERGED_DBXREF_FILE = join(UNIPROT_DIR, "uniprot_merged_dbxref.tsv.gz")
 UNIPROT_KB_DBXREF_SPLIT_FILES = []
 for i, basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
     UNIPROT_KB_DBXREF_SPLIT_FILES.extend(
@@ -172,18 +172,19 @@ for i, basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
                     1,
                     ceil(
                         config["uniprot"]["kb"]["kb_sizes"][i]
-                        / int(float(config["uniprot"]["kb"]["parse"]["split_size"]))
+                        / int(float(config["uniprot"]["kb"]["parse"]["split_sizes"][i]))
                     )
                     + 1,
                 )
             ),
         )
     )
+UNIPROT_KB_MERGED_DBXREF_FILE = join(UNIPROT_DIR, "uniprot_merged_dbxref.tsv.gz")
 
-UNIPROT_IDMAP_FILE_URL = join(UNIPROT_IDMAP_URL, UNIPROT_IDMAP_FILENAME)
-UNIPROT_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_IDMAP_FILENAME)
-UNIPROT_IDMAP_FILE_BASENAME = UNIPROT_IDMAP_FILENAME.partition(".")[0]
-UNIPROT_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmapping")
+UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_IDMAP_FILE_BASENAME = UNIPROT_KB_IDMAP_FILENAME.partition(".")[0]
+UNIPROT_KB_IDMAP_HDF_DIR = join(UNIPROT_DIR, "idmapping")
 
 PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_DIR, "ref_{asm_type}.fa.gz")
 PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_DIR, "ref_merged.fa.gz")
@@ -253,15 +254,13 @@ NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
 )
 UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
+UNIPROT_KB_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_split_pos.log")
 UNIPROT_KB_DBXREF_SPLIT_LOG = join(
     UNIPROT_LOG_DIR, "create_{ukb_basename}_dbxref_{ukb_snum}.log"
 )
-UNIPROT_KB_TYPE_MERGED_DBXREF_LOG = join(
-    UNIPROT_LOG_DIR, "merge_{ukb_basename}_dbxrefs.log"
-)
 UNIPROT_KB_MERGED_DBXREF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_dbxrefs.log")
-UNIPROT_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_idmap.log")
-UNIPROT_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_idmap_hdf.log")
+UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
+UNIPROT_KB_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap_hdf.log")
 PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
 PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
@@ -326,10 +325,11 @@ rule all:
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_SPLIT_POS_FILE, **EXPAND_PARAMS),
         UNIPROT_KB_DBXREF_SPLIT_FILES,
         UNIPROT_KB_MERGED_DBXREF_FILE,
-        UNIPROT_IDMAP_FILE,
-        UNIPROT_IDMAP_HDF_DIR,
+        UNIPROT_KB_IDMAP_FILE,
+        UNIPROT_KB_IDMAP_HDF_DIR,
         expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,

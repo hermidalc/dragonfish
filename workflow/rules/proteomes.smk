@@ -32,18 +32,33 @@ rule get_uniprot_kb:
         "../scripts/get_url_file.py"
 
 
+rule get_uniprot_kb_split_pos:
+    input:
+        UNIPROT_KB_FILE,
+    params:
+        kb_size=lambda wc: config["uniprot"]["kb"]["kb_sizes"][
+            EXPAND_PARAMS["ukb_basename"].index(wc.ukb_basename)
+        ],
+        split_size=lambda wc: config["uniprot"]["kb"]["parse"]["split_sizes"][
+            EXPAND_PARAMS["ukb_basename"].index(wc.ukb_basename)
+        ],
+    output:
+        UNIPROT_KB_SPLIT_POS_FILE,
+    log:
+        UNIPROT_KB_SPLIT_POS_LOG,
+    script:
+        "../scripts/get_uniprot_kb_split_pos.py"
+
+
 rule create_uniprot_kb_dbxref_split:
     conda:
         "../envs/biopython.yaml"
     input:
-        kb_file=UNIPROT_KB_FILE,
-        proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
+        kb=UNIPROT_KB_FILE,
+        proteome=UNIPROT_PROTEOME_METADATA_FILE,
+        split_pos=UNIPROT_KB_SPLIT_POS_FILE,
     params:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
-        kb_size=lambda wc: config["uniprot"]["kb"]["kb_sizes"][
-            0 if wc.ukb_basename == "uniprot_sprot" else 1
-        ],
-        split_size=config["uniprot"]["kb"]["parse"]["split_size"],
         split_num="{ukb_snum}",
     output:
         UNIPROT_KB_DBXREF_SPLIT_FILE,
@@ -66,13 +81,13 @@ rule merge_uniprot_kb_dbxref_splits:
         "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
 
 
-rule get_uniprot_idmap:
+rule get_uniprot_kb_idmap:
     params:
-        UNIPROT_IDMAP_FILE_URL,
+        UNIPROT_KB_IDMAP_FILE_URL,
     output:
-        UNIPROT_IDMAP_FILE,
+        UNIPROT_KB_IDMAP_FILE,
     log:
-        UNIPROT_IDMAP_LOG,
+        UNIPROT_KB_IDMAP_LOG,
     message:
         "{params}"
     retries: config["download"]["retries"]
@@ -80,22 +95,22 @@ rule get_uniprot_idmap:
         "../scripts/get_url_file.py"
 
 
-checkpoint create_uniprot_idmap_hdf:
+checkpoint create_uniprot_kb_idmap_hdf:
     conda:
         "../envs/vaex.yaml"
     input:
-        UNIPROT_IDMAP_FILE,
+        UNIPROT_KB_IDMAP_FILE,
     params:
-        split_size=config["uniprot"]["idmap"]["parse"]["split_size"],
+        split_size=config["uniprot"]["kb"]["idmap"]["parse"]["split_size"],
     output:
-        directory(UNIPROT_IDMAP_HDF_DIR),
+        directory(UNIPROT_KB_IDMAP_HDF_DIR),
     log:
-        UNIPROT_IDMAP_HDF_LOG,
+        UNIPROT_KB_IDMAP_HDF_LOG,
     script:
-        "../scripts/create_uniprot_idmap_hdf.py"
+        "../scripts/create_uniprot_kb_idmap_hdf.py"
 
 
-def gather_uniprot_idmap_hdf_files(wildcards):
-    hdf_dir = checkpoints.create_uniprot_idmap_hdf.get(**wildcards).output[0]
-    file_wc_path = join(hdf_dir, f"{UNIPROT_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
+def gather_uniprot_kb_idmap_hdf_files(wildcards):
+    hdf_dir = checkpoints.create_uniprot_kb_idmap_hdf.get(**wildcards).output[0]
+    file_wc_path = join(hdf_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
     return expand(file_wc_path, i=glob_wildcards(file_wc_path).i)

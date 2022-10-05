@@ -58,14 +58,9 @@ print(
 )
 
 summary_df = pd.read_csv(
-    snakemake.input.summary_file,
-    sep="\t",
-    index_col="assembly_accession",
-    low_memory=False,
+    snakemake.input.summary, sep="\t", index_col="assembly_accession", low_memory=False
 )
-proteome_df = pd.read_csv(
-    snakemake.input.proteome_file, sep="\t", index_col="Proteome Id"
-)
+proteome_df = pd.read_csv(snakemake.input.proteome, sep="\t", index_col="Proteome Id")
 
 genome_names = []
 file_urls, files = [], []

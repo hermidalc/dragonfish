@@ -29,8 +29,8 @@ checkpoint get_ncbi_assemblies:
     conda:
         "../envs/joblib.yaml"
     input:
-        proteome_file=UNIPROT_PROTEOME_METADATA_FILE,
-        summary_file=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        proteome=UNIPROT_PROTEOME_METADATA_FILE,
+        summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     params:
         genome_ext=config["ncbi"]["assembly"]["file"]["ext"]["genome"],
         cds_ext=config["ncbi"]["assembly"]["file"]["ext"]["cds"],
