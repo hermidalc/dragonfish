@@ -125,7 +125,7 @@ uniprot:
     ]
     kb_sizes: [568002, 226771949]
     parse:
-      split_sizes: [5e4, 1e6]
+      split_sizes: [1e4, 1e6]
     dbxref:
       names: [
         "BioCyc",
