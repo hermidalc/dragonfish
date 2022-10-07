@@ -32,7 +32,7 @@ rule merge_pufferfish_ref_fastas:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     log:
         PUFFERFISH_REF_MERGED_FASTA_LOG,
-    # decompress takes ~1 thread so subtract 1
+    # decompress takes ~1 thread in this context subtract 1
     threads: PUFFERFISH_REF_PIGZ_THREADS - 1
     shell:
         # creates a smaller gzip file than gzip cat
