@@ -31,7 +31,7 @@ with gzip.open(snakemake.input.kb, "rb") as kb_fh:
                 v = v.strip()
                 if k == "Proteomes" and v in proteome_df.index:
                     found_proteome = True
-                if k in snakemake.params.dbxref_names:
+                elif k in snakemake.params.dbxref_names:
                     found_dbxref = True
                     rec_dbxrefs[k].append(v)
             if found_proteome and found_dbxref:
