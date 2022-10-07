@@ -23,15 +23,19 @@ with gzip.open(snakemake.input.kb, "rb") as kb_fh:
         if line.decode("utf-8").startswith("</entry>"):
             rec = UniprotParser(etree.fromstring(b"".join(entry_lines))).parse()
             entry_lines = []
+            found_proteome = False
+            found_dbxref = False
             rec_dbxrefs = defaultdict(list)
             for k, v in [x.split(":", maxsplit=1) for x in sorted(rec.dbxrefs)]:
-                rec_dbxrefs[k.strip()].append(v.strip())
-            if (
-                "Proteomes" in rec_dbxrefs
-                and any(x in proteome_df.index for x in rec_dbxrefs["Proteomes"])
-                and any(x in rec_dbxrefs for x in snakemake.params.dbxref_names)
-            ):
-                for db_name in snakemake.params.dbxref_names:
+                k = k.strip()
+                v = v.strip()
+                if k == "Proteomes" and v in proteome_df.index:
+                    found_proteome = True
+                if k in snakemake.params.dbxref_names:
+                    found_dbxref = True
+                    rec_dbxrefs[k].append(v)
+            if found_proteome and found_dbxref:
+                for db_name in rec_dbxrefs:
                     for db_id in rec_dbxrefs[db_name]:
                         dbxrefs["id"].append(rec.id)
                         dbxrefs["db"].append(db_name)
