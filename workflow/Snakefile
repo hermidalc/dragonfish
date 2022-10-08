@@ -180,6 +180,11 @@ for i, basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
         )
     )
 UNIPROT_KB_MERGED_DBXREF_FILE = join(UNIPROT_DIR, "uniprot_merged_dbxref.tsv.gz")
+UNIPROT_KB_MERGED_DBXREF_THREADS = (
+    workflow.cores
+    if config["uniprot"]["kb"]["pigz"]["threads"] == "all"
+    else config["uniprot"]["kb"]["pigz"]["threads"]
+)
 
 UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
 UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)

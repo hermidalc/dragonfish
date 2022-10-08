@@ -77,8 +77,10 @@ rule merge_uniprot_kb_dbxref_splits:
         UNIPROT_KB_MERGED_DBXREF_FILE,
     log:
         UNIPROT_KB_MERGED_DBXREF_LOG,
+    # decompress takes ~1 thread in this context subtract 1
+    threads: UNIPROT_KB_MERGED_DBXREF_THREADS - 1
     shell:
-        "pigz -dc {input} | pigz -p 1 1> {output} 2> {log}"
+        "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
 
 
 rule get_uniprot_kb_idmap:

@@ -120,8 +120,7 @@ uniprot:
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     filenames: [
-      'uniprot_sprot.xml.gz',
-      'uniprot_trembl.xml.gz',
+      'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
     ]
     kb_sizes: [568002, 226771949]
     parse:
@@ -141,6 +140,8 @@ uniprot:
         "Reactome",
         "TIGRFAMs",
       ]
+    pigz:
+      threads: 12
     idmap:
       url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
       filename: 'idmapping.dat.gz'
