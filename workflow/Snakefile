@@ -272,7 +272,9 @@ NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG = join(
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
 )
-UNIPROT_PROTEOME_METADATA_LOG = join(UNIPROT_LOG_DIR, "get_proteome_metadata.log")
+UNIPROT_PROTEOME_METADATA_LOG = join(
+    UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
+)
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 UNIPROT_KB_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_split_pos.log")
 UNIPROT_KB_DBXREF_LOG = join(
