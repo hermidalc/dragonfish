@@ -50,7 +50,7 @@ rule get_uniprot_kb_split_pos:
         "../scripts/get_uniprot_kb_split_pos.py"
 
 
-rule create_uniprot_kb_dbxref_split:
+rule get_uniprot_kb_dbxrefs:
     conda:
         "../envs/biopython.yaml"
     input:
@@ -61,26 +61,24 @@ rule create_uniprot_kb_dbxref_split:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
         split_num="{ukb_snum}",
     output:
-        UNIPROT_KB_DBXREF_SPLIT_FILE,
+        UNIPROT_KB_DBXREF_FILE,
     log:
-        UNIPROT_KB_DBXREF_SPLIT_LOG,
+        UNIPROT_KB_DBXREF_LOG,
     script:
-        "../scripts/create_uniprot_kb_dbxref_split.py"
+        "../scripts/get_uniprot_kb_dbxrefs.py"
 
 
-rule merge_uniprot_kb_dbxref_splits:
+rule create_uniprot_kb_dbxref_hdf:
     conda:
-        "../envs/pigz.yaml"
+        "../envs/vaex.yaml"
     input:
-        UNIPROT_KB_DBXREF_SPLIT_FILES,
+        UNIPROT_KB_DBXREF_FILE,
     output:
-        UNIPROT_KB_MERGED_DBXREF_FILE,
+        UNIPROT_KB_DBXREF_HDF_FILE,
     log:
-        UNIPROT_KB_MERGED_DBXREF_LOG,
-    # decompress takes ~1 thread in this context subtract 1
-    threads: UNIPROT_KB_MERGED_DBXREF_THREADS - 1
-    shell:
-        "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
+        UNIPROT_KB_DBXREF_HDF_LOG,
+    script:
+        "../scripts/create_uniprot_kb_dbxref_hdf.py"
 
 
 rule get_uniprot_kb_idmap:
