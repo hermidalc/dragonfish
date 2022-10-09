@@ -2,8 +2,8 @@ rule get_uniprot_proteome_metadata:
     conda:
         "../envs/pandas.yaml"
     params:
-        ref_url=config["uniprot"]["proteome"]["ref_metadata_url"],
-        other_url=config["uniprot"]["proteome"]["other_metadata_url"],
+        ref_url=config["uniprot"]["proteome"]["url"]["ref"],
+        other_url=config["uniprot"]["proteome"]["url"]["other"],
         low_quality_regex=config["ncbi"]["taxonomy"]["low_quality_regex"],
         eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
@@ -113,4 +113,4 @@ checkpoint create_uniprot_kb_idmap_hdf:
 def gather_uniprot_kb_idmap_hdf_files(wildcards):
     hdf_dir = checkpoints.create_uniprot_kb_idmap_hdf.get(**wildcards).output[0]
     file_wc_path = join(hdf_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
-    return expand(file_wc_path, i=glob_wildcards(file_wc_path).i)
+    return sorted(expand(file_wc_path, i=glob_wildcards(file_wc_path).i))
