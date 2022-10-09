@@ -1,6 +1,6 @@
 rule run_fastp_trim:
     input:
-        unpack(lambda w: get_fq(w, trimmed=False)),
+        unpack(lambda wc: get_fq(wc, trimmed=False)),
     params:
         run_id=RUN_ID_WILDCARD_STR,
         extra=config["trim"]["fastp"]["extra"],

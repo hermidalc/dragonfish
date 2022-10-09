@@ -4,8 +4,8 @@ rule create_pufferfish_ref_fasta:
     params:
         cmd="seq",
         id_regexp=(
-            lambda w: config["pufferfish"]["ref"]["seqkit"]["seq"]["cds_id_regex"]
-            if w.asm_type.startswith("cds_from_genomic")
+            lambda wc: config["pufferfish"]["ref"]["seqkit"]["seq"]["cds_id_regex"]
+            if wc.asm_type.startswith("cds_from_genomic")
             else None
         ),
         extra=(

@@ -18,7 +18,9 @@ rule fix_gencode_genome_fasta_ids:
     params:
         cmd="replace",
         pattern=config["gencode"]["seqkit"]["replace"]["search_regex"],
-        replacement=lambda w: f"{w.gc_species.title()}_{w.gc_release}_{w.gc_build}_${{1}}",
+        replacement=lambda wc: (
+            f"{wc.gc_species.title()}_{wc.gc_release}_{wc.gc_build}_${{1}}"
+        ),
         extra=f'--line-width {config["seqkit"]["line_width"]}',
     output:
         GENCODE_GENOME_FIXED_FASTA_FILE,
