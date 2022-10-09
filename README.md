@@ -101,5 +101,5 @@ mamba activate dragonfish
 ### Run Dragonfish
 
 ```
-snakemake --use-conda --printshellcmds --cores all
+snakemake --use-conda --printshellcmds --cores all --scheduler greedy --resources gencode_download_jobs=2
 ```

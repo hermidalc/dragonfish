@@ -7,6 +7,8 @@ rule get_gencode_genome_fasta:
         regions=GENCODE_REGIONS,
     output:
         GENCODE_GENOME_FASTA_FILE,
+    resources:
+        gencode_download_jobs=1,
     retries: config["download"]["retries"]
     wrapper:
         GENCODE_GENOME_SEQ_WRAPPER
@@ -66,6 +68,8 @@ rule get_gencode_genome_annot:
         annot_fmt=GENCODE_ANNOT_FMT,
     output:
         GENCODE_GENOME_ANNOT_FILE,
+    resources:
+        gencode_download_jobs=1,
     retries: config["download"]["retries"]
     wrapper:
         GENCODE_GENOME_ANNOT_WRAPPER
