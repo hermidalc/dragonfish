@@ -37,7 +37,7 @@ with gzip.open(snakemake.input.kb, "rb") as kb_fh:
             if found_proteome and found_dbxref:
                 for db_name in rec_dbxrefs:
                     for db_id in rec_dbxrefs[db_name]:
-                        dbxrefs["id"].append(rec.id)
+                        dbxrefs["uniprot_id"].append(rec.id)
                         dbxrefs["db"].append(db_name)
                         dbxrefs["db_id"].append(db_id)
             if kb_fh.tell() == end_pos:
