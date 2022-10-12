@@ -1,7 +1,7 @@
 import gzip
 from collections import defaultdict
 
-import pandas as pd
+import vaex as vx
 from Bio.SeqIO.UniprotIO import Parser as UniprotParser
 from lxml import etree
 
@@ -43,4 +43,4 @@ with gzip.open(snakemake.input.kb, "rb") as kb_fh:
             if kb_fh.tell() == end_pos:
                 break
 
-pd.DataFrame(dbxrefs).to_csv(snakemake.output[0], sep="\t", index=False)
+vx.from_dict(dbxrefs).export_hdf5(snakemake.output[0])

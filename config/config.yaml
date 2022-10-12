@@ -37,7 +37,7 @@ pufferfish:
       threads: all
     seqkit:
       seq:
-        cds_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
+        protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
         extra: '--upper-case'
       rename:
         extra: ''

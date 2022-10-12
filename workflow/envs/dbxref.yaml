@@ -1,6 +1,8 @@
-name: biopython
+name: dbxref
 channels:
   - conda-forge
 dependencies:
   - biopython=1.79
   - lxml
+  - numpy=1.22.3
+  - vaex

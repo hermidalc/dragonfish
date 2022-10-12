@@ -50,9 +50,9 @@ rule get_uniprot_kb_split_pos:
         "../scripts/get_uniprot_kb_split_pos.py"
 
 
-rule get_uniprot_kb_dbxrefs:
+rule create_uniprot_kb_dbxref:
     conda:
-        "../envs/biopython.yaml"
+        "../envs/dbxref.yaml"
     input:
         kb=UNIPROT_KB_FILE,
         proteome=UNIPROT_PROTEOME_METADATA_FILE,
@@ -65,20 +65,7 @@ rule get_uniprot_kb_dbxrefs:
     log:
         UNIPROT_KB_DBXREF_LOG,
     script:
-        "../scripts/get_uniprot_kb_dbxrefs.py"
-
-
-rule create_uniprot_kb_dbxref_hdf:
-    conda:
-        "../envs/vaex.yaml"
-    input:
-        UNIPROT_KB_DBXREF_FILE,
-    output:
-        UNIPROT_KB_DBXREF_HDF_FILE,
-    log:
-        UNIPROT_KB_DBXREF_HDF_LOG,
-    script:
-        "../scripts/create_uniprot_kb_dbxref_hdf.py"
+        "../scripts/create_uniprot_kb_dbxref.py"
 
 
 rule get_uniprot_kb_idmap:
@@ -95,7 +82,7 @@ rule get_uniprot_kb_idmap:
         "../scripts/get_url_file.py"
 
 
-checkpoint create_uniprot_kb_idmap_hdf:
+checkpoint create_uniprot_kb_idmap:
     conda:
         "../envs/vaex.yaml"
     input:
@@ -103,14 +90,14 @@ checkpoint create_uniprot_kb_idmap_hdf:
     params:
         split_size=config["uniprot"]["kb"]["idmap"]["parse"]["split_size"],
     output:
-        directory(UNIPROT_KB_IDMAP_HDF_DIR),
+        directory(UNIPROT_KB_IDMAP_DIR),
     log:
-        UNIPROT_KB_IDMAP_HDF_LOG,
+        UNIPROT_KB_IDMAP_LOG,
     script:
-        "../scripts/create_uniprot_kb_idmap_hdf.py"
+        "../scripts/create_uniprot_kb_idmap.py"
 
 
-def gather_uniprot_kb_idmap_hdf_files(wildcards):
-    hdf_dir = checkpoints.create_uniprot_kb_idmap_hdf.get(**wildcards).output[0]
-    file_wc_path = join(hdf_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
+def gather_uniprot_kb_idmap_files(wildcards):
+    idmap_dir = checkpoints.create_uniprot_kb_idmap.get(**wildcards).output[0]
+    file_wc_path = join(idmap_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
     return sorted(expand(file_wc_path, i=glob_wildcards(file_wc_path).i))

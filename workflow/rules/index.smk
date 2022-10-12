@@ -8,7 +8,9 @@ rule create_pufferfish_ref_fasta:
             + (
                 lambda wc: (
                     " --id-regexp "
-                    + config["pufferfish"]["ref"]["seqkit"]["seq"]["cds_id_pattern"]
+                    + config["pufferfish"]["ref"]["seqkit"]["seq"][
+                        "protein_id_pattern"
+                    ]
                     if wc.asm_type.startswith("cds_from_genomic")
                     else ""
                 )
