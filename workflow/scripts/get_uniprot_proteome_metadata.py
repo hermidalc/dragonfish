@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 
 print("\nGetting UniProt Proteomes metadata", flush=True)
@@ -30,6 +32,9 @@ merged_df = merged_df[
         merged_df["Organism"]
         .str.capitalize()
         .str.startswith(tuple(snakemake.params.eukaryote_genera))
+    )
+    | ~merged_df["Organism"].str.contains(
+        snakemake.params.low_quality_pattern, regex=True, flags=re.IGNORECASE
     )
 ]
 

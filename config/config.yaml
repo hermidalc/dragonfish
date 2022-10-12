@@ -28,7 +28,7 @@ gencode:
     length_col: "Length"
   seqkit:
     replace:
-      search_regex: '^(\S+)(?:\s.*)?'
+      pattern: '^(\S+)(?:\s.*)?'
 
 pufferfish:
   binary: './bin/pufferfish'
@@ -37,7 +37,7 @@ pufferfish:
       threads: all
     seqkit:
       seq:
-        cds_id_regex: '^\w+\|.*?\[protein_id=(.+?)\]'
+        cds_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
         extra: '--upper-case'
       rename:
         extra: ''
@@ -86,7 +86,7 @@ ncbi:
       'Trichomonas',
       'Trypanosoma',
     ]
-    low_quality_regex: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
+    low_quality_pattern: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
 
   assembly:
     summary:
@@ -98,7 +98,7 @@ ncbi:
         'assembly_summary_refseq_historical.txt',
       ]
     file:
-      types: ["genomic", "cds_from_genomic_no_pseudo"]
+      types: ["genomic", "cds_from_genomic_filtered"]
       ext:
         genome: 'genomic.fna.gz'
         cds: 'cds_from_genomic.fna.gz'
@@ -109,6 +109,16 @@ ncbi:
         threads: 16
         file_retries: 5
         file_retry_wait: 5
+      seqkit:
+        grep:
+          pattern: [
+            "\[pseudo=true\]",
+            "\[protein_id=.+?\]",
+          ]
+          extra: [
+            "--by-name --use-regexp --ignore-case --invert-match",
+            "--by-name --use-regexp --ignore-case",
+          ]
 
 uniprot:
   proteome:

@@ -19,7 +19,7 @@ rule fix_gencode_genome_fasta_ids:
         GENCODE_GENOME_FASTA_FILE,
     params:
         cmd="replace",
-        pattern=config["gencode"]["seqkit"]["replace"]["search_regex"],
+        pattern=config["gencode"]["seqkit"]["replace"]["pattern"],
         replacement=lambda wc: (
             f"{wc.gc_species.title()}_{wc.gc_release}_{wc.gc_build}_${{1}}"
         ),

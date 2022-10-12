@@ -60,8 +60,8 @@ def gather_ncbi_assembly_fasta_files(wildcards):
         join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz")
     )
     # required since some genome assemblies do not have cds_from_genomic files and
-    # cannot use these dirs in expand for cds_from_genomic(_no_pseudo) create fasta
-    # list input, also cds_from_genomic_no_pseudo files don't exist yet when this
+    # cannot use these dirs in expand for cds_from_genomic(_filtered) create fasta
+    # list input, also cds_from_genomic_filtered files don't exist yet when this
     # function is called so need to use cds_from_genomic dirs for this call
     dirs = [
         d
@@ -79,17 +79,17 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     )
 
 
-rule create_ncbi_assembly_cds_no_pseudo_fasta:
+rule create_ncbi_assembly_cds_filtered_fasta:
     input:
         NCBI_ASSEMBLY_CDS_FASTA_FILE,
     params:
         cmd="grep",
-        pattern="\[pseudo=true\]",
-        extra="--by-name --use-regexp --invert-match --ignore-case",
+        pattern=config["ncbi"]["assembly"]["seqkit"]["grep"]["pattern"],
+        extra=config["ncbi"]["assembly"]["seqkit"]["grep"]["extra"],
     output:
-        NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_FILE,
+        NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE,
     log:
-        NCBI_ASSEMBLY_CDS_NO_PSEUDO_FASTA_LOG,
+        NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG,
     wrapper:
         SEQKIT_WRAPPER
 

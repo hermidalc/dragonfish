@@ -4,7 +4,7 @@ rule get_uniprot_proteome_metadata:
     params:
         ref_url=config["uniprot"]["proteome"]["url"]["ref"],
         other_url=config["uniprot"]["proteome"]["url"]["other"],
-        low_quality_regex=config["ncbi"]["taxonomy"]["low_quality_regex"],
+        low_quality_pattern=config["ncbi"]["taxonomy"]["low_quality_pattern"],
         eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
         random_seed=config["uniprot"]["proteome"]["random_seed"],
