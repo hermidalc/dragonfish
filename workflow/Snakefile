@@ -63,6 +63,14 @@ NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
 
+UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
+UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
+UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
+UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
+
+NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary"]["url"]
+NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenames"]
+
 GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
 GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
@@ -73,81 +81,10 @@ NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
 NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
 NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 
-NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary"]["url"]
-NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenames"]
-
-UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
-UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
-UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
-UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
-
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_PAIRS = config["fastq"]["pairs"]
 FASTQ_EXT = config["fastq"]["ext"]
 FASTQ_PLATFORM = config["fastq"]["platform"]
-
-GENCODE_SPECIES = "{gc_species}"
-GENCODE_RELEASE = "{gc_release}"
-GENCODE_BUILD = "{gc_build}"
-
-GENCODE_GENOME_NAME = f"{GENCODE_SPECIES}_{GENCODE_RELEASE}_{GENCODE_BUILD}"
-GENCODE_GENOME_FASTA_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}.fa.gz")
-GENCODE_GENOME_FIXED_FASTA_FILE = join(
-    GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed.fa.gz"
-)
-GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE = join(
-    GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed_fasta_ids.txt"
-)
-GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE = join(
-    GENCODE_DIR, "merged_fixed_fasta_ids.txt"
-)
-GENCODE_GENOME_ANNOT_FILE = join(
-    GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}.gz"
-)
-
-EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
-EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
-EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
-
-EXPAND_PARAMS["a2t_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
-]
-
-NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
-NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
-NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_FILES = [
-    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
-]
-EXPAND_PARAMS["asu_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
-]
-
-NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
-NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
-NCBI_ASSEMBLY_SUMMARY_FILES = [
-    join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
-]
-NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
-
-NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
-    workflow.cores
-    if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
-    else config["ncbi"]["assembly"]["file"]["download"]["threads"]
-)
-NCBI_ASSEMBLY_CDS_FASTA_FILE = join(
-    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_cds_from_genomic.fna.gz"
-)
-NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE = join(
-    NCBI_ASSEMBLY_DIR,
-    "{asm_dir}",
-    "{asm_dir}_cds_from_genomic_filtered.fna.gz",
-)
-NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
-    NCBI_GENOME_DIR, "assembly_{asm_type}_fasta_list.txt"
-)
-EXPAND_PARAMS["asm_type"] = config["ncbi"]["assembly"]["file"]["types"]
 
 UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
@@ -181,12 +118,74 @@ UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
 UNIPROT_KB_IDMAP_FILE_BASENAME = UNIPROT_KB_IDMAP_FILENAME.partition(".")[0]
 UNIPROT_KB_IDMAP_DIR = join(UNIPROT_DIR, "idmapping")
 
+NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
+NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
+NCBI_ASSEMBLY_SUMMARY_FILES = [
+    join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
+]
+NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
+
+NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
+    workflow.cores
+    if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
+    else config["ncbi"]["assembly"]["file"]["download"]["threads"]
+)
+NCBI_ASSEMBLY_CDS_FASTA_FILE = join(
+    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_cds_from_genomic.fna.gz"
+)
+NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE = join(
+    NCBI_ASSEMBLY_DIR,
+    "{asm_dir}",
+    "{asm_dir}_cds_from_genomic_filtered.fna.gz",
+)
+NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
+    NCBI_GENOME_DIR, "assembly_{asm_type}_fasta_list.txt"
+)
+EXPAND_PARAMS["asm_type"] = config["ncbi"]["assembly"]["file"]["types"]
+
+GENCODE_SPECIES = "{gc_species}"
+GENCODE_RELEASE = "{gc_release}"
+GENCODE_BUILD = "{gc_build}"
+
+GENCODE_GENOME_NAME = f"{GENCODE_SPECIES}_{GENCODE_RELEASE}_{GENCODE_BUILD}"
+GENCODE_GENOME_FASTA_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}.fa.gz")
+GENCODE_GENOME_FIXED_FASTA_FILE = join(
+    GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed.fa.gz"
+)
+GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE = join(
+    GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed_fasta_ids.txt"
+)
+GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE = join(
+    GENCODE_DIR, "merged_fixed_fasta_ids.txt"
+)
+GENCODE_GENOME_ANNOT_FILE = join(
+    GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}.gz"
+)
+
+EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
+EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
+EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
+
 PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_DIR, "ref_{asm_type}.fa.gz")
 PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_DIR, "ref_merged.fa.gz")
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
     PUFFERFISH_DIR, "ref_merged_deduped_ids.fa.gz"
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
+
+NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
+NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_FILES = [
+    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
+]
+EXPAND_PARAMS["a2t_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
+]
+EXPAND_PARAMS["asu_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
+]
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{sub_dir}")
 
@@ -223,30 +222,6 @@ UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{sub_dir}")
 
-GENCODE_GENOME_FIXED_FASTA_LOG = join(
-    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
-)
-GENCODE_GENOME_FIXED_FASTA_ID_LIST_LOG = join(
-    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fasta_ids.log"
-)
-GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
-    GENCODE_LOG_DIR, "merge_genome_fixed_fasta_ids.log"
-)
-
-NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
-NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
-NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
-NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
-NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
-    NCBI_GENOME_LOG_DIR, "merge_assembly_summaries.log"
-)
-NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
-NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_filtered_fasta.log"
-)
-NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
-)
 UNIPROT_PROTEOME_METADATA_LOG = join(
     UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
 )
@@ -260,12 +235,40 @@ UNIPROT_KB_DBXREF_LOG = join(
 )
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap.log")
+
+NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
+NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
+    NCBI_GENOME_LOG_DIR, "merge_assembly_summaries.log"
+)
+NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
+NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG = join(
+    NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_filtered_fasta.log"
+)
+NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
+    NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
+)
+
+GENCODE_GENOME_FIXED_FASTA_LOG = join(
+    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
+)
+GENCODE_GENOME_FIXED_FASTA_ID_LIST_LOG = join(
+    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fasta_ids.log"
+)
+GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
+    GENCODE_LOG_DIR, "merge_genome_fixed_fasta_ids.log"
+)
+
 PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
 PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
     PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
 )
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
+
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
+
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
 PUFFERFISH_REF_PIGZ_THREADS = (
@@ -310,28 +313,28 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
-        GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
-        expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        NCBI_TAXDUMP_ZIP_FILE,
-        NCBI_TAXDUMP_FILES,
-        expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
-        NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
-        NCBI_ASSEMBLY_DIR,
-        expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_PROTEOME_METADATA_FILE,
         expand(UNIPROT_KB_FILE, **EXPAND_PARAMS),
         expand(UNIPROT_KB_SPLIT_POS_FILE, **EXPAND_PARAMS),
         UNIPROT_KB_DBXREF_FILES,
         UNIPROT_KB_IDMAP_FILE,
         UNIPROT_KB_IDMAP_DIR,
+        expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
+        NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        NCBI_ASSEMBLY_DIR,
+        expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
+        GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
+        expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
         PUFFERFISH_REF_MERGED_FASTA_FILE,
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         PUFFERFISH_INDEX_DIR,
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        NCBI_TAXDUMP_ZIP_FILE,
+        NCBI_TAXDUMP_FILES,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
 
