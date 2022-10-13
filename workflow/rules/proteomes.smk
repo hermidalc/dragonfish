@@ -55,7 +55,7 @@ rule create_uniprot_kb_dbxref:
         "../envs/dbxref.yaml"
     input:
         kb=UNIPROT_KB_FILE,
-        proteome=UNIPROT_PROTEOME_METADATA_FILE,
+        proteomes=UNIPROT_PROTEOME_METADATA_FILE,
         split_pos=UNIPROT_KB_SPLIT_POS_FILE,
     params:
         dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
