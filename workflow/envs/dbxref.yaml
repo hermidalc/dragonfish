@@ -5,4 +5,5 @@ dependencies:
   - biopython=1.79
   - lxml
   - numpy=1.22.3
+  - pandas
   - vaex

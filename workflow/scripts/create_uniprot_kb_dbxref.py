@@ -1,6 +1,7 @@
 import gzip
 from collections import defaultdict
 
+import pandas as pd
 import vaex as vx
 from Bio.SeqIO.UniprotIO import Parser as UniprotParser
 from lxml import etree
