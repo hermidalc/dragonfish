@@ -23,17 +23,19 @@ merged_df.drop_duplicates(
 
 merged_df = merged_df[
     (
-        merged_df["Taxonomic lineage"]
-        .str.split("\s*,\s*", n=2, expand=True)[0]
-        .str.capitalize()
-        != "Eukaryota"
+        (
+            merged_df["Taxonomic lineage"]
+            .str.split("\s*,\s*", n=2, expand=True)[0]
+            .str.capitalize()
+            != "Eukaryota"
+        )
+        | (
+            merged_df["Organism"]
+            .str.capitalize()
+            .str.startswith(tuple(snakemake.params.eukaryote_genera))
+        )
     )
-    | (
-        merged_df["Organism"]
-        .str.capitalize()
-        .str.startswith(tuple(snakemake.params.eukaryote_genera))
-    )
-    | ~merged_df["Organism"].str.contains(
+    & ~merged_df["Organism"].str.contains(
         snakemake.params.low_quality_pattern, regex=True, flags=re.IGNORECASE
     )
 ]
