@@ -113,10 +113,16 @@ for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
     UNIPROT_KB_DBXREF_FILES.extend(
         expand(UNIPROT_KB_DBXREF_FILE, ukb_basename=ukb_basename, ukb_snum=ukb_snum)
     )
+UNIPROT_KB_DBXREF_HDF_FILE = join(UNIPROT_DIR, "uniprot_dbxref.hdf5")
 UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
 UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_IDMAP_FILE_BASENAME = UNIPROT_KB_IDMAP_FILENAME.partition(".")[0]
-UNIPROT_KB_IDMAP_DIR = join(UNIPROT_DIR, "idmapping")
+UNIPROT_KB_IDMAP_HDF_FILE = join(UNIPROT_DIR, "uniprot_idmap.hdf5")
+UNIPROT_KB_IDMAP_DBXREF_HDF_FILE = join(
+    UNIPROT_DIR, "uniprot_idmap_{ukb_dbxref_db}.hdf5"
+)
+EXPAND_PARAMS["ukb_dbxref_db"] = [
+    db.lower() for db in config["uniprot"]["kb"]["dbxref"]["dbs"]
+]
 
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
 NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
@@ -228,13 +234,14 @@ UNIPROT_PROTEOME_METADATA_LOG = join(
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 UNIPROT_KB_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_split_pos.log")
 UNIPROT_KB_DBXREF_LOG = join(
-    UNIPROT_LOG_DIR, "get_{ukb_basename}_dbxref_{ukb_snum}.log"
-)
-UNIPROT_KB_DBXREF_LOG = join(
     UNIPROT_LOG_DIR, "create_{ukb_basename}_dbxref_{ukb_snum}.log"
 )
+UNIPROT_KB_DBXREF_HDF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_kb_dbxrefs.log")
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
-UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap.log")
+UNIPROT_KB_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap.log")
+UNIPROT_KB_IDMAP_DBXREF_HDF_LOG = join(
+    UNIPROT_LOG_DIR, "create_uniprot_kb_idmap_{ukb_dbxref_db}.log"
+)
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
@@ -271,6 +278,11 @@ NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
+UNIPROT_KB_IDMAP_DBXREF_THREADS = (
+    workflow.cores
+    if config["uniprot"]["kb"]["idmap"]["threads"] == "all"
+    else config["uniprot"]["kb"]["idmap"]["threads"]
+)
 PUFFERFISH_REF_PIGZ_THREADS = (
     workflow.cores
     if config["pufferfish"]["ref"]["pigz"]["threads"] == "all"
@@ -314,11 +326,12 @@ wildcard_constraints:
 rule all:
     input:
         UNIPROT_PROTEOME_METADATA_FILE,
-        expand(UNIPROT_KB_FILE, **EXPAND_PARAMS),
-        expand(UNIPROT_KB_SPLIT_POS_FILE, **EXPAND_PARAMS),
-        UNIPROT_KB_DBXREF_FILES,
+        expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_DBXREF_HDF_FILE,
         UNIPROT_KB_IDMAP_FILE,
-        UNIPROT_KB_IDMAP_DIR,
+        UNIPROT_KB_IDMAP_HDF_FILE,
+        expand(UNIPROT_KB_IDMAP_DBXREF_HDF_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,

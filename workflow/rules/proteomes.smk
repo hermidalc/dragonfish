@@ -58,14 +58,27 @@ rule create_uniprot_kb_dbxref:
         proteomes=UNIPROT_PROTEOME_METADATA_FILE,
         split_pos=UNIPROT_KB_SPLIT_POS_FILE,
     params:
-        dbxref_names=config["uniprot"]["kb"]["dbxref"]["names"],
+        dbs=config["uniprot"]["kb"]["dbxref"]["dbs"],
         split_num="{ukb_snum}",
     output:
-        UNIPROT_KB_DBXREF_FILE,
+        temp(UNIPROT_KB_DBXREF_FILE),
     log:
         UNIPROT_KB_DBXREF_LOG,
     script:
         "../scripts/create_uniprot_kb_dbxref.py"
+
+
+rule merge_uniprot_kb_dbxrefs:
+    conda:
+        "../envs/vaex.yaml"
+    input:
+        UNIPROT_KB_DBXREF_FILES,
+    output:
+        UNIPROT_KB_DBXREF_HDF_FILE,
+    log:
+        UNIPROT_KB_DBXREF_HDF_LOG,
+    script:
+        "../scripts/merge_uniprot_kb_dbxrefs.py"
 
 
 rule get_uniprot_kb_idmap:
@@ -82,7 +95,7 @@ rule get_uniprot_kb_idmap:
         "../scripts/get_url_file.py"
 
 
-checkpoint create_uniprot_kb_idmap:
+rule create_uniprot_kb_idmap:
     conda:
         "../envs/vaex.yaml"
     input:
@@ -90,14 +103,27 @@ checkpoint create_uniprot_kb_idmap:
     params:
         split_size=config["uniprot"]["kb"]["idmap"]["parse"]["split_size"],
     output:
-        directory(UNIPROT_KB_IDMAP_DIR),
+        UNIPROT_KB_IDMAP_HDF_FILE,
     log:
-        UNIPROT_KB_IDMAP_LOG,
+        UNIPROT_KB_IDMAP_HDF_LOG,
     script:
         "../scripts/create_uniprot_kb_idmap.py"
 
 
-def gather_uniprot_kb_idmap_files(wildcards):
-    idmap_dir = checkpoints.create_uniprot_kb_idmap.get(**wildcards).output[0]
-    file_wc_path = join(idmap_dir, f"{UNIPROT_KB_IDMAP_FILE_BASENAME}_{{i}}.hdf5")
-    return sorted(expand(file_wc_path, i=glob_wildcards(file_wc_path).i))
+rule create_uniprot_kb_idmap_dbxref:
+    conda:
+        "../envs/vaex.yaml"
+    input:
+        idmap=UNIPROT_KB_IDMAP_HDF_FILE,
+        dbxref=UNIPROT_KB_DBXREF_HDF_FILE,
+    params:
+        db=lambda wc: config["uniprot"]["kb"]["dbxref"]["dbs"][
+            EXPAND_PARAMS["ukb_dbxref_db"].index(wc.ukb_dbxref_db)
+        ],
+    output:
+        UNIPROT_KB_IDMAP_DBXREF_HDF_FILE,
+    log:
+        UNIPROT_KB_IDMAP_DBXREF_HDF_LOG,
+    threads: UNIPROT_KB_IDMAP_DBXREF_THREADS
+    script:
+        "../scripts/create_uniprot_kb_idmap_dbxref.py"

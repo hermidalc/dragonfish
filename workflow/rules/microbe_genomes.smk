@@ -84,8 +84,8 @@ rule create_ncbi_assembly_cds_filtered_fasta:
         NCBI_ASSEMBLY_CDS_FASTA_FILE,
     params:
         cmd="grep",
-        pattern=config["ncbi"]["assembly"]["seqkit"]["grep"]["pattern"],
-        extra=config["ncbi"]["assembly"]["seqkit"]["grep"]["extra"],
+        pattern=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["pattern"],
+        extra=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["extra"],
     output:
         NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE,
     log:

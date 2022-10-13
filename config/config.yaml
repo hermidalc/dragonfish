@@ -12,20 +12,20 @@ joblib:
   verbosity: 1
 
 study:
-  name: "test"
-  samples: "config/samples.tsv"
-  units: "config/units.tsv"
+  name: 'test'
+  samples: 'config/samples.tsv'
+  units: 'config/units.tsv'
 
 gencode:
-  protocol: "ftp"
-  species: ["human", "mouse"]
-  releases: ["41", "M30"]
-  builds: ["GRCh38", "GRCm39"]
-  regions: "PRI"
+  protocol: 'ftp'
+  species: ['human', 'mouse']
+  releases: ['41', 'M30']
+  builds: ['GRCh38', 'GRCm39']
+  regions: 'PRI'
   annot:
-    fmt: "gtf"
+    fmt: 'gtf'
   gene_annot:
-    length_col: "Length"
+    length_col: 'Length'
   seqkit:
     replace:
       pattern: '^(\S+)(?:\s.*)?'
@@ -98,7 +98,7 @@ ncbi:
         'assembly_summary_refseq_historical.txt',
       ]
     file:
-      types: ["genomic", "cds_from_genomic_filtered"]
+      types: ['genomic', 'cds_from_genomic_filtered']
       ext:
         genome: 'genomic.fna.gz'
         cds: 'cds_from_genomic.fna.gz'
@@ -112,12 +112,12 @@ ncbi:
       seqkit:
         grep:
           pattern: [
-            "\[pseudo=true\]",
-            "\[protein_id=.+?\]",
+            '\[pseudo=true\]',
+            '\[protein_id=.+?\]',
           ]
           extra: [
-            "--by-name --use-regexp --ignore-case --invert-match",
-            "--by-name --use-regexp --ignore-case",
+            '--by-name --use-regexp --ignore-case --invert-match',
+            '--by-name --use-regexp --ignore-case',
           ]
 
 uniprot:
@@ -137,19 +137,19 @@ uniprot:
     parse:
       split_sizes: [1e5, 1e6]
     dbxref:
-      names: [
-        "BioCyc",
-        "GO",
-        "EC",
-        "eggNOG",
-        "InterPro",
-        "KEGG",
-        "PANTHER",
-        "Pfam",
-        "PRINTS",
-        "PROSITE",
-        "Reactome",
-        "TIGRFAMs",
+      dbs: [
+        'BioCyc',
+        'GO',
+        'EC',
+        'eggNOG',
+        'InterPro',
+        'KEGG',
+        'PANTHER',
+        'Pfam',
+        'PRINTS',
+        'PROSITE',
+        'Reactome',
+        'TIGRFAMs',
       ]
     pigz:
       threads: 12
@@ -158,19 +158,20 @@ uniprot:
       filename: 'idmapping.dat.gz'
       parse:
         split_size: 1e7
+      threads: all
 
 seqkit:
   line_width: 100
   threads: 4
 
 fastq:
-  data_dir: "data/fastq"
-  pairs: ["R1_001", "R2_001"]
-  ext: "fq"
-  platform: "Illumina"
+  data_dir: 'data/fastq'
+  pairs: ['R1_001', 'R2_001']
+  ext: 'fq'
+  platform: 'Illumina'
 
 trim:
   activate: true
   fastp:
     threads: 8
-    extra: "--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis"
+    extra: '--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis'

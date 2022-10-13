@@ -5,7 +5,7 @@ rule create_pufferfish_ref_fasta:
         cmd="seq",
         extra=(
             "--only-id"
-            + (
+            + str(
                 lambda wc: (
                     " --id-regexp "
                     + config["pufferfish"]["ref"]["seqkit"]["seq"][
