@@ -1,4 +1,6 @@
 *
+!bin
+!bin/**
 !config
 !config/config.yaml
 !envs

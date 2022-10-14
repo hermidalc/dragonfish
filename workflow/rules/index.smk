@@ -1,3 +1,6 @@
+from os.path import abspath
+
+
 rule create_pufferfish_ref_fasta:
     input:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
@@ -68,7 +71,7 @@ rule create_pufferfish_index:
         ref=PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
     params:
-        pufferfish=config["pufferfish"]["binary"],
+        pufferfish=abspath(join(config["pufferfish"]["bin_dir"], "pufferfish")),
         extra=config["pufferfish"]["index"]["extra"],
     output:
         directory(PUFFERFISH_INDEX_DIR),

@@ -31,7 +31,7 @@ gencode:
       pattern: '^(\S+)(?:\s.*)?'
 
 pufferfish:
-  binary: './bin/pufferfish'
+  bin_dir: 'bin/pufferfish/c4db524/linux-x64'
   ref:
     pigz:
       threads: all
