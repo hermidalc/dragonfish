@@ -24,7 +24,7 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
             if isinstance(extra, (list, tuple)):
                 assert len(extra) == len(
                     pattern
-                ), "extra must be same length as pattern when list-like"
+                ), "params: extra must be same length as pattern when list-like"
                 for p, e in zip(pattern, extra):
                     flags.append([f"--pattern '{p}' {e}"])
         else:
