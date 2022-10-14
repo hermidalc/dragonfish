@@ -120,6 +120,7 @@ zlib-static
 Download and build [jemalloc](https://github.com/jemalloc/jemalloc):
 
 ```bash
+cd external
 https://github.com/jemalloc/jemalloc/archive/refs/tags/5.3.0.zip
 unzip 5.3.0.zip
 cd jemalloc-5.3.0
