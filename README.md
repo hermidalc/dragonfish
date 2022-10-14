@@ -70,7 +70,7 @@ Run the full pipeline:
 snakemake --use-conda --printshellcmds --cores all --scheduler greedy --resources gencode_download_jobs=2
 ```
 
-## Notes
+## Additional Notes
 
 ### Building Pufferfish for your architecture
 
