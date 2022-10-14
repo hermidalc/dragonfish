@@ -1,7 +1,9 @@
 import gzip
 
 split_offsets = list(
-    range(0, int(snakemake.params.kb_size), int(float(snakemake.params.split_size)))
+    range(
+        0, int(float(snakemake.params.kb_size)), int(float(snakemake.params.split_size))
+    )
 )
 
 split_pos = []
