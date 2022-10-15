@@ -26,13 +26,13 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
                     pattern
                 ), "params: extra must be same length as pattern when list-like"
                 for p, e in zip(pattern, extra):
-                    flags.append([f"--pattern '{p}' {e}"])
+                    flags.append(f"--pattern '{p}' {e}")
         else:
             for p in pattern:
-                flags.append([f"--pattern '{p}'"])
+                flags.append(f"--pattern '{p}'")
     elif extra is not None:
         for e in extra:
-            flags.append([e])
+            flags.append(e)
 
     cmd_prefix = f"seqkit {cmd} --threads {snakemake.threads}"
     shell_cmd = f"{cmd_prefix} {flags[0]} {infiles}"
@@ -43,6 +43,9 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
     shell_cmd += f" | {cmd_prefix} {flags[-1]} --out-file {snakemake.output[0]} {log}"
 else:
     flags = ""
+    id_regexp = snakemake.params.get("id_regexp")
+    if id_regexp is not None:
+        flags += f"--id-regexp '{id_regexp}'"
     if pattern is not None:
         flags += f"--pattern '{pattern}'"
         replacement = snakemake.params.get("replacement")

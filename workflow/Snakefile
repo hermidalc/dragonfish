@@ -104,7 +104,7 @@ for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
         for x in range(
             1,
             ceil(
-                config["uniprot"]["kb"]["kb_sizes"][i]
+                int(float(config["uniprot"]["kb"]["kb_sizes"][i]))
                 / int(float(config["uniprot"]["kb"]["parse"]["split_sizes"][i]))
             )
             + 1,

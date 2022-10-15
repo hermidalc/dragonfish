@@ -6,20 +6,15 @@ rule create_pufferfish_ref_fasta:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
         cmd="seq",
+        id_regexp=lambda wc: (
+            config["pufferfish"]["ref"]["seqkit"]["seq"]["protein_id_pattern"]
+            if wc.asm_type.startswith("cds_from_genomic")
+            else None
+        ),
         extra=(
             "--only-id"
-            + str(
-                lambda wc: (
-                    " --id-regexp "
-                    + config["pufferfish"]["ref"]["seqkit"]["seq"][
-                        "protein_id_pattern"
-                    ]
-                    if wc.asm_type.startswith("cds_from_genomic")
-                    else ""
-                )
-            )
             + f' --line-width {config["seqkit"]["line_width"]}'
-            f' {config["pufferfish"]["ref"]["seqkit"]["seq"]["extra"]}'
+            + f' {config["pufferfish"]["ref"]["seqkit"]["seq"]["extra"]}'
         ),
     output:
         PUFFERFISH_REF_FASTA_FILE,
