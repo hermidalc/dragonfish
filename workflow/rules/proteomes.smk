@@ -106,6 +106,8 @@ rule create_uniprot_kb_idmap:
         UNIPROT_KB_IDMAP_HDF_FILE,
     log:
         UNIPROT_KB_IDMAP_HDF_LOG,
+    resources:
+        tmpdir=TEMP_DIR,
     script:
         "../scripts/create_uniprot_kb_idmap.py"
 
