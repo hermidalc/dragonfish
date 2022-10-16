@@ -220,6 +220,8 @@ FAILED_READS_FILE = join(
 FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
 FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
 
+PUFFERFISH_ALIGN_FILE = join(PUFFERFISH_DIR, "alignments.sam")
+
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
 NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
@@ -270,7 +272,8 @@ PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
     PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
 )
-PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_index.log")
+PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
+PUFFERFISH_ALIGN_LOG = join(PUFFERFISH_LOG_DIR, "align_reads_pufferfish.log")
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
@@ -317,6 +320,7 @@ include: join(RULES_DIR, "taxonomy.smk")
 include: join(RULES_DIR, "host_genomes.smk")
 include: join(RULES_DIR, "index.smk")
 include: join(RULES_DIR, "trim.smk")
+include: join(RULES_DIR, "align.smk")
 
 
 wildcard_constraints:
@@ -350,6 +354,7 @@ rule all:
         NCBI_TAXDUMP_FILES,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
+        PUFFERFISH_ALIGN_FILE,
 
 
 def clean(*dirs):
