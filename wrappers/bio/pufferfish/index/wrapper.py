@@ -14,8 +14,6 @@ assert pufferfish is not None, "params: pufferfish is a required parameter"
 ref = snakemake.input.get("ref")
 assert ref is not None, "input: ref is a required input parameter"
 
-out_dir = snakemake.output.get("out_dir", snakemake.output[0])
-
 decoys = snakemake.input.get("decoys", "")
 if decoys:
     decoys = "--decoys " + (decoys if isinstance(decoys, str) else f"<({decoys})")
@@ -29,7 +27,7 @@ with TemporaryDirectory(dir=tmp_base_dir) as tmp_dir:
         "{pufferfish} index"
         " --threads {snakemake.threads}"
         " --ref {ref}"
-        " --output {out_dir}"
+        " --output {snakemake.output[0]}"
         " --tmpdir {tmp_dir}"
         " {decoys}"
         " {extra}"
