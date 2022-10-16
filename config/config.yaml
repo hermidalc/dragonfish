@@ -47,6 +47,7 @@ pufferfish:
     extra: '--keepDuplicates'
   align:
     threads: all
+    extra: '--coverageScoreRatio 0.5'
 
 ncbi:
   taxonomy:
