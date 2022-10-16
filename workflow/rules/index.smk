@@ -11,11 +11,7 @@ rule create_pufferfish_ref_fasta:
             if wc.asm_type.startswith("cds_from_genomic")
             else None
         ),
-        extra=(
-            "--only-id"
-            + f' --line-width {config["seqkit"]["line_width"]}'
-            + f' {config["pufferfish"]["ref"]["seqkit"]["seq"]["extra"]}'
-        ),
+        extra="--only-id " + config["pufferfish"]["ref"]["seqkit"]["seq"]["extra"],
     output:
         PUFFERFISH_REF_FASTA_FILE,
     log:
@@ -48,10 +44,7 @@ rule create_pufferfish_ref_merged_deduped_id_fasta:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     params:
         cmd="rename",
-        extra=(
-            f' --line-width {config["seqkit"]["line_width"]}'
-            f' {config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"]}'
-        ),
+        extra=config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"],
     output:
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
     log:

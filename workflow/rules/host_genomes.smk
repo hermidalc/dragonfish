@@ -23,7 +23,7 @@ rule fix_gencode_genome_fasta_ids:
         replacement=lambda wc: (
             f"{wc.gc_species.title()}_{wc.gc_release}_{wc.gc_build}_${{1}}"
         ),
-        extra=f'--line-width {config["seqkit"]["line_width"]}',
+        extra=config["gencode"]["seqkit"]["replace"]["extra"],
     output:
         GENCODE_GENOME_FIXED_FASTA_FILE,
     log:

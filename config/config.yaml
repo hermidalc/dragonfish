@@ -29,6 +29,7 @@ gencode:
   seqkit:
     replace:
       pattern: '^(\S+)(?:\s.*)?'
+      extra: '--line-width 60'
 
 pufferfish:
   bin_dir: 'bin/pufferfish/c4db524/linux-x64'
@@ -38,9 +39,9 @@ pufferfish:
     seqkit:
       seq:
         protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
-        extra: '--upper-case'
+        extra: '--upper-case --line-width 100'
       rename:
-        extra: ''
+        extra: '--line-width 100'
   index:
     threads: all
     extra: '--keepDuplicates'
@@ -116,8 +117,8 @@ ncbi:
             '\[protein_id=.+?\]',
           ]
           extra: [
-            '--by-name --use-regexp --ignore-case --invert-match',
-            '--by-name --use-regexp --ignore-case',
+            '--by-name --use-regexp --ignore-case --invert-match --line-width 80',
+            '--by-name --use-regexp --ignore-case  --line-width 80',
           ]
 
 uniprot:
@@ -161,7 +162,6 @@ uniprot:
       threads: all
 
 seqkit:
-  line_width: 100
   threads: 4
 
 fastq:
