@@ -9,8 +9,8 @@ from snakemake.shell import shell
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 extra = snakemake.params.get("extra", "")
 
-fq1 = snakemake.input.get("fq1")
-assert fq1 is not None, "input: fq1 is a required input parameter"
+fq1 = snakemake.input.get("fq") or snakemake.input.get("fq1")
+assert fq1 is not None, "input: fq/fq1 is a required input parameter"
 in_fqs = f"--in1 {fq1}"
 
 fq2 = snakemake.input.get("fq2")
