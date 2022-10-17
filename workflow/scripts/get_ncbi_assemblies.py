@@ -65,7 +65,6 @@ proteome_df = pd.read_csv(snakemake.input.proteomes, sep="\t", index_col="Proteo
 genome_names = []
 file_urls, files = [], []
 md5_file_urls, md5_files = [], []
-file_exts = [snakemake.params.genome_ext, snakemake.params.cds_ext]
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
@@ -76,7 +75,7 @@ for acc in proteome_df["Genome assembly ID"]:
                 continue
             genome_names.append(genome_name)
             genome_dir = join(snakemake.output[0], genome_name)
-            for file_ext in file_exts:
+            for file_ext in snakemake.params.file_exts:
                 file_name = "_".join([genome_name, file_ext])
                 file_url = join(ftp_dir_url, file_name)
                 file_urls.append(file_url)
@@ -133,18 +132,16 @@ Parallel(
     verbose=snakemake.params.verbosity,
 )(delayed(check_md5)(file) for file in [f for f in files if exists(f)])
 
-# remove genome dirs with missing genome sequence file
+# remove genome dirs with missing genomic and cds_from_genomic files
 # testing if URLs exist (via request HEAD) before downloading is very slow so
 # faster to download everything and then check/remove incomplete genomes
-print("\nChecking for incomplete genome files")
+print("\nChecking for incomplete genomes")
 for genome_name in genome_names:
-    complete_genome = False
     genome_dir = join(snakemake.output[0], genome_name)
     genome_file_names = listdir(genome_dir)
-    for file_name in genome_file_names:
-        if file_name.endswith(snakemake.params.genome_ext):
-            complete_genome = True
-            break
-    if not complete_genome:
+    if not all(
+        any(name.endswith(ext) for name in genome_file_names)
+        for ext in snakemake.params.file_exts
+    ):
         print(f"Removing incomplete {genome_name}")
         rmtree(genome_dir, ignore_errors=True)
