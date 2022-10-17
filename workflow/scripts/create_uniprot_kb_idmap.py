@@ -25,7 +25,7 @@ with TemporaryDirectory(dir=snakemake.resources.get("tmpdir", gettempdir())) as 
                 print(f"Writing {idmap_file}")
                 vx.from_dict(
                     {"genbank_id": split_genbank_ids, "uniprot_id": split_uniprot_ids}
-                ).export_hdf5(idmap_file)
+                ).export_hdf5(idmap_file, column_count=2, writer_threads=2)
                 split_num += 1
                 num_split_entries = 0
                 split_uniprot_ids = []
@@ -34,7 +34,9 @@ with TemporaryDirectory(dir=snakemake.resources.get("tmpdir", gettempdir())) as 
     print(f"Writing {idmap_file}")
     vx.from_dict(
         {"genbank_id": split_genbank_ids, "uniprot_id": split_uniprot_ids}
-    ).export_hdf5(idmap_file)
-    vx.open(join(tmp_dir, f"{file_basename}_*.hdf5")).export_hdf5(snakemake.output[0])
+    ).export_hdf5(idmap_file, column_count=2, writer_threads=2)
+    vx.open(join(tmp_dir, f"{file_basename}_*.hdf5")).export_hdf5(
+        snakemake.output[0], column_count=2, writer_threads=2
+    )
 
 print(f"Parsed {num_total_entries} entries")
