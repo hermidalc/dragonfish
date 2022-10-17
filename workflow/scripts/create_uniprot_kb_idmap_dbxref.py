@@ -1,4 +1,11 @@
+import os
+
 import vaex as vx
+
+os.environ["MKL_NUM_THREADS"] = str(snakemake.threads)
+os.environ["NUMBA_NUM_THREADS"] = str(snakemake.threads)
+os.environ["NUMEXPR_NUM_THREADS"] = str(snakemake.threads)
+os.environ["OPENBLAS_NUM_THREADS"] = str(snakemake.threads)
 
 vx.settings.main.thread_count = snakemake.threads
 
