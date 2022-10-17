@@ -3,5 +3,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - snakemake=7.7.0
-  - tabulate=0.8.10
+  - snakemake
