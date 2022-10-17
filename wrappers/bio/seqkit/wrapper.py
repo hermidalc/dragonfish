@@ -34,13 +34,15 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
         for e in extra:
             flags.append(e)
 
-    cmd_prefix = f"seqkit {cmd} --threads {snakemake.threads}"
-    shell_cmd = f"{cmd_prefix} {flags[0]} {infiles}"
+    cmd_prefix = "seqkit {cmd} --threads {snakemake.threads}"
+    shell_cmd = f"{cmd_prefix} {{flags[0]}} {{infiles}}"
     if len(flags) > 2:
         shell_cmd += " | " + " | ".join(
             f"{cmd_prefix} {f}" for f in flags[1 : len(flags) - 1]
         )
-    shell_cmd += f" | {cmd_prefix} {flags[-1]} --out-file {snakemake.output[0]} {log}"
+    shell_cmd += (
+        f" | {cmd_prefix} {{flags[-1]}} --out-file {{snakemake.output[0]}} {{log}}"
+    )
 else:
     flags = ""
     id_regexp = snakemake.params.get("id_regexp")
@@ -55,12 +57,12 @@ else:
         flags += f" {extra}"
 
     shell_cmd = (
-        f"seqkit {cmd}"
-        f" --threads {snakemake.threads}"
-        f" {flags}"
-        f" {infiles}"
-        f" --out-file {snakemake.output[0]}"
-        f" {log}"
+        "seqkit {cmd}"
+        " --threads {snakemake.threads}"
+        " {flags}"
+        " {infiles}"
+        " --out-file {snakemake.output[0]}"
+        " {log}"
     )
 
 shell(shell_cmd)
