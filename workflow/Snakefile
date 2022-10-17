@@ -61,7 +61,7 @@ NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
-PUFFERFISH_DIR = join(RESOURCES_DIR, "pufferfish")
+PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
@@ -172,12 +172,13 @@ EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
 EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
 EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
 
-PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_DIR, "ref_{asm_type}.fa.gz")
-PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_DIR, "ref_merged.fa.gz")
+PUFFERFISH_REF_DIR = join(PUFFERFISH_RESOURCES_DIR, "ref")
+PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_REF_DIR, "ref_{asm_type}.fa.gz")
+PUFFERFISH_REF_MERGED_FASTA_FILE = join(PUFFERFISH_REF_DIR, "ref_merged.fa.gz")
 PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
-    PUFFERFISH_DIR, "ref_merged_deduped_ids.fa.gz"
+    PUFFERFISH_REF_DIR, "ref_merged_deduped_ids.fa.gz"
 )
-PUFFERFISH_INDEX_DIR = join(PUFFERFISH_DIR, "index")
+PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index")
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
 NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
@@ -220,7 +221,11 @@ FAILED_READS_FILE = join(
 FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
 FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
 
-PUFFERFISH_ALIGN_FILE = join(PUFFERFISH_DIR, "alignments.sam")
+
+PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{sub_dir}")
+PUFFERFISH_ALIGN_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_alignments.sam"
+)
 
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
@@ -273,7 +278,9 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
     PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
 )
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
-PUFFERFISH_ALIGN_LOG = join(PUFFERFISH_LOG_DIR, "align_reads_pufferfish.log")
+PUFFERFISH_ALIGN_LOG = join(
+    PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log"
+)
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
@@ -311,6 +318,7 @@ GENCODE_GENOME_ANNOT_WRAPPER = join(
 SEQKIT_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
+PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
 
 
 include: join(RULES_DIR, "common.smk")
@@ -354,7 +362,7 @@ rule all:
         NCBI_TAXDUMP_FILES,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
-        PUFFERFISH_ALIGN_FILE,
+        expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
 
 
 def clean(*dirs):
