@@ -1,4 +1,4 @@
-rule get_ncbi_acc2taxid_file:
+rule get_ncbi_acc2taxid:
     params:
         NCBI_ACC2TAXID_URL,
     output:
@@ -12,7 +12,7 @@ rule get_ncbi_acc2taxid_file:
         "../scripts/get_url_file.py"
 
 
-rule get_ncbi_taxdump_zip:
+rule get_ncbi_taxdump:
     params:
         NCBI_TAXDUMP_ZIP_URL,
     output:
