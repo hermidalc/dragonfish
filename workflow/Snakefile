@@ -85,7 +85,7 @@ FASTQ_PAIRS = config["fastq"]["pairs"]
 FASTQ_EXT = config["fastq"]["ext"]
 FASTQ_PLATFORM = config["fastq"]["platform"]
 
-UNIPROT_PROTEOME_METADATA_FILE = join(UNIPROT_DIR, "uniprot_proteome_metadata.tsv")
+UNIPROT_PROTEOMES_FILE = join(UNIPROT_DIR, "uniprot_proteomes.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
     filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
 ]
@@ -96,7 +96,17 @@ UNIPROT_KB_DBXREF_DIR = join(UNIPROT_DIR, "dbxref")
 UNIPROT_KB_DBXREF_FILE = join(
     UNIPROT_KB_DBXREF_DIR, "{ukb_basename}_dbxref_{ukb_snum}.hdf5"
 )
-UNIPROT_KB_DBXREF_FILES = []
+UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
+UNIPROT_KB_GENBANK_CDS_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_cds_idmap.hdf5")
+EXPAND_PARAMS["ukb_dbxref_db"] = [
+    db.lower() for db in config["uniprot"]["kb"]["dbxref"]["dbs"]
+]
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE = join(
+    UNIPROT_KB_DBXREF_DIR,
+    "{ukb_basename}_genbank_cds_idmap_{ukb_dbxref_db}_{ukb_snum}.hdf5",
+)
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILES = []
 for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
     ukb_snum = list(
         str(x).zfill(3)
@@ -105,19 +115,17 @@ for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
             int(float(config["uniprot"]["kb"]["parse"]["num_splits"][i])) + 1,
         )
     )
-    UNIPROT_KB_DBXREF_FILES.extend(
-        expand(UNIPROT_KB_DBXREF_FILE, ukb_basename=ukb_basename, ukb_snum=ukb_snum)
+    UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILES.extend(
+        expand(
+            UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE,
+            ukb_basename=ukb_basename,
+            ukb_snum=ukb_snum,
+            allow_missing=True,
+        )
     )
-UNIPROT_KB_DBXREF_HDF_FILE = join(UNIPROT_DIR, "uniprot_dbxref.hdf5")
-UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_GENBANK_CDS_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_cds_idmap.hdf5")
-UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE = join(
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_MERGED_FILE = join(
     UNIPROT_DIR, "uniprot_genbank_cds_idmap_{ukb_dbxref_db}.hdf5"
 )
-EXPAND_PARAMS["ukb_dbxref_db"] = [
-    db.lower() for db in config["uniprot"]["kb"]["dbxref"]["dbs"]
-]
 
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
 NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
@@ -230,21 +238,22 @@ UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{sub_dir}")
 
-UNIPROT_PROTEOME_METADATA_LOG = join(
-    UNIPROT_LOG_DIR, "get_uniprot_proteome_metadata.log"
-)
+UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_proteomes.log")
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
 UNIPROT_KB_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_split_pos.log")
 UNIPROT_KB_DBXREF_LOG = join(
     UNIPROT_LOG_DIR, "create_{ukb_basename}_dbxref_{ukb_snum}.log"
 )
-UNIPROT_KB_DBXREF_HDF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_kb_dbxrefs.log")
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
 UNIPROT_KB_GENBANK_CDS_IDMAP_LOG = join(
     UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_cds_idmap.log"
 )
 UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_LOG = join(
-    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_cds_idmap_{ukb_dbxref_db}.log"
+    UNIPROT_LOG_DIR,
+    "create_{ukb_basename}_genbank_cds_idmap_{ukb_dbxref_db}_{ukb_snum}.log",
+)
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_MERGED_LOG = join(
+    UNIPROT_LOG_DIR, "merge_uniprot_kb_genbank_cds_idmap_{ukb_dbxref_db}.log"
 )
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
@@ -285,7 +294,7 @@ NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
-UNIPROT_KB_IDMAP_DBXREF_THREADS = (
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS = (
     workflow.cores
     if config["uniprot"]["kb"]["idmap"]["threads"] == "all"
     else config["uniprot"]["kb"]["idmap"]["threads"]
@@ -334,13 +343,12 @@ wildcard_constraints:
 
 rule all:
     input:
-        UNIPROT_PROTEOME_METADATA_FILE,
+        UNIPROT_PROTEOMES_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
-        UNIPROT_KB_DBXREF_HDF_FILE,
         UNIPROT_KB_IDMAP_FILE,
         UNIPROT_KB_GENBANK_CDS_IDMAP_FILE,
-        expand(UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_MERGED_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,

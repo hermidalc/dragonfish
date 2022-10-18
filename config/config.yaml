@@ -136,8 +136,8 @@ uniprot:
       'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
     ]
     parse:
-      num_splits: [6, 230]
-      split_sizes: [1e5, 1e6]
+      num_splits: [1, 230]
+      split_size: 1e6
     dbxref:
       dbs: [
         'BioCyc',
