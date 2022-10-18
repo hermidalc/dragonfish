@@ -36,7 +36,7 @@ rule get_uniprot_kb_split_pos:
     input:
         UNIPROT_KB_FILE,
     params:
-        kb_size=lambda wc: config["uniprot"]["kb"]["kb_sizes"][
+        num_splits=lambda wc: config["uniprot"]["kb"]["parse"]["num_splits"][
             EXPAND_PARAMS["ukb_basename"].index(wc.ukb_basename)
         ],
         split_size=lambda wc: config["uniprot"]["kb"]["parse"]["split_sizes"][

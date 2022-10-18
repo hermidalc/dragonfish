@@ -135,8 +135,8 @@ uniprot:
     filenames: [
       'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
     ]
-    kb_sizes: [6e5, 230e6]
     parse:
+      num_splits: [6, 230]
       split_sizes: [1e5, 1e6]
     dbxref:
       dbs: [

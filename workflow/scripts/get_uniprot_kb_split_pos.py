@@ -1,10 +1,8 @@
 import gzip
 
-split_offsets = list(
-    range(
-        0, int(float(snakemake.params.kb_size)), int(float(snakemake.params.split_size))
-    )
-)
+num_splits = int(float(snakemake.params.num_splits))
+split_size = int(float(snakemake.params.split_size))
+split_offsets = list(range(0, num_splits * split_size, split_size))
 
 split_pos = []
 entry_offset = 0
