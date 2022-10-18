@@ -111,9 +111,9 @@ for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
 UNIPROT_KB_DBXREF_HDF_FILE = join(UNIPROT_DIR, "uniprot_dbxref.hdf5")
 UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
 UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_IDMAP_HDF_FILE = join(UNIPROT_DIR, "uniprot_idmap.hdf5")
-UNIPROT_KB_IDMAP_DBXREF_HDF_FILE = join(
-    UNIPROT_DIR, "uniprot_idmap_{ukb_dbxref_db}.hdf5"
+UNIPROT_KB_GENBANK_CDS_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_cds_idmap.hdf5")
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE = join(
+    UNIPROT_DIR, "uniprot_genbank_cds_idmap_{ukb_dbxref_db}.hdf5"
 )
 EXPAND_PARAMS["ukb_dbxref_db"] = [
     db.lower() for db in config["uniprot"]["kb"]["dbxref"]["dbs"]
@@ -240,9 +240,11 @@ UNIPROT_KB_DBXREF_LOG = join(
 )
 UNIPROT_KB_DBXREF_HDF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_kb_dbxrefs.log")
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
-UNIPROT_KB_IDMAP_HDF_LOG = join(UNIPROT_LOG_DIR, "create_uniprot_kb_idmap.log")
-UNIPROT_KB_IDMAP_DBXREF_HDF_LOG = join(
-    UNIPROT_LOG_DIR, "create_uniprot_kb_idmap_{ukb_dbxref_db}.log"
+UNIPROT_KB_GENBANK_CDS_IDMAP_LOG = join(
+    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_cds_idmap.log"
+)
+UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_LOG = join(
+    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_cds_idmap_{ukb_dbxref_db}.log"
 )
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
@@ -337,8 +339,8 @@ rule all:
         expand(UNIPROT_KB_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_KB_DBXREF_HDF_FILE,
         UNIPROT_KB_IDMAP_FILE,
-        UNIPROT_KB_IDMAP_HDF_FILE,
-        expand(UNIPROT_KB_IDMAP_DBXREF_HDF_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_GENBANK_CDS_IDMAP_FILE,
+        expand(UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
