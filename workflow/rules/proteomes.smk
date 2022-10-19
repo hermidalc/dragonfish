@@ -8,7 +8,7 @@ rule get_uniprot_proteomes:
         eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
         random_seed=config["uniprot"]["proteome"]["random_seed"],
-        bacteria_only=config["uniprot"]["proteome"]["bacteria_only"],
+        filter_domains=config["uniprot"]["proteome"]["filter_domains"],
     output:
         UNIPROT_PROTEOMES_FILE,
     log:
