@@ -48,7 +48,7 @@ rule get_uniprot_kb_split_pos:
         "../scripts/get_uniprot_kb_split_pos.py"
 
 
-rule create_uniprot_kb_dbxref:
+rule create_uniprot_kb_dbxref_split:
     conda:
         "../envs/dbxref.yaml"
     input:
@@ -59,11 +59,24 @@ rule create_uniprot_kb_dbxref:
         dbs=config["uniprot"]["kb"]["dbxref"]["dbs"],
         split_num="{ukb_snum}",
     output:
+        UNIPROT_KB_DBXREF_SPLIT_FILE,
+    log:
+        UNIPROT_KB_DBXREF_SPLIT_LOG,
+    script:
+        "../scripts/create_uniprot_kb_dbxref_split.py"
+
+
+rule merge_uniprot_kb_dbxrefs:
+    conda:
+        "../envs/vaex.yaml"
+    input:
+        UNIPROT_KB_DBXREF_SPLIT_FILES,
+    output:
         UNIPROT_KB_DBXREF_FILE,
     log:
         UNIPROT_KB_DBXREF_LOG,
     script:
-        "../scripts/create_uniprot_kb_dbxref.py"
+        "../scripts/merge_uniprot_kb_dbxref_splits.py"
 
 
 rule get_uniprot_kb_idmap:
@@ -114,16 +127,3 @@ rule create_uniprot_kb_genbank_cds_idmap_dbxref:
     threads: UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS
     script:
         "../scripts/create_uniprot_kb_genbank_cds_idmap_dbxref.py"
-
-
-rule merge_uniprot_kb_genbank_cds_idmap_dbxrefs:
-    conda:
-        "../envs/vaex.yaml"
-    input:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILES,
-    output:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_MERGED_FILE,
-    log:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_MERGED_LOG,
-    script:
-        "../scripts/merge_uniprot_kb_genbank_cds_idmap_dbxrefs.py"
