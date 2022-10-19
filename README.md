@@ -22,12 +22,10 @@ existing functional meta-omic profiling tools that are available.
 
 ## Installation
 
-### Mambaforge / Miniforge3
+### Mambaforge
 
 Install and set up
-[Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) or
-[Miniforge3](https://github.com/conda-forge/miniforge#miniforge3). I recommend
-Mambaforge as it is significantly faster:
+[Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
 
 ```bash
 wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
@@ -56,8 +54,7 @@ cd dragonfish
 
 Create and activate the base Dragonfish conda environment, which only
 provides snakemake. All the rest of the dependencies are automatically
-provided via snakemake and conda when running Dragonfish. If using
-Miniforge3 replace `mamba` with `conda`:
+provided via snakemake and conda when running Dragonfish.
 
 ```
 mamba env create -f envs/dragonfish.yaml
@@ -74,9 +71,9 @@ snakemake --use-conda --printshellcmds --cores all --scheduler greedy --resource
 
 ### Building Pufferfish for your architecture
 
-I already provide statically built Pufferfish binaries for Linux x86-64
-OS platform and CPU architecture. Here are my notes for trying to build it for
-other platform and architectures.
+**I already provide statically built Pufferfish binaries for Linux x86-64
+OS platform and CPU architecture.** Though heere are my notes for trying to
+build it for other platform and architectures.
 
 I could not get Pufferfish to build within a conda envrionment using the
 required conda dependencies already installed into that environment. The main
@@ -84,10 +81,10 @@ issue appears to be with the [SeqLib](https://github.com/walaj/SeqLib)
 dependency failing to see its required conda dependency C files or having other
 compilation issues.
 
-Therefore, you currently have to build Pufferfish using dependencies from your
-system-wide package manager (and therefore potentially need sudo/root
-permissions), e.g. for RHEL/Fedora Linux `dnf` or Ubuntu `apt`. SeqLib
-successfully builds this way.
+Therefore, if you want to make you own Pufferfish build, you have to use
+dependencies from your system-wide package manager (and therefore potentially
+need sudo/root permissions), e.g. for RHEL/Fedora Linux `dnf` or Ubuntu `apt`.
+SeqLib successfully builds this way.
 
 ### Static build
 
@@ -97,9 +94,11 @@ Get the Dragonfish project Pufferfish submodule:
 git submodule update --init --recursive
 ```
 
-A static build will make self-contained binaries for the OS and CPU
-architecture you are using to make the build. In RHEL/Fedora, install the
-following dependencies:
+A static build will create fully self-contained binaries for the OS platform
+and CPU architecture you are using to make the build. These binaries can then
+simply be copied onto another of the same platform and architecture and will
+work. On RHEL/Fedora, install the following dependencies using your package
+manager:
 
 ```bash
 sudo dnf install \
@@ -139,7 +138,7 @@ mkdir external/pufferfish/build
 cd external/pufferfish/build
 ```
 
-If your system has CMake >=3.24 then you can build with the following command:
+If your system has CMake >=3.24, then you can build with the following command:
 
 ```bash
 cmake \
@@ -176,15 +175,14 @@ Now build with:
 make
 ```
 
-After the build successfully completes you now have statically compiled
-Pufferfish binaries under the build `src` directory. These are fully
-self-contained and can simply be copied and used on any computer with the same
-OS platform and CPU architecture. You can check that they are static binaries
-for example on Linux run `ldd`:
+After the build successfully completes you now have the statically compiled
+Pufferfish binaries under the build `src` directory. Check that they are
+indeed static binaries, for example on Linux run `ldd` and you should not see
+any dynamic links to any `.so` shared objects or linux kernel dynamic linked
+files:
 
 ```bash
-$ ldd src/bcalm_pufferize src/cedar src/filtersam src/getLineage src/pufferfish
-src/bcalm_pufferize:
+$ ldd src/*
 	not a dynamic executable
 src/cedar:
 	not a dynamic executable
@@ -195,6 +193,9 @@ src/getLineage:
 src/pufferfish:
 	not a dynamic executable
 ```
+
+Again, these are fully self-contained and can simply be copied and used on any
+computer with the same OS platform and CPU architecture.
 
 ### Dynamic build
 
