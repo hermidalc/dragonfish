@@ -71,9 +71,9 @@ snakemake --use-conda --printshellcmds --cores all --scheduler greedy --resource
 
 ### Building Pufferfish
 
-**I already provide statically built Pufferfish binaries for Linux x86-64
-OS platform and CPU architecture.** Though here are my notes for trying to
-build it for other platform and architectures.
+**I already provide statically built Pufferfish binaries for Linux x86-64.**
+Though here are my notes for trying to build it for other platform and
+architectures.
 
 I could not get Pufferfish to build within a conda envrionment using the
 required conda dependencies already installed into that environment. The main
