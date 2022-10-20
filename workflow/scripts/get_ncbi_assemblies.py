@@ -139,9 +139,8 @@ print("\nChecking for incomplete genomes")
 for genome_name in genome_names:
     genome_dir = join(snakemake.output[0], genome_name)
     genome_file_names = listdir(genome_dir)
-    if not all(
-        any(name.endswith(ext) for name in genome_file_names)
-        for ext in snakemake.params.file_exts
+    if not any(
+        n.endswith(tuple(snakemake.params.file_exts)) for n in genome_file_names
     ):
         print(f"Removing incomplete {genome_name}")
         rmtree(genome_dir, ignore_errors=True)
