@@ -35,13 +35,13 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
             flags.append(e)
 
     cmd_prefix = "seqkit {cmd} --threads {snakemake.threads}"
-    shell_cmd = f"{cmd_prefix} {{flags[0]}} {{infiles}}"
+    shell_cmd = f"{cmd_prefix} {flags[0]} {{infiles}}"
     if len(flags) > 2:
         shell_cmd += " | " + " | ".join(
             f"{cmd_prefix} {f}" for f in flags[1 : len(flags) - 1]
         )
     shell_cmd += (
-        f" | {cmd_prefix} {{flags[-1]}} --out-file {{snakemake.output[0]}} {{log}}"
+        f" | {cmd_prefix} {flags[-1]} --out-file {{snakemake.output[0]}} {{log}}"
     )
 else:
     flags = ""
