@@ -17,10 +17,7 @@ assert index is not None, "input: index is a required input parameter"
 fq1 = snakemake.input.get("fq") or snakemake.input.get("fq1")
 assert fq1 is not None, "input: fq/fq1 is a required input parameter"
 fq2 = snakemake.input.get("fq2")
-if fq2:
-    in_fqs = f"--mate1 {fq1} --mate2 {fq2}"
-else:
-    in_fqs = f"--read {fq1}"
+in_fqs = f"--mate1 {fq1} --mate2 {fq2}" if fq2 else f"--read {fq1}"
 
 extra = snakemake.params.get("extra", "")
 
