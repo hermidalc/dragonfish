@@ -20,11 +20,25 @@ rule get_uniprot_proteomes:
 
 rule get_uniprot_kb:
     params:
-        UNIPROT_KB_FILE_URL,
+        UNIPROT_KB_URL,
     output:
         UNIPROT_KB_FILE,
     log:
         UNIPROT_KB_LOG,
+    message:
+        "{params}"
+    retries: config["download"]["retries"]
+    script:
+        "../scripts/get_url_file.py"
+
+
+rule get_uniprot_kb_fasta:
+    params:
+        UNIPROT_KB_FASTA_URL,
+    output:
+        UNIPROT_KB_FASTA_FILE,
+    log:
+        UNIPROT_KB_FASTQ_LOG,
     message:
         "{params}"
     retries: config["download"]["retries"]

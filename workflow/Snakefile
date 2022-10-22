@@ -89,8 +89,10 @@ UNIPROT_PROTEOMES_FILE = join(UNIPROT_DIR, "uniprot_proteomes.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
     filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
 ]
-UNIPROT_KB_FILE_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
+UNIPROT_KB_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
 UNIPROT_KB_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
+UNIPROT_KB_FASTA_URL = join(UNIPROT_KB_URL, "{ukb_basename}.fasta.gz")
+UNIPROT_KB_FASTA_FILE = join(UNIPROT_DIR, "{ukb_basename}.fasta.gz")
 UNIPROT_KB_SPLIT_POS_FILE = join(UNIPROT_DIR, "{ukb_basename}_split_pos.txt")
 UNIPROT_KB_DBXREF_SPLIT_DIR = join(UNIPROT_DIR, "dbxref")
 UNIPROT_KB_DBXREF_SPLIT_FILE = join(
@@ -370,6 +372,7 @@ rule all:
     input:
         UNIPROT_PROTEOMES_FILE,
         expand(UNIPROT_KB_FILE, zip, **EXPAND_PARAMS),
+        expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_KB_DBXREF_FILE,
         UNIPROT_KB_IDMAP_FILE,
