@@ -19,4 +19,11 @@ annot = snakemake.input.get("gff", "")
 makedirs(snakemake.output[0])
 chdir(snakemake.output[0])
 
-shell("paladin index -r{ref_type} {extra} {snakemake.input[0]} {annot} {log}")
+shell(
+    "paladin index"
+    " -r{ref_type}"
+    " {extra}"
+    " {snakemake.input[0]}"
+    " {annot}"
+    " {log}"
+)

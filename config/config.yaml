@@ -179,3 +179,6 @@ trim:
   fastp:
     threads: 8
     extra: '--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis'
+
+paladin:
+  threads: all

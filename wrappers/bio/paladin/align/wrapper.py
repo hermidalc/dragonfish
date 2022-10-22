@@ -17,5 +17,11 @@ fq = snakemake.input.get("fq")
 assert fq is not None, "input: fq is a required input parameter"
 
 shell(
-    "paladin align -t {snakemake.threads} -f {min_orf_len} {extra} {index} {fq} {out_cmd} -o {snakemake.output[0]}"
+    "paladin align"
+    " -t {snakemake.threads}"
+    " -f {min_orf_len}"
+    " {extra}"
+    " {index}"
+    " {fq}"
+    " > {snakemake.output[0]}"
 )
