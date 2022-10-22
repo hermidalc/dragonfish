@@ -3,6 +3,7 @@ rule cedar_count_matrix:
         expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
+        data_col=4,
         collapse_techreps=True,
     output:
         COUNT_MATRIX_FILE,
@@ -17,6 +18,7 @@ rule cedar_tpm_matrix:
         expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
+        data_col=3,
     output:
         TPM_MATRIX_FILE,
     log:

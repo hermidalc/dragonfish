@@ -9,7 +9,13 @@ assert sample_names is not None, "params: samples is a required parameter"
 
 data_matrix_df = pd.DataFrame()
 for quant_file, sample_name, strand in zip(snakemake.input[0], sample_names):
-    quants = pd.read_csv(quant_file, sep="\t", header=None, index_col=0, usecols=[0])
+    quants = pd.read_csv(
+        quant_file,
+        sep="\t",
+        header=None,
+        index_col=0,
+        usecols=[0, snakemake.params.data_col],
+    )
     quants.columns = [sample_name]
     data_matrix_df = pd.concat([data_matrix_df, quants], axis=1, verify_integrity=True)
     assert (
