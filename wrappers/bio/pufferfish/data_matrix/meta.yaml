@@ -1,4 +1,4 @@
-name: "cedar data_matrix"
+name: cedar data_matrix
 description: Cedar data matrix generation from individual quant files
 authors:
   - Leandro C. Hermida

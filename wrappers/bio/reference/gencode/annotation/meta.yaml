@@ -1,4 +1,4 @@
-name: "gencode annotation"
+name: gencode annotation
 description: GENCODE genome annotation download and unpacking
 authors:
   - Leandro C. Hermida

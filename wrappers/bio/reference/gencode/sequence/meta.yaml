@@ -1,4 +1,4 @@
-name: "gencode sequence"
+name: gencode sequence
 description: GENCODE genome sequence download and gunzip
 authors:
   - Leandro C. Hermida

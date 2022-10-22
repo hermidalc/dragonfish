@@ -1,4 +1,4 @@
-name: "seqkit"
+name: seqkit
 description: Ultrafast FASTA/Q toolkit
 authors:
   - Leandro C. Hermida

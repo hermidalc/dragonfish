@@ -345,8 +345,8 @@ SEQKIT_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
-CEDAR_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/cedar/quant")
-DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/cedar/data_matrix")
+CEDAR_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
+DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
 ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
 
 

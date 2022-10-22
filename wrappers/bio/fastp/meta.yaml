@@ -1,4 +1,4 @@
-name: "fastp"
+name: fastp
 description: FASTQ QC and trimming with fastp
 authors:
   - Leandro C. Hermida
