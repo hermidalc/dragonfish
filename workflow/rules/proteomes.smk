@@ -38,7 +38,7 @@ rule get_uniprot_kb_fasta:
     output:
         UNIPROT_KB_FASTA_FILE,
     log:
-        UNIPROT_KB_FASTQ_LOG,
+        UNIPROT_KB_FASTA_LOG,
     message:
         "{params}"
     retries: config["download"]["retries"]

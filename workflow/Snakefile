@@ -250,6 +250,7 @@ FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{sub_dir}")
 
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_proteomes.log")
 UNIPROT_KB_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}.log")
+UNIPROT_KB_FASTA_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_fasta.log")
 UNIPROT_KB_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_split_pos.log")
 UNIPROT_KB_DBXREF_SPLIT_LOG = join(
     UNIPROT_LOG_DIR, "create_{ukb_basename}_dbxref_{ukb_snum}.log"
