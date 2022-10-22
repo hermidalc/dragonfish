@@ -26,9 +26,7 @@ uniprot:
     filter_domains: []
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
-    filenames: [
-      'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
-    ]
+    types: ['sprot', 'trembl']
     parse:
       num_splits: [1, 230]
       split_size: 1e6

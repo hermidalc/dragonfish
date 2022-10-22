@@ -63,7 +63,7 @@ UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
-UNIPROT_KB_FILENAMES = config["uniprot"]["kb"]["filenames"]
+UNIPROT_KB_TYPES = config["uniprot"]["kb"]["types"]
 UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
 UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
 
@@ -86,9 +86,7 @@ NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"
 NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
 
 UNIPROT_PROTEOMES_FILE = join(UNIPROT_DIR, "uniprot_proteomes.tsv")
-EXPAND_PARAMS["ukb_basename"] = [
-    filename.partition(".")[0] for filename in UNIPROT_KB_FILENAMES
-]
+EXPAND_PARAMS["ukb_basename"] = [f"uniprot_{t}" for t in UNIPROT_KB_TYPES]
 UNIPROT_KB_XML_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
 UNIPROT_KB_XML_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
 UNIPROT_KB_FASTA_URL = join(UNIPROT_KB_URL, "{ukb_basename}.fasta.gz")
