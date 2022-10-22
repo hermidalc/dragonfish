@@ -1,0 +1,6 @@
+name: samtools view
+description: Convert or filter SAM/BAM
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information see, http://www.htslib.org/doc/samtools-view.html

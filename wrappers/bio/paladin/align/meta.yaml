@@ -1,0 +1,6 @@
+name: paladin align
+description: Align FASTQ reads to a PALADIN protein index
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information, see https://github.com/ToniWestbrook/paladin
