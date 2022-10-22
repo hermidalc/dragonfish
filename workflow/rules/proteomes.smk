@@ -18,13 +18,13 @@ rule uniprot_proteomes:
         "../scripts/get_uniprot_proteomes.py"
 
 
-rule uniprot_kb:
+rule uniprot_kb_xml:
     params:
-        UNIPROT_KB_URL,
+        UNIPROT_KB_XML_URL,
     output:
-        UNIPROT_KB_FILE,
+        UNIPROT_KB_XML_FILE,
     log:
-        UNIPROT_KB_LOG,
+        UNIPROT_KB_XML_LOG,
     message:
         "{params}"
     retries: config["download"]["retries"]
@@ -46,29 +46,29 @@ rule uniprot_kb_fasta:
         "../scripts/get_url_file.py"
 
 
-rule uniprot_kb_split_pos:
+rule uniprot_kb_xml_split_pos:
     input:
-        UNIPROT_KB_FILE,
+        UNIPROT_KB_XML_FILE,
     params:
         num_splits=lambda wc: config["uniprot"]["kb"]["parse"]["num_splits"][
             EXPAND_PARAMS["ukb_basename"].index(wc.ukb_basename)
         ],
         split_size=lambda wc: config["uniprot"]["kb"]["parse"]["split_size"],
     output:
-        UNIPROT_KB_SPLIT_POS_FILE,
+        UNIPROT_KB_XML_SPLIT_POS_FILE,
     log:
-        UNIPROT_KB_SPLIT_POS_LOG,
+        UNIPROT_KB_XML_SPLIT_POS_LOG,
     script:
-        "../scripts/get_uniprot_kb_split_pos.py"
+        "../scripts/get_uniprot_kb_xml_split_pos.py"
 
 
 rule uniprot_kb_dbxref_split:
     conda:
         "../envs/dbxref.yaml"
     input:
-        kb=UNIPROT_KB_FILE,
+        kb=UNIPROT_KB_XML_FILE,
         proteomes=UNIPROT_PROTEOMES_FILE,
-        split_pos=UNIPROT_KB_SPLIT_POS_FILE,
+        split_pos=UNIPROT_KB_XML_SPLIT_POS_FILE,
     params:
         dbs=config["uniprot"]["kb"]["dbxref"]["dbs"],
         split_num="{ukb_snum}",
