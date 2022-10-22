@@ -16,41 +16,45 @@ study:
   samples: 'config/samples.tsv'
   units: 'config/units.tsv'
 
-gencode:
-  protocol: 'ftp'
-  species: ['human', 'mouse']
-  releases: ['41', 'M30']
-  builds: ['GRCh38', 'GRCm39']
-  regions: 'PRI'
-  annot:
-    fmt: 'gtf'
-  gene_annot:
-    length_col: 'Length'
-  seqkit:
-    replace:
-      pattern: '^(\S+)(?:\s.*)?'
-      extra: '--line-width 60'
-
-pufferfish:
-  bin_dir: 'bin/pufferfish/c4db524/linux-x64'
-  ref:
+uniprot:
+  proteome:
+    url:
+      ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
+      other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
+    n_sample: 0
+    random_seed: 777
+    filter_domains: []
+  kb:
+    url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
+    filenames: [
+      'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
+    ]
+    parse:
+      num_splits: [1, 230]
+      split_size: 1e6
+    dbxref:
+      dbs: [
+        'BioCyc',
+        'GO',
+        'EC',
+        'eggNOG',
+        'InterPro',
+        'KEGG',
+        'PANTHER',
+        'Pfam',
+        'PRINTS',
+        'PROSITE',
+        'Reactome',
+        'TIGRFAMs',
+      ]
     pigz:
+      threads: 12
+    idmap:
+      url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
+      filename: 'idmapping.dat.gz'
+      parse:
+        split_size: 1e7
       threads: all
-    seqkit:
-      seq:
-        protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
-        extra: '--upper-case --line-width 100'
-      rename:
-        extra: '--line-width 100'
-  index:
-    threads: all
-    extra: '--keepDuplicates'
-  align:
-    threads: all
-    extra: '--genomicReads --coverageScoreRatio 0.5'
-  cedar:
-    threads: all
-    extra: '--flat --minCnt 2'
 
 ncbi:
   taxonomy:
@@ -125,48 +129,44 @@ ncbi:
             '--by-name --use-regexp --ignore-case --line-width 80',
           ]
 
-uniprot:
-  proteome:
-    url:
-      ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
-      other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
-    n_sample: 0
-    random_seed: 777
-    filter_domains: []
-  kb:
-    url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
-    filenames: [
-      'uniprot_sprot.xml.gz', 'uniprot_trembl.xml.gz'
-    ]
-    parse:
-      num_splits: [1, 230]
-      split_size: 1e6
-    dbxref:
-      dbs: [
-        'BioCyc',
-        'GO',
-        'EC',
-        'eggNOG',
-        'InterPro',
-        'KEGG',
-        'PANTHER',
-        'Pfam',
-        'PRINTS',
-        'PROSITE',
-        'Reactome',
-        'TIGRFAMs',
-      ]
-    pigz:
-      threads: 12
-    idmap:
-      url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/'
-      filename: 'idmapping.dat.gz'
-      parse:
-        split_size: 1e7
-      threads: all
-
 seqkit:
   threads: 4
+
+gencode:
+  protocol: 'ftp'
+  species: ['human', 'mouse']
+  releases: ['41', 'M30']
+  builds: ['GRCh38', 'GRCm39']
+  regions: 'PRI'
+  annot:
+    fmt: 'gtf'
+  gene_annot:
+    length_col: 'Length'
+  seqkit:
+    replace:
+      pattern: '^(\S+)(?:\s.*)?'
+      extra: '--line-width 60'
+
+pufferfish:
+  bin_dir: 'bin/pufferfish/c4db524/linux-x64'
+  ref:
+    pigz:
+      threads: all
+    seqkit:
+      seq:
+        protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
+        extra: '--upper-case --line-width 100'
+      rename:
+        extra: '--line-width 100'
+  index:
+    threads: all
+    extra: '--keepDuplicates'
+  align:
+    threads: all
+    extra: '--genomicReads --coverageScoreRatio 0.5'
+  cedar:
+    threads: all
+    extra: '--flat --minCnt 2'
 
 fastq:
   data_dir: 'data/fastq'
