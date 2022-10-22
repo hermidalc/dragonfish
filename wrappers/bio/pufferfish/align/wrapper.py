@@ -9,7 +9,7 @@ from snakemake.shell import shell
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 pufferfish = snakemake.params.get("pufferfish")
-assert pufferfish is not None, "params: pufferfish is a required parameter"
+assert pufferfish is not None, "params: pufferfish path is a required parameter"
 
 index = snakemake.input.get("index")
 assert index is not None, "input: index is a required input parameter"

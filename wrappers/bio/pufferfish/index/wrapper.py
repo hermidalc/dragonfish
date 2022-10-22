@@ -9,10 +9,10 @@ from snakemake.shell import shell
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 pufferfish = snakemake.params.get("pufferfish")
-assert pufferfish is not None, "params: pufferfish is a required parameter"
+assert pufferfish is not None, "params: pufferfish path is a required parameter"
 
 ref = snakemake.input.get("ref")
-assert ref is not None, "input: ref is a required input parameter"
+assert ref is not None, "input: ref FASTA is a required input parameter"
 
 decoys = snakemake.input.get("decoys", "")
 if decoys:

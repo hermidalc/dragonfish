@@ -48,6 +48,9 @@ pufferfish:
   align:
     threads: all
     extra: '--genomicReads --coverageScoreRatio 0.5'
+  cedar:
+    threads: all
+    extra: '--flat --minCnt 2'
 
 ncbi:
   taxonomy:

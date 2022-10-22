@@ -74,16 +74,16 @@ GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
 GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
 
+FASTQ_DATA_DIR = config["fastq"]["data_dir"]
+FASTQ_PAIRS = config["fastq"]["pairs"]
+FASTQ_EXT = config["fastq"]["ext"]
+FASTQ_PLATFORM = config["fastq"]["platform"]
+
 NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
 NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
 NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
 NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
 NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
-
-FASTQ_DATA_DIR = config["fastq"]["data_dir"]
-FASTQ_PAIRS = config["fastq"]["pairs"]
-FASTQ_EXT = config["fastq"]["ext"]
-FASTQ_PLATFORM = config["fastq"]["platform"]
 
 UNIPROT_PROTEOMES_FILE = join(UNIPROT_DIR, "uniprot_proteomes.tsv")
 EXPAND_PARAMS["ukb_basename"] = [
@@ -177,20 +177,6 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index")
 
-NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
-NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
-NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_FILES = [
-    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
-]
-EXPAND_PARAMS["a2t_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
-]
-EXPAND_PARAMS["asu_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
-]
-
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{sub_dir}")
 
 FASTQ1_FILE = join(
@@ -218,11 +204,39 @@ FAILED_READS_FILE = join(
 FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
 FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
 
-
 PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{sub_dir}")
 PUFFERFISH_ALIGN_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_alignments.sam"
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_pufferfish.sam"
 )
+
+NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
+NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_FILES = [
+    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
+]
+EXPAND_PARAMS["a2t_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
+]
+EXPAND_PARAMS["asu_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
+]
+
+CEDAR_QUANT_FILE = join(PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar.sf")
+
+SUB_DIRS = list(set(EXPAND_PARAMS["sub_dir"]))
+if len(SUB_DIRS) == 1:
+    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", SUB_DIRS[0])
+    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", SUB_DIRS[0])
+else:
+    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
+    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
+
+COUNT_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_matrix.tsv")
+COUNT_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_eset.rds")
+TPM_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_matrix.tsv")
+TPM_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_eset.rds")
 
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
@@ -275,6 +289,9 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
     PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
 )
 PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
+
+FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
+
 PUFFERFISH_ALIGN_LOG = join(
     PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log"
 )
@@ -283,7 +300,14 @@ NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
-FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
+CEDAR_QUANT_LOG = join(
+    PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_cedar_quant.log"
+)
+
+COUNT_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_matrix.log")
+COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_eset.log")
+TPM_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_matrix.log")
+TPM_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_eset.log")
 
 UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS = (
     workflow.cores
@@ -305,6 +329,11 @@ PUFFERFISH_ALIGN_THREADS = (
     if config["pufferfish"]["align"]["threads"] == "all"
     else config["pufferfish"]["align"]["threads"]
 )
+CEDAR_QUANT_THREADS = (
+    workflow.cores
+    if config["pufferfish"]["cedar"]["threads"] == "all"
+    else config["pufferfish"]["cedar"]["threads"]
+)
 
 GENCODE_GENOME_SEQ_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
@@ -316,6 +345,9 @@ SEQKIT_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
+CEDAR_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/cedar/quant")
+DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/cedar/data_matrix")
+ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
 
 
 include: join(RULES_DIR, "common.smk")
@@ -326,6 +358,8 @@ include: join(RULES_DIR, "host_genomes.smk")
 include: join(RULES_DIR, "index.smk")
 include: join(RULES_DIR, "trim.smk")
 include: join(RULES_DIR, "align.smk")
+include: join(RULES_DIR, "quant.smk")
+include: join(RULES_DIR, "data_matrix.smk")
 
 
 wildcard_constraints:
@@ -360,6 +394,11 @@ rule all:
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
+        COUNT_MATRIX_FILE,
+        COUNT_ESET_FILE,
+        TPM_MATRIX_FILE,
+        TPM_ESET_FILE,
 
 
 def clean(*dirs):
