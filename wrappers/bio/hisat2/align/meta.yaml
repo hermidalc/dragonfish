@@ -1,5 +1,5 @@
-name: hisat2 index
-description: HISAT2 genome index creation
+name: hisat2 align
+description: HISAT2 alignment
 authors:
   - Leandro C. Hermida
 notes: |

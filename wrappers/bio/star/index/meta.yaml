@@ -1,0 +1,6 @@
+name: star index
+description: STAR genome index creation
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information, see https://github.com/alexdobin/STAR

@@ -185,3 +185,15 @@ paladin:
 
 diamond:
   threads: all
+
+hisat2:
+  threads: all
+
+star:
+  index:
+    threads: all
+  align:
+    sort_bam: true
+    threads: all
+  # regex specific to GTF style
+  sj_filter_chr_regex: "^(?!chrM$).+$"  # "chr([1-9][0-9]?|X|Y)"

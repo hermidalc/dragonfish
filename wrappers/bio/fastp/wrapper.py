@@ -7,7 +7,6 @@ import re
 from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
-extra = snakemake.params.get("extra", "")
 
 fq1 = snakemake.input.get("fq") or snakemake.input.get("fq1")
 assert fq1 is not None, "input: fq/fq1 is a required input parameter"
@@ -44,6 +43,8 @@ if failed:
     out_fqs += f" --failed_out {failed}"
 
 adapters = snakemake.params.get("adapters", "")
+
+extra = snakemake.params.get("extra", "")
 
 html = snakemake.output.get("html")
 assert html is not None, "output: html is a required output parameter"
