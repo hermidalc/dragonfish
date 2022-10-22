@@ -157,7 +157,7 @@ GENCODE_GENOME_FASTA_FILE = join(GENCODE_DIR, f"{GENCODE_GENOME_NAME}.fa.gz")
 GENCODE_GENOME_FIXED_FASTA_FILE = join(
     GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed.fa.gz"
 )
-GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE = join(
+GENCODE_GENOME_FIXED_FASTA_ID_FILE = join(
     GENCODE_DIR, f"{GENCODE_GENOME_NAME}_fixed_fasta_ids.txt"
 )
 GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE = join(
@@ -225,7 +225,7 @@ EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 
-CEDAR_QUANT_FILE = join(PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar.sf")
+CEDAR_READ_QUANT_FILE = join(PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar.sf")
 
 SUB_DIRS = list(set(EXPAND_PARAMS["sub_dir"]))
 if len(SUB_DIRS) == 1:
@@ -235,10 +235,12 @@ else:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
     DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
-COUNT_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_matrix.tsv")
-COUNT_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_eset.rds")
-TPM_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_matrix.tsv")
-TPM_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_eset.rds")
+CEDAR_COUNT_MATRIX_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_matrix.tsv"
+)
+CEDAR_COUNT_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_eset.rds")
+CEDAR_TPM_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_matrix.tsv")
+CEDAR_TPM_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_eset.rds")
 
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
@@ -279,7 +281,7 @@ NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
     GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
 )
-GENCODE_GENOME_FIXED_FASTA_ID_LIST_LOG = join(
+GENCODE_GENOME_FIXED_FASTA_ID_LOG = join(
     GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fasta_ids.log"
 )
 GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
@@ -303,14 +305,14 @@ NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
-CEDAR_QUANT_LOG = join(
+CEDAR_READ_QUANT_LOG = join(
     PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_cedar_quant.log"
 )
 
-COUNT_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_matrix.log")
-COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_eset.log")
-TPM_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_matrix.log")
-TPM_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_eset.log")
+CEDAR_COUNT_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_matrix.log")
+CEDAR_COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_eset.log")
+CEDAR_TPM_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_matrix.log")
+CEDAR_TPM_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_eset.log")
 
 UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS = (
     workflow.cores
@@ -332,7 +334,7 @@ PUFFERFISH_ALIGN_THREADS = (
     if config["pufferfish"]["align"]["threads"] == "all"
     else config["pufferfish"]["align"]["threads"]
 )
-CEDAR_QUANT_THREADS = (
+CEDAR_READ_QUANT_THREADS = (
     workflow.cores
     if config["pufferfish"]["cedar"]["threads"] == "all"
     else config["pufferfish"]["cedar"]["threads"]
@@ -348,7 +350,7 @@ SEQKIT_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
-CEDAR_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
+CEDAR_READ_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
 DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
 ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
 
@@ -385,7 +387,7 @@ rule all:
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
         GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
         expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
@@ -398,11 +400,11 @@ rule all:
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
-        expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
-        COUNT_MATRIX_FILE,
-        COUNT_ESET_FILE,
-        TPM_MATRIX_FILE,
-        TPM_ESET_FILE,
+        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        CEDAR_COUNT_MATRIX_FILE,
+        CEDAR_COUNT_ESET_FILE,
+        CEDAR_TPM_MATRIX_FILE,
+        CEDAR_TPM_ESET_FILE,
 
 
 def clean(*dirs):

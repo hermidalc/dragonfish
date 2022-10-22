@@ -1,4 +1,4 @@
-rule align_reads_pufferfish_pe:
+rule pufferfish_align_pe:
     input:
         index=PUFFERFISH_INDEX_DIR,
         fq1=TRIMMED_FASTQ1_FILE,

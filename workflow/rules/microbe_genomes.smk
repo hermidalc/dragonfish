@@ -1,4 +1,4 @@
-rule get_ncbi_assembly_summary:
+rule ncbi_assembly_summary:
     params:
         NCBI_ASSEMBLY_SUMMARY_FILE_URL,
     output:
@@ -12,7 +12,7 @@ rule get_ncbi_assembly_summary:
         "../scripts/get_url_file.py"
 
 
-rule merge_ncbi_assembly_summaries:
+rule ncbi_assembly_merged_summary:
     conda:
         "../envs/pandas.yaml"
     input:
@@ -25,7 +25,7 @@ rule merge_ncbi_assembly_summaries:
         "../scripts/merge_ncbi_assembly_summaries.py"
 
 
-checkpoint get_ncbi_assemblies:
+checkpoint ncbi_assemblies:
     conda:
         "../envs/joblib.yaml"
     input:
@@ -53,7 +53,7 @@ checkpoint get_ncbi_assemblies:
 
 
 def gather_ncbi_assembly_fasta_files(wildcards):
-    ncbi_assembly_dir = checkpoints.get_ncbi_assemblies.get(**wildcards).output[0]
+    ncbi_assembly_dir = checkpoints.ncbi_assemblies.get(**wildcards).output[0]
     # XXX: workaround using separate unused asm_name wildcard for snakemake issue
     # #1849, using two of same wildcards in glob_wildcards pattern seems to be broken,
     # even though for regular rules it works. Also couldn't get asm_name wildcard
@@ -81,7 +81,7 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     )
 
 
-rule create_ncbi_assembly_cds_filtered_fasta:
+rule ncbi_assembly_cds_filtered_fasta:
     input:
         NCBI_ASSEMBLY_CDS_FASTA_FILE,
     params:
@@ -96,7 +96,7 @@ rule create_ncbi_assembly_cds_filtered_fasta:
         SEQKIT_WRAPPER
 
 
-rule create_ncbi_assembly_fasta_list:
+rule ncbi_assembly_fasta_list:
     conda:
         "../envs/pandas.yaml"
     input:

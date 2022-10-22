@@ -1,4 +1,4 @@
-rule get_gencode_genome_fasta:
+rule gencode_genome_fasta:
     params:
         protocol=GENCODE_PROTOCOL,
         species=GENCODE_SPECIES,
@@ -14,7 +14,7 @@ rule get_gencode_genome_fasta:
         GENCODE_GENOME_SEQ_WRAPPER
 
 
-rule fix_gencode_genome_fasta_ids:
+rule gencode_genome_fasta_id_fix:
     input:
         GENCODE_GENOME_FASTA_FILE,
     params:
@@ -33,24 +33,24 @@ rule fix_gencode_genome_fasta_ids:
         SEQKIT_WRAPPER
 
 
-rule get_gencode_genome_fixed_fasta_ids:
+rule gencode_genome_fixed_fasta_ids:
     input:
         GENCODE_GENOME_FIXED_FASTA_FILE,
     params:
         cmd="seq",
         extra="--name",
     output:
-        GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE,
+        GENCODE_GENOME_FIXED_FASTA_ID_FILE,
     log:
-        GENCODE_GENOME_FIXED_FASTA_ID_LIST_LOG,
+        GENCODE_GENOME_FIXED_FASTA_ID_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_WRAPPER
 
 
-rule merge_gencode_genome_fixed_fasta_ids:
+rule gencode_genome_merged_fixed_fasta_ids:
     input:
-        expand(GENCODE_GENOME_FIXED_FASTA_ID_LIST_FILE, zip, **EXPAND_PARAMS),
+        expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
     output:
         GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
     log:
@@ -59,7 +59,7 @@ rule merge_gencode_genome_fixed_fasta_ids:
         "cat {input} 1> {output} 2> {log}"
 
 
-rule get_gencode_genome_annot:
+rule gencode_genome_annot:
     params:
         protocol=GENCODE_PROTOCOL,
         species=GENCODE_SPECIES,

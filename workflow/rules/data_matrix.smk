@@ -1,55 +1,55 @@
 rule cedar_count_matrix:
     input:
-        expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
         data_col=4,
         collapse_techreps=True,
     output:
-        COUNT_MATRIX_FILE,
+        CEDAR_COUNT_MATRIX_FILE,
     log:
-        COUNT_MATRIX_LOG,
+        CEDAR_COUNT_MATRIX_LOG,
     wrapper:
         DATA_MATRIX_WRAPPER
 
 
 rule cedar_tpm_matrix:
     input:
-        expand(CEDAR_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
         data_col=3,
     output:
-        TPM_MATRIX_FILE,
+        CEDAR_TPM_MATRIX_FILE,
     log:
-        TPM_MATRIX_LOG,
+        CEDAR_TPM_MATRIX_LOG,
     wrapper:
         DATA_MATRIX_WRAPPER
 
 
-rule count_eset:
+rule cedar_count_eset:
     input:
-        assay=COUNT_MATRIX_FILE,
+        assay=CEDAR_COUNT_MATRIX_FILE,
         pheno=SAMPLE_CONFIG_FILE,
     params:
         samples=SAMPLE_LABELS,
     output:
-        COUNT_ESET_FILE,
+        CEDAR_COUNT_ESET_FILE,
     log:
-        COUNT_ESET_LOG,
+        CEDAR_COUNT_ESET_LOG,
     wrapper:
         ESET_WRAPPER
 
 
-rule tpm_eset:
+rule cedar_tpm_eset:
     input:
-        assay=TPM_MATRIX_FILE,
+        assay=CEDAR_TPM_MATRIX_FILE,
         pheno=SAMPLE_CONFIG_FILE,
     params:
         samples=SAMPLE_LABELS,
     output:
-        TPM_ESET_FILE,
+        CEDAR_TPM_ESET_FILE,
     log:
-        TPM_ESET_LOG,
+        CEDAR_TPM_ESET_LOG,
     wrapper:
         ESET_WRAPPER

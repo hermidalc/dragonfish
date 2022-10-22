@@ -1,7 +1,7 @@
 from os.path import abspath
 
 
-rule create_pufferfish_ref_fasta:
+rule pufferfish_ref_fasta:
     input:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
@@ -21,7 +21,7 @@ rule create_pufferfish_ref_fasta:
         SEQKIT_WRAPPER
 
 
-rule merge_pufferfish_ref_fastas:
+rule pufferfish_ref_merged_fasta:
     conda:
         "../envs/pigz.yaml"
     input:
@@ -39,7 +39,7 @@ rule merge_pufferfish_ref_fastas:
         "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
 
 
-rule create_pufferfish_ref_merged_deduped_id_fasta:
+rule pufferfish_ref_merged_deduped_id_fasta:
     input:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     params:
@@ -54,7 +54,7 @@ rule create_pufferfish_ref_merged_deduped_id_fasta:
         SEQKIT_WRAPPER
 
 
-rule create_pufferfish_index:
+rule pufferfish_index:
     input:
         ref=PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
         decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,

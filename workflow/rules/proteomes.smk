@@ -1,4 +1,4 @@
-rule get_uniprot_proteomes:
+rule uniprot_proteomes:
     conda:
         "../envs/pandas.yaml"
     params:
@@ -18,7 +18,7 @@ rule get_uniprot_proteomes:
         "../scripts/get_uniprot_proteomes.py"
 
 
-rule get_uniprot_kb:
+rule uniprot_kb:
     params:
         UNIPROT_KB_URL,
     output:
@@ -32,7 +32,7 @@ rule get_uniprot_kb:
         "../scripts/get_url_file.py"
 
 
-rule get_uniprot_kb_fasta:
+rule uniprot_kb_fasta:
     params:
         UNIPROT_KB_FASTA_URL,
     output:
@@ -46,7 +46,7 @@ rule get_uniprot_kb_fasta:
         "../scripts/get_url_file.py"
 
 
-rule get_uniprot_kb_split_pos:
+rule uniprot_kb_split_pos:
     input:
         UNIPROT_KB_FILE,
     params:
@@ -62,7 +62,7 @@ rule get_uniprot_kb_split_pos:
         "../scripts/get_uniprot_kb_split_pos.py"
 
 
-rule create_uniprot_kb_dbxref_split:
+rule uniprot_kb_dbxref_split:
     conda:
         "../envs/dbxref.yaml"
     input:
@@ -80,7 +80,7 @@ rule create_uniprot_kb_dbxref_split:
         "../scripts/create_uniprot_kb_dbxref_split.py"
 
 
-rule merge_uniprot_kb_dbxrefs:
+rule uniprot_kb_dbxrefs:
     conda:
         "../envs/vaex.yaml"
     input:
@@ -93,7 +93,7 @@ rule merge_uniprot_kb_dbxrefs:
         "../scripts/merge_uniprot_kb_dbxref_splits.py"
 
 
-rule get_uniprot_kb_idmap:
+rule uniprot_kb_idmap:
     params:
         UNIPROT_KB_IDMAP_FILE_URL,
     output:
@@ -107,7 +107,7 @@ rule get_uniprot_kb_idmap:
         "../scripts/get_url_file.py"
 
 
-rule create_uniprot_kb_genbank_cds_idmap:
+rule uniprot_kb_genbank_cds_idmap:
     conda:
         "../envs/vaex.yaml"
     input:
@@ -124,7 +124,7 @@ rule create_uniprot_kb_genbank_cds_idmap:
         "../scripts/create_uniprot_kb_genbank_cds_idmap.py"
 
 
-rule create_uniprot_kb_genbank_cds_idmap_dbxref:
+rule uniprot_kb_genbank_cds_idmap_dbxrefs:
     conda:
         "../envs/vaex.yaml"
     input:
