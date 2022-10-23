@@ -18,7 +18,6 @@ rule gencode_genome_fasta_id_fix:
     input:
         GENCODE_GENOME_FASTA_FILE,
     params:
-        cmd="replace",
         pattern=config["gencode"]["seqkit"]["replace"]["pattern"],
         replacement=lambda wc: (
             f"{wc.gc_species.title()}_{wc.gc_release}_{wc.gc_build}_${{1}}"
@@ -30,14 +29,13 @@ rule gencode_genome_fasta_id_fix:
         GENCODE_GENOME_FIXED_FASTA_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
-        SEQKIT_WRAPPER
+        SEQKIT_REPLACE_WRAPPER
 
 
 rule gencode_genome_fixed_fasta_ids:
     input:
         GENCODE_GENOME_FIXED_FASTA_FILE,
     params:
-        cmd="seq",
         extra="--name",
     output:
         GENCODE_GENOME_FIXED_FASTA_ID_FILE,
@@ -45,7 +43,7 @@ rule gencode_genome_fixed_fasta_ids:
         GENCODE_GENOME_FIXED_FASTA_ID_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
-        SEQKIT_WRAPPER
+        SEQKIT_SEQ_WRAPPER
 
 
 rule gencode_genome_merged_fixed_fasta_ids:

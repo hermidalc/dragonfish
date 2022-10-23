@@ -5,7 +5,6 @@ rule pufferfish_ref_fasta:
     input:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
-        cmd="seq",
         id_regexp=lambda wc: (
             config["pufferfish"]["ref"]["seqkit"]["seq"]["protein_id_pattern"]
             if wc.asm_type.startswith("cds_from_genomic")
@@ -18,7 +17,7 @@ rule pufferfish_ref_fasta:
         PUFFERFISH_REF_FASTA_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
-        SEQKIT_WRAPPER
+        SEQKIT_SEQ_WRAPPER
 
 
 rule pufferfish_ref_merged_fasta:
@@ -43,7 +42,6 @@ rule pufferfish_ref_merged_deduped_id_fasta:
     input:
         PUFFERFISH_REF_MERGED_FASTA_FILE,
     params:
-        cmd="rename",
         extra=config["pufferfish"]["ref"]["seqkit"]["rename"]["extra"],
     output:
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE,
@@ -51,7 +49,7 @@ rule pufferfish_ref_merged_deduped_id_fasta:
         PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
-        SEQKIT_WRAPPER
+        SEQKIT_RENAME_WRAPPER
 
 
 rule pufferfish_index:

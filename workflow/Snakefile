@@ -346,7 +346,10 @@ GENCODE_GENOME_SEQ_WRAPPER = join(
 GENCODE_GENOME_ANNOT_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
 )
-SEQKIT_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit")
+SEQKIT_GREP_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/grep")
+SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
+SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
+SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")

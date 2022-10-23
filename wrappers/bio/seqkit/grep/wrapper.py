@@ -6,9 +6,6 @@ from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
-cmd = snakemake.params.get("cmd")
-assert cmd is not None, "input: cmd is a required input parameter"
-
 infiles = snakemake.input.get("list_file")
 if infiles is not None:
     infiles = f"--infile-list {infiles}"
@@ -34,7 +31,7 @@ if cmd == "grep" and isinstance(pattern, (list, tuple)):
         for e in extra:
             flags.append(e)
 
-    cmd_prefix = "seqkit {cmd} --threads {snakemake.threads}"
+    cmd_prefix = "seqkit grep --threads {snakemake.threads}"
     shell_cmd = f"{cmd_prefix} {flags[0]} {{infiles}}"
     if len(flags) > 2:
         shell_cmd += " | " + " | ".join(
@@ -48,16 +45,12 @@ else:
     id_regexp = snakemake.params.get("id_regexp")
     if id_regexp is not None:
         flags += f"--id-regexp '{id_regexp}'"
-    if pattern is not None:
-        flags += f"--pattern '{pattern}'"
-        replacement = snakemake.params.get("replacement")
-        if replacement is not None:
-            flags += f" --replacement '{replacement}'"
+    extra = snakemake.params.get("extra")
     if extra is not None:
         flags += f" {extra}"
 
-    shell_cmd = (
-        "seqkit {cmd}"
+    shell(
+        "seqkit grep"
         " --threads {snakemake.threads}"
         " {flags}"
         " {infiles}"

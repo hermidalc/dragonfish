@@ -85,7 +85,6 @@ rule ncbi_assembly_cds_filtered_fasta:
     input:
         NCBI_ASSEMBLY_CDS_FASTA_FILE,
     params:
-        cmd="grep",
         pattern=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["pattern"],
         extra=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["extra"],
     output:
@@ -93,7 +92,7 @@ rule ncbi_assembly_cds_filtered_fasta:
     log:
         NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG,
     wrapper:
-        SEQKIT_WRAPPER
+        SEQKIT_GREP_WRAPPER
 
 
 rule ncbi_assembly_fasta_list:

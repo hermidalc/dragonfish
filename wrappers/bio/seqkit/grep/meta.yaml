@@ -1,0 +1,6 @@
+name: seqkit grep
+description: Search sequences by ID/name/seq/seq motifs using SeqKit
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information, see https://bioinf.shenwei.me/seqkit/

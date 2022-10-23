@@ -1,5 +1,5 @@
-name: seqkit
-description: Ultrafast FASTA/Q toolkit
+name: seqkit rename
+description: Rename duplicated IDs using SeqKit
 authors:
   - Leandro C. Hermida
 notes: |
