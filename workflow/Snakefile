@@ -55,7 +55,7 @@ SAMPLE_LABELS = [
     for n, l in zip(SAMPLE_DF["sample_name"], SAMPLE_DF["sample_label"])
 ]
 
-EXPAND_PARAMS["data_subdir"] = [Path(dirname(fq)).name for fq in UNIT_DF["fq1"]]
+EXPAND_PARAMS["data_subdir"] = [dirname(fq) for fq in UNIT_DF["fq1"]]
 
 GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
