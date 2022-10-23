@@ -53,7 +53,7 @@ SAMPLE_LABELS = [
     for n, l in zip(SAMPLE_DF["sample_name"], SAMPLE_DF["sample_label"])
 ]
 
-EXPAND_PARAMS["sub_dir"] = [Path(dirname(fq)).name for fq in UNIT_DF["fq1"]]
+EXPAND_PARAMS["data_subdir"] = [Path(dirname(fq)).name for fq in UNIT_DF["fq1"]]
 
 GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
@@ -177,7 +177,7 @@ PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_FILE = join(
 )
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index")
 
-TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{sub_dir}")
+TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{data_subdir}")
 
 FASTQ1_FILE = join(
     FASTQ_DATA_DIR, f"{RUN_ID_WILDCARD_STR}_{FASTQ_PAIRS[0]}.{FASTQ_EXT}"
@@ -204,7 +204,7 @@ FAILED_READS_FILE = join(
 FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
 FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
 
-PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{sub_dir}")
+PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 PUFFERFISH_ALIGN_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_pufferfish.sam"
 )
@@ -225,10 +225,10 @@ EXPAND_PARAMS["asu_basename"] = [
 
 CEDAR_READ_QUANT_FILE = join(PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar.sf")
 
-SUB_DIRS = list(set(EXPAND_PARAMS["sub_dir"]))
-if len(SUB_DIRS) == 1:
-    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", SUB_DIRS[0])
-    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", SUB_DIRS[0])
+DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
+if len(DATA_SUBDIRS) == 1:
+    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", DATA_SUBDIRS[0])
+    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", DATA_SUBDIRS[0])
 else:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
     DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
@@ -246,7 +246,7 @@ NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
 NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
-FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{sub_dir}")
+FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
 
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_proteomes.log")
 UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_xml.log")
@@ -298,7 +298,7 @@ PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
 PUFFERFISH_ALIGN_LOG = join(
-    PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log"
+    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log"
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
@@ -306,7 +306,7 @@ NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
 CEDAR_READ_QUANT_LOG = join(
-    PUFFERFISH_LOG_DIR, "{sub_dir}", f"{RUN_ID_WILDCARD_STR}_cedar_quant.log"
+    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cedar_quant.log"
 )
 
 CEDAR_COUNT_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_matrix.log")
