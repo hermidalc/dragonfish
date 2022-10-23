@@ -168,8 +168,8 @@ pufferfish:
 
 fastq:
   data_dir: 'data/fastq'
-  pairs: ['R1_001', 'R2_001']
-  ext: 'fq'
+  mates: ['R1_001', 'R2_001']
+  ext: 'fq.gz'
   platform: 'Illumina'
 
 trim:
