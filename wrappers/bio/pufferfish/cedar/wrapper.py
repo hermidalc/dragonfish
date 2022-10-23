@@ -7,7 +7,7 @@ from snakemake.shell import shell
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 cedar = snakemake.params.get("cedar")
-assert pufferfish is not None, "params: cedar path is a required parameter"
+assert cedar is not None, "params: cedar path is a required parameter"
 
 extra = snakemake.params.get("extra", "")
 
