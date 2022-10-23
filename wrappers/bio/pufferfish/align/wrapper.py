@@ -17,18 +17,13 @@ assert fq1 is not None, "input: fq/fq1 is a required input parameter"
 fq2 = snakemake.input.get("fq2")
 in_fqs = f"--mate1 {fq1} --mate2 {fq2}" if fq2 else f"--read {fq1}"
 
-cvsr = snakemake.params.get("cvsr", "")
-if cvsr:
-    cvsr = f"--coverageScoreRatio {cvsr}"
-
 extra = snakemake.params.get("extra", "")
 
 shell(
     "{pufferfish} align"
+    " --threads {snakemake.threads}"
     " --index {index}"
     " {in_fqs}"
-    " --threads {snakemake.threads}"
-    " {cvsr}"
     " --outdir {snakemake.output[0]}"
     " {extra}"
     " {log}"

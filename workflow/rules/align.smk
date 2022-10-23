@@ -4,7 +4,6 @@ rule pufferfish_align_pe:
         index=PUFFERFISH_INDEX_DIR,
     params:
         pufferfish=abspath(join(config["pufferfish"]["bin_dir"], "pufferfish")),
-        cvsr=config["pufferfish"]["align"]["cvsr"],
         extra=config["pufferfish"]["align"]["extra"],
     output:
         PUFFERFISH_ALIGN_FILE,
