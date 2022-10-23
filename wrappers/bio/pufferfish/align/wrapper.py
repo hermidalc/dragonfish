@@ -2,8 +2,6 @@ __author__ = "Leandro C. Hermida"
 __email__ = "hermidalc@pitt.edu"
 __license__ = "BSD 3-Clause"
 
-from tempfile import gettempdir, TemporaryDirectory
-
 from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
@@ -25,17 +23,13 @@ if cvsr:
 
 extra = snakemake.params.get("extra", "")
 
-tmp_base_dir = snakemake.resources.get("tmpdir", gettempdir())
-
-with TemporaryDirectory(dir=tmp_base_dir) as tmp_dir:
-    shell(
-        "{pufferfish} align"
-        " --index {index}"
-        " {in_fqs}"
-        " {cvsr}"
-        " --outdir {snakemake.output[0]}"
-        " --threads {snakemake.threads}"
-        " --tmpdir {tmp_dir}"
-        " {extra}"
-        " {log}"
-    )
+shell(
+    "{pufferfish} align"
+    " --index {index}"
+    " {in_fqs}"
+    " --threads {snakemake.threads}"
+    " {cvsr}"
+    " --outdir {snakemake.output[0]}"
+    " {extra}"
+    " {log}"
+)
