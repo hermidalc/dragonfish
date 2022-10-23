@@ -25,9 +25,9 @@ tmp_base_dir = snakemake.resources.get("tmpdir", gettempdir())
 with TemporaryDirectory(dir=tmp_base_dir) as tmp_dir:
     shell(
         "{pufferfish} index"
-        " --threads {snakemake.threads}"
         " --ref {ref}"
         " --output {snakemake.output[0]}"
+        " --threads {snakemake.threads}"
         " --tmpdir {tmp_dir}"
         " {decoys}"
         " {extra}"
