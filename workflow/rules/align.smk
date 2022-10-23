@@ -1,8 +1,7 @@
 rule pufferfish_align_pe:
     input:
+        unpack(lambda wc: get_fq(wc, trimmed=True)),
         index=PUFFERFISH_INDEX_DIR,
-        fq1=TRIMMED_FASTQ1_FILE,
-        fq2=TRIMMED_FASTQ2_FILE,
     params:
         pufferfish=abspath(join(config["pufferfish"]["bin_dir"], "pufferfish")),
         extra=config["pufferfish"]["align"]["extra"],
