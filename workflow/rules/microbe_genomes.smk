@@ -32,10 +32,7 @@ checkpoint ncbi_assemblies:
         proteomes=UNIPROT_PROTEOMES_FILE,
         summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     params:
-        file_exts=[
-            config["ncbi"]["assembly"]["file"]["ext"]["genome"],
-            config["ncbi"]["assembly"]["file"]["ext"]["cds"],
-        ],
+        file_exts=config["ncbi"]["assembly"]["file"]["exts"],
         skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["file_retries"],

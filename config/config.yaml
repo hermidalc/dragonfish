@@ -105,11 +105,9 @@ ncbi:
         'assembly_summary_refseq_historical.txt',
       ]
     file:
-      types: ['genomic', 'cds_from_genomic_filtered']
-      ext:
-        genome: 'genomic.fna.gz'
-        cds: 'cds_from_genomic.fna.gz'
-        gff: 'genomic.gff.gz'
+      types: [ 'genomic', 'cds_from_genomic_filtered']
+      exts: [ 'genomic.fna.gz', 'cds_from_genomic.fna.gz']
+      gff_ext: 'genomic.gff.gz'
       download:
         md5_name: 'md5checksums.txt'
         skip: []
