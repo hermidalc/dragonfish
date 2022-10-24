@@ -161,7 +161,7 @@ pufferfish:
     extra: '--keepDuplicates'
   align:
     threads: all
-    extra: '--coverageScoreRatio 0.5 --genomicReads'
+    extra: '--coverageScoreRatio 0.5 --genomicReads --compressedOutput'
   cedar:
     threads: all
     extra: '--flat --minCnt 2'
