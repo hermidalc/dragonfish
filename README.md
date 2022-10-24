@@ -215,6 +215,7 @@ bzip2-devel \
 gcc \
 gcc-c++ \
 git \
+glibc-devel \
 hwloc-devel \
 jsoncpp-devel \
 jemalloc-devel \
