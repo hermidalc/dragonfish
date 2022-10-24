@@ -293,17 +293,24 @@ GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
     GENCODE_LOG_DIR, "merge_genome_fixed_fasta_ids.log"
 )
 
-PUFFERFISH_REF_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "create_ref_{asm_type}_fasta.log")
-PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_LOG_DIR, "merge_ref_fastas.log")
-PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
-    PUFFERFISH_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
+PUFFERFISH_REF_LOG_DIR = join(PUFFERFISH_LOG_DIR, "ref")
+PUFFERFISH_REF_FASTA_LOG = join(
+    PUFFERFISH_REF_LOG_DIR, "create_ref_{asm_type}_fasta.log"
 )
-PUFFERFISH_INDEX_LOG = join(PUFFERFISH_LOG_DIR, "create_pufferfish_index.log")
+PUFFERFISH_REF_MERGED_FASTA_LOG = join(PUFFERFISH_REF_LOG_DIR, "merge_ref_fastas.log")
+PUFFERFISH_REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
+    PUFFERFISH_REF_LOG_DIR, "create_ref_merged_deduped_id_fasta.log"
+)
+PUFFERFISH_INDEX_LOG_DIR = join(PUFFERFISH_LOG_DIR, "index")
+PUFFERFISH_INDEX_LOG = join(PUFFERFISH_INDEX_LOG_DIR, "create_pufferfish_index.log")
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
+PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align")
 PUFFERFISH_ALIGN_LOG = join(
-    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log"
+    PUFFERFISH_ALIGN_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log",
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
