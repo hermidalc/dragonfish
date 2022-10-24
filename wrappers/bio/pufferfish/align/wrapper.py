@@ -22,14 +22,14 @@ in_fqs = f"--mate1 {fq1} --mate2 {fq2}" if fq2 else f"--read {fq1}"
 extra = snakemake.params.get("extra", "")
 
 assert snakemake.output[0].endswith(
-    ("sam", "sam.gz", "pam")
+    ("pam", "sam", "sam.gz")
 ), "output: file type required to be sam, sam.gz, or pam"
 
 run_pigz = False
-if snakemake.output[0].partition(".")[-1] == "pam":
+if snakemake.output[0].endswith(".pam"):
     output = snakemake.output[0]
     extra += " --pam"
-elif snakemake.output[0].partition(".")[-1] == "sam.gz":
+elif snakemake.output[0].endswith(".sam.gz"):
     output = splitext(snakemake.output[0])[0]
     run_pigz = True
 else:
