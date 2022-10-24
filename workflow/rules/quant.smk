@@ -1,3 +1,6 @@
+from os.path import abspath
+
+
 rule cedar_read_quant:
     input:
         PUFFERFISH_ALIGN_FILE,
