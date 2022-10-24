@@ -14,7 +14,7 @@ else:
 
 pattern = snakemake.params.get("pattern")
 extra = snakemake.params.get("extra")
-if cmd == "grep" and isinstance(pattern, (list, tuple)):
+if isinstance(pattern, (list, tuple)):
     flags = []
     if pattern is not None:
         if extra is not None:
