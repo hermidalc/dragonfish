@@ -26,10 +26,10 @@ assert snakemake.output[0].endswith(
 ), "output: file type required to be sam, sam.gz, or pam"
 
 run_pigz = False
-if snakemake.output[0].partition[-1] == "pam":
+if snakemake.output[0].partition(".")[-1] == "pam":
     output = snakemake.output[0]
     extra += " --pam"
-elif snakemake.output[0].partition[-1] == "sam.gz":
+elif snakemake.output[0].partition(".")[-1] == "sam.gz":
     output = splitext(snakemake.output[0])[0]
     run_pigz = True
 else:
