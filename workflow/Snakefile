@@ -81,6 +81,8 @@ FASTQ_MATES = config["fastq"]["mates"]
 FASTQ_EXT = config["fastq"]["ext"]
 FASTQ_PLATFORM = config["fastq"]["platform"]
 
+PUFFERFISH_ALIGN_OUTPUT = config["pufferfish"]["align"]["output"]
+
 NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
 NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
 NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
@@ -208,7 +210,8 @@ FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_repor
 
 PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 PUFFERFISH_ALIGN_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_pufferfish.sam.gz"
+    PUFFERFISH_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_pufferfish.{PUFFERFISH_ALIGN_OUTPUT}",
 )
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
