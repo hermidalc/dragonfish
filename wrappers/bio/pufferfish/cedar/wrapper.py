@@ -14,7 +14,7 @@ extra = snakemake.params.get("extra", "")
 shell(
     "{cedar}"
     " --threads {snakemake.threads}"
-    " --puffMapperOut {snakemake.input[0]}"
+    " --sam {snakemake.input[0]}"
     " --output {snakemake.output[0]}"
     " {extra}"
     " {log}"
