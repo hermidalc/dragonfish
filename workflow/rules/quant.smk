@@ -28,15 +28,15 @@ rule cds_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule cds_bam_read_quant:
+rule cds_read_quant:
     input:
         PUFFERFISH_FILTERED_CDS_BAM_FILE,
     params:
         read_count=True,
     output:
-        PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_FILE,
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE,
     log:
-        PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_LOG,
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_BAM_WRAPPER
