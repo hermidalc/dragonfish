@@ -139,7 +139,7 @@ NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
 NCBI_ASSEMBLY_CDS_FASTA_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_cds_from_genomic.fna.gz"
 )
-NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE = join(
+NCBI_ASSEMBLY_FILTERED_CDS_FASTA_FILE = join(
     NCBI_ASSEMBLY_DIR,
     "{asm_dir}",
     "{asm_dir}_cds_from_genomic_filtered.fna.gz",
@@ -178,13 +178,13 @@ REF_CDS_FROM_GENOMIC_DEDUPED_ID_FILE = join(
     REF_DIR, "ref_cds_from_genomic_filtered_deduped_id.txt"
 )
 REF_DEDUPED_ID_MERGED_FASTA_FILE = join(
-    REF_DIR, "ref_merged_genomic_cds_filtered_deduped_id.fa.gz"
+    REF_DIR, "ref_merged_genomic_filtered_cds_deduped_id.fa.gz"
 )
 REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{ref_type}_deduped_id.fa.gz")
 REF_DEDUPED_ID_MERGED_DECOY_FASTA_FILE = join(
     REF_DIR, "ref_{ref_type}_deduped_id_merged_decoy.fa.gz"
 )
-EXPAND_PARAMS["ref_type"] = ["merged_genomic_cds_filtered", "genomic"]
+EXPAND_PARAMS["ref_type"] = ["merged_genomic_filtered_cds", "genomic"]
 
 PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index", "{ref_type}")
 
@@ -225,17 +225,17 @@ EXPAND_PARAMS["pfa_type"] = ["sam", "pam"]
 PUFFERFISH_GENOMIC_PAM_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_genomic.pam"
 )
-PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_SAM_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered.sam"
+PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_SAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_filtered_cds.sam"
 )
-PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered.bam"
+PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_filtered_cds.bam"
 )
-PUFFERFISH_CDS_FILTERED_BAM_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cds_filtered.bam"
+PUFFERFISH_FILTERED_CDS_BAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds.bam"
 )
-PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cds_filtered_read_quant.tsv"
+PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.tsv"
 )
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
@@ -301,7 +301,7 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "merge_assembly_summaries.log"
 )
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
-NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG = join(
+NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG = join(
     NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_filtered_fasta.log"
 )
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
@@ -324,7 +324,7 @@ REF_DEDUPED_ID_BASE_FASTA_LOG = join(
 )
 REF_DEDUPED_ID_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_deduped_id.log")
 REF_DEDUPED_ID_MERGED_FASTA_LOG = join(
-    REF_LOG_DIR, "create_ref_merged_genomic_cds_filtered_deduped_id_fasta.log"
+    REF_LOG_DIR, "create_ref_merged_genomic_filtered_cds_deduped_id_fasta.log"
 )
 REF_DEDUPED_ID_MERGED_DECOY_FASTA_LOG = join(
     REF_LOG_DIR, "create_ref_{ref_type}_deduped_id_merged_decoy_fasta.log"
@@ -346,18 +346,18 @@ PUFFERFISH_ALIGN_BAM_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR, f"{RUN_ID_WILDCARD_STR}_{{ref_type}}_bam.log"
 )
 
-PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_LOG = join(
+PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered_bam.log",
+    f"{RUN_ID_WILDCARD_STR}_merged_genomic_filtered_cds_bam.log",
 )
-PUFFERFISH_CDS_FILTERED_BAM_LOG = join(
-    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cds_filtered_bam.log"
+PUFFERFISH_FILTERED_CDS_BAM_LOG = join(
+    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_filtered_cds_bam.log"
 )
-PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_LOG = join(
+PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_cds_filtered_read_quant.log",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.log",
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
@@ -470,9 +470,9 @@ rule all:
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_CDS_FILTERED_BAM_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,

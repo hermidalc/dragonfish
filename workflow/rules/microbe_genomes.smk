@@ -78,16 +78,16 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     )
 
 
-rule ncbi_assembly_cds_filtered_fasta:
+rule ncbi_assembly_filtered_cds_fasta:
     input:
         NCBI_ASSEMBLY_CDS_FASTA_FILE,
     params:
         pattern=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["pattern"],
         extra=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["extra"],
     output:
-        NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE,
+        NCBI_ASSEMBLY_FILTERED_CDS_FASTA_FILE,
     log:
-        NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG,
+        NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_GREP_WRAPPER
