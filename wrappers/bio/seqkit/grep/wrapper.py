@@ -42,9 +42,11 @@ if isinstance(pattern, (list, tuple)):
     )
 else:
     flags = ""
+    if pattern is not None:
+        flags += "--pattern {pattern}"
     id_regexp = snakemake.params.get("id_regexp")
     if id_regexp is not None:
-        flags += "--id-regexp '{id_regexp}'"
+        flags += " --id-regexp '{id_regexp}'"
     extra = snakemake.params.get("extra")
     if extra is not None:
         flags += " {extra}"
