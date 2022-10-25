@@ -6,6 +6,19 @@ from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True, append=True)
 
-extra = snakemake.params.get("extra", "")
+bam = snakemake.input.get("bam")
+bam = snakemake.input[0] if bam is None else bam
 
-shell("samtools view {extra} {snakemake.input[0]} {log}")
+extra = snakemake.params.get("extra", "")
+qname = snakemake.params.get("qname")
+if qname is not None:
+    extra = "--qname-file {qname} {extra}"
+
+shell(
+    "samtools view"
+    " --threads {snakemake.threads}"
+    " {extra}"
+    " --output {snakemake.output[0]}"
+    " {bam}"
+    " {log}"
+)

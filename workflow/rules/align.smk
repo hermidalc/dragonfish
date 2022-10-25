@@ -1,3 +1,6 @@
+from os.path import abspath
+
+
 rule pufferfish_align_pe:
     input:
         unpack(lambda wc: get_fq(wc, trimmed=True)),

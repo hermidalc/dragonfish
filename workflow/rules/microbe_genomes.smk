@@ -88,6 +88,7 @@ rule ncbi_assembly_cds_filtered_fasta:
         NCBI_ASSEMBLY_CDS_FILTERED_FASTA_FILE,
     log:
         NCBI_ASSEMBLY_CDS_FILTERED_FASTA_LOG,
+    threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_GREP_WRAPPER
 

@@ -125,8 +125,15 @@ ncbi:
             '--by-name --use-regexp --ignore-case --line-width 80',
           ]
 
-seqkit:
-  threads: 4
+ref:
+  pigz:
+    threads: all
+  seqkit:
+    seq:
+      protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
+      extra: '--upper-case --line-width 100'
+    rename:
+      extra: '--line-width 100'
 
 gencode:
   protocol: 'ftp'
@@ -143,27 +150,6 @@ gencode:
       pattern: '^(\S+)(?:\s.*)?'
       extra: '--line-width 60'
 
-pufferfish:
-  bin_dir: 'bin/pufferfish/c4db524/linux-x64'
-  ref:
-    pigz:
-      threads: all
-    seqkit:
-      seq:
-        protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
-        extra: '--upper-case --line-width 100'
-      rename:
-        extra: '--line-width 100'
-  index:
-    threads: all
-    extra: '--keepDuplicates'
-  align:
-    threads: all
-    extra: '--coverageScoreRatio 0.5 --genomicReads'
-  cedar:
-    threads: all
-    extra: '--flat --minCnt 2'
-
 fastq:
   data_dir: 'data/fastq'
   mates: ['R1_001', 'R2_001']
@@ -175,6 +161,25 @@ trim:
   fastp:
     threads: 8
     extra: '--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis'
+
+pufferfish:
+  bin_dir: 'bin/pufferfish/c4db524/linux-x64'
+  index:
+    threads: all
+    extra: '--keepDuplicates'
+  align:
+    threads: all
+    extra: '--coverageScoreRatio 0.5 --genomicReads'
+  cedar:
+    threads: all
+    extra: '--flat --minCnt 2'
+
+seqkit:
+  threads: 4
+
+samtools:
+  view:
+    threads: all
 
 paladin:
   threads: all

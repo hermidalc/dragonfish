@@ -57,12 +57,13 @@ SAMPLE_LABELS = [
 
 EXPAND_PARAMS["data_subdir"] = [dirname(fq) for fq in UNIT_DF["fq1"]]
 
-GENCODE_DIR = join(RESOURCES_DIR, "gencode")
-NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
+UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
-UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
+GENCODE_DIR = join(RESOURCES_DIR, "gencode")
+REF_DIR = join(RESOURCES_DIR, "ref")
 PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
+NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_TYPES = config["uniprot"]["kb"]["types"]
@@ -170,21 +171,22 @@ EXPAND_PARAMS["gc_species"] = config["gencode"]["species"]
 EXPAND_PARAMS["gc_release"] = config["gencode"]["releases"]
 EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
 
-PUFFERFISH_REF_DIR = join(PUFFERFISH_RESOURCES_DIR, "ref")
-PUFFERFISH_REF_BASE_FASTA_FILE = join(PUFFERFISH_RESOURCES_DIR, "ref_{asm_type}.fa.gz")
-PUFFERFISH_REF_MERGED_FASTA_FILE = join(
-    PUFFERFISH_RESOURCES_DIR, "ref_merged_genomic_cds_filtered.fa.gz"
+REF_BASE_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
+REF_DEDUPED_ID_BASE_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.fa.gz")
+REF_DEDUPED_ID_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.txt")
+REF_CDS_FROM_GENOMIC_DEDUPED_ID_FILE = join(
+    REF_DIR, "ref_cds_from_genomic_filtered_deduped_id.txt"
 )
-PUFFERFISH_REF_FASTA_FILE = join(PUFFERFISH_RESOURCES_DIR, "ref_{pfi_type}.fa.gz")
-PUFFERFISH_REF_MERGED_DECOY_FASTA_FILE = join(
-    PUFFERFISH_RESOURCES_DIR, "ref_{pfi_type}_merged_decoy.fa.gz"
+REF_DEDUPED_ID_MERGED_FASTA_FILE = join(
+    REF_DIR, "ref_merged_genomic_cds_filtered_deduped_id.fa.gz"
 )
-PUFFERFISH_REF_MERGED_DECOY_DEDUPED_ID_FASTA_FILE = join(
-    PUFFERFISH_RESOURCES_DIR, "ref_{pfi_type}_merged_decoy_deduped_id.fa.gz"
+REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{ref_type}_deduped_id.fa.gz")
+REF_DEDUPED_ID_MERGED_DECOY_FASTA_FILE = join(
+    REF_DIR, "ref_{ref_type}_deduped_id_merged_decoy.fa.gz"
 )
+EXPAND_PARAMS["ref_type"] = ["merged_genomic_cds_filtered", "genomic"]
 
-PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index", "{pfi_type}")
-EXPAND_PARAMS["pfi_type"] = ["merged_genomic_cds_filtered", "genomic"]
+PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index", "{ref_type}")
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{data_subdir}")
 
@@ -215,7 +217,25 @@ FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_repor
 
 PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 PUFFERFISH_ALIGN_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_pufferfish.pam"
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_{{ref_type}}.{{pfa_type}}"
+)
+# order to match ref_type order
+EXPAND_PARAMS["pfa_type"] = ["sam", "pam"]
+
+PUFFERFISH_GENOMIC_PAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_genomic.pam"
+)
+PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_SAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered.sam"
+)
+PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered.bam"
+)
+PUFFERFISH_CDS_FILTERED_BAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cds_filtered.bam"
+)
+PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cds_filtered_read_quant.tsv"
 )
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
@@ -249,13 +269,14 @@ CEDAR_COUNT_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_eset.
 CEDAR_TPM_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_matrix.tsv")
 CEDAR_TPM_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_eset.rds")
 
-GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
+UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
 NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
-NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
-UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
+GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
+REF_LOG_DIR = join(LOG_DIR, "ref")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
+NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_proteomes.log")
 UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_xml.log")
@@ -297,34 +318,46 @@ GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
     GENCODE_LOG_DIR, "merge_genome_fixed_fasta_ids.log"
 )
 
-PUFFERFISH_REF_LOG_DIR = join(PUFFERFISH_LOG_DIR, "ref")
-PUFFERFISH_REF_BASE_FASTA_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_ref_{asm_type}_fasta.log"
+REF_BASE_FASTA_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_fasta.log")
+REF_DEDUPED_ID_BASE_FASTA_LOG = join(
+    REF_LOG_DIR, "create_ref_{asm_type}_deduped_id_fasta.log"
 )
-PUFFERFISH_REF_MERGED_FASTA_LOG = join(
-    PUFFERFISH_REF_LOG_DIR, "create_ref_merged_genomic_cds_filtered_fasta.log"
+REF_DEDUPED_ID_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_deduped_id.log")
+REF_DEDUPED_ID_MERGED_FASTA_LOG = join(
+    REF_LOG_DIR, "create_ref_merged_genomic_cds_filtered_deduped_id_fasta.log"
 )
-PUFFERFISH_REF_FASTA_LOG = join(
-    PUFFERFISH_REF_LOG_DIR, "create_ref_{pfi_type}_fasta.log"
+REF_DEDUPED_ID_MERGED_DECOY_FASTA_LOG = join(
+    REF_LOG_DIR, "create_ref_{ref_type}_deduped_id_merged_decoy_fasta.log"
 )
-PUFFERFISH_REF_MERGED_DECOY_FASTA_LOG = join(
-    PUFFERFISH_REF_LOG_DIR, "create_ref_{pfi_type}_merged_decoy_fasta.log"
-)
-PUFFERFISH_REF_MERGED_DECOY_DEDUPED_ID_FASTA_LOG = join(
-    PUFFERFISH_REF_LOG_DIR, "create_ref_{pfi_type}_merged_decoy_deduped_id_fasta.log"
-)
+
 PUFFERFISH_INDEX_LOG_DIR = join(PUFFERFISH_LOG_DIR, "index")
 PUFFERFISH_INDEX_LOG = join(
-    PUFFERFISH_INDEX_LOG_DIR, "create_pufferfish_{pfi_type}_index.log"
+    PUFFERFISH_INDEX_LOG_DIR,
+    "create_pufferfish_{ref_type}_deduped_id_merged_decoy_index.log",
 )
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
-PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align")
+PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align", "{data_subdir}")
 PUFFERFISH_ALIGN_LOG = join(
-    PUFFERFISH_ALIGN_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR, f"{RUN_ID_WILDCARD_STR}_{{ref_type}}_{{pfa_type}}.log"
+)
+PUFFERFISH_ALIGN_BAM_LOG = join(
+    PUFFERFISH_ALIGN_LOG_DIR, f"{RUN_ID_WILDCARD_STR}_{{ref_type}}_bam.log"
+)
+
+PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_LOG = join(
+    PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_pufferfish_align.log",
+    f"{RUN_ID_WILDCARD_STR}_merged_genomic_cds_filtered_bam.log",
+)
+PUFFERFISH_CDS_FILTERED_BAM_LOG = join(
+    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cds_filtered_bam.log"
+)
+PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_LOG = join(
+    PUFFERFISH_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_cds_filtered_read_quant.log",
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
@@ -345,10 +378,10 @@ UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS = (
     if config["uniprot"]["kb"]["idmap"]["threads"] == "all"
     else config["uniprot"]["kb"]["idmap"]["threads"]
 )
-PUFFERFISH_REF_PIGZ_THREADS = (
+REF_PIGZ_THREADS = (
     workflow.cores
-    if config["pufferfish"]["ref"]["pigz"]["threads"] == "all"
-    else config["pufferfish"]["ref"]["pigz"]["threads"]
+    if config["ref"]["pigz"]["threads"] == "all"
+    else config["ref"]["pigz"]["threads"]
 )
 PUFFERFISH_INDEX_THREADS = (
     workflow.cores
@@ -359,6 +392,11 @@ PUFFERFISH_ALIGN_THREADS = (
     workflow.cores
     if config["pufferfish"]["align"]["threads"] == "all"
     else config["pufferfish"]["align"]["threads"]
+)
+SAMTOOLS_VIEW_THREADS = (
+    workflow.cores
+    if config["samtools"]["view"]["threads"] == "all"
+    else config["samtools"]["view"]["threads"]
 )
 CEDAR_READ_QUANT_THREADS = (
     workflow.cores
@@ -372,6 +410,7 @@ GENCODE_GENOME_SEQ_WRAPPER = join(
 GENCODE_GENOME_ANNOT_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
 )
+SEQKIT_BAM_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/bam")
 SEQKIT_GREP_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/grep")
 SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
 SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
@@ -379,6 +418,7 @@ SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
+SAMTOOLS_VIEW_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/view")
 CEDAR_READ_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
 DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
 ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
@@ -389,6 +429,7 @@ include: join(RULES_DIR, "proteomes.smk")
 include: join(RULES_DIR, "microbe_genomes.smk")
 include: join(RULES_DIR, "taxonomy.smk")
 include: join(RULES_DIR, "host_genomes.smk")
+include: join(RULES_DIR, "ref.smk")
 include: join(RULES_DIR, "index.smk")
 include: join(RULES_DIR, "trim.smk")
 include: join(RULES_DIR, "align.smk")
@@ -419,18 +460,22 @@ rule all:
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
         GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
         expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_REF_BASE_FASTA_FILE, zip, **EXPAND_PARAMS),
-        PUFFERFISH_REF_MERGED_FASTA_FILE,
-        expand(PUFFERFISH_REF_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_REF_MERGED_DECOY_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_REF_MERGED_DECOY_DEDUPED_ID_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(REF_BASE_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(REF_DEDUPED_ID_BASE_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(REF_DEDUPED_ID_FILE, zip, **EXPAND_PARAMS),
+        REF_DEDUPED_ID_MERGED_FASTA_FILE,
+        expand(REF_DEDUPED_ID_FASTA_FILE, zip, **EXPAND_PARAMS),
+        expand(REF_DEDUPED_ID_MERGED_DECOY_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_INDEX_DIR, zip, **EXPAND_PARAMS),
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        NCBI_TAXDUMP_ZIP_FILE,
-        NCBI_TAXDUMP_FILES,
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_CDS_FILTERED_BAM_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_CDS_FILTERED_BAM_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        NCBI_TAXDUMP_ZIP_FILE,
+        NCBI_TAXDUMP_FILES,
         expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         CEDAR_COUNT_MATRIX_FILE,
         CEDAR_COUNT_ESET_FILE,
