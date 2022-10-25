@@ -107,7 +107,7 @@ rule uniprot_kb_idmap:
         "../scripts/get_url_file.py"
 
 
-rule uniprot_kb_genbank_cds_idmap:
+rule uniprot_kb_genbank_idmap:
     conda:
         "../envs/vaex.yaml"
     input:
@@ -115,29 +115,29 @@ rule uniprot_kb_genbank_cds_idmap:
     params:
         split_size=config["uniprot"]["kb"]["idmap"]["parse"]["split_size"],
     output:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_FILE,
+        UNIPROT_KB_GENBANK_IDMAP_FILE,
     log:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_LOG,
+        UNIPROT_KB_GENBANK_IDMAP_LOG,
     resources:
         tmpdir=TEMP_DIR,
     script:
-        "../scripts/create_uniprot_kb_genbank_cds_idmap.py"
+        "../scripts/create_uniprot_kb_genbank_idmap.py"
 
 
-rule uniprot_kb_genbank_cds_idmap_dbxrefs:
+rule uniprot_kb_genbank_idmap_dbxrefs:
     conda:
         "../envs/vaex.yaml"
     input:
-        idmap=UNIPROT_KB_GENBANK_CDS_IDMAP_FILE,
+        idmap=UNIPROT_KB_GENBANK_IDMAP_FILE,
         dbxref=UNIPROT_KB_DBXREF_FILE,
     params:
         db=lambda wc: config["uniprot"]["kb"]["dbxref"]["dbs"][
             EXPAND_PARAMS["ukb_dbxref_db"].index(wc.ukb_dbxref_db)
         ],
     output:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE,
+        UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE,
     log:
-        UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_LOG,
-    threads: UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS
+        UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG,
+    threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
     script:
-        "../scripts/create_uniprot_kb_genbank_cds_idmap_dbxref.py"
+        "../scripts/create_uniprot_kb_genbank_idmap_dbxref.py"

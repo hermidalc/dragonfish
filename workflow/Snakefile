@@ -116,12 +116,12 @@ for i, ukb_basename in enumerate(EXPAND_PARAMS["ukb_basename"]):
 UNIPROT_KB_DBXREF_FILE = join(UNIPROT_DIR, "uniprot_dbxref.hdf5")
 UNIPROT_KB_IDMAP_FILE_URL = join(UNIPROT_KB_IDMAP_URL, UNIPROT_KB_IDMAP_FILENAME)
 UNIPROT_KB_IDMAP_FILE = join(UNIPROT_DIR, UNIPROT_KB_IDMAP_FILENAME)
-UNIPROT_KB_GENBANK_CDS_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_cds_idmap.hdf5")
+UNIPROT_KB_GENBANK_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_idmap.hdf5")
 EXPAND_PARAMS["ukb_dbxref_db"] = [
     db.lower() for db in config["uniprot"]["kb"]["dbxref"]["dbs"]
 ]
-UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE = join(
-    UNIPROT_DIR, "uniprot_genbank_cds_idmap_{ukb_dbxref_db}.hdf5"
+UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE = join(
+    UNIPROT_DIR, "uniprot_genbank_idmap_{ukb_dbxref_db}.hdf5"
 )
 
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
@@ -289,11 +289,11 @@ UNIPROT_KB_DBXREF_SPLIT_LOG = join(
 )
 UNIPROT_KB_DBXREF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_kb_dbxrefs.log")
 UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
-UNIPROT_KB_GENBANK_CDS_IDMAP_LOG = join(
-    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_cds_idmap.log"
+UNIPROT_KB_GENBANK_IDMAP_LOG = join(
+    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_idmap.log"
 )
-UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_LOG = join(
-    UNIPROT_LOG_DIR, "create_genbank_cds_idmap_{ukb_dbxref_db}.log"
+UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG = join(
+    UNIPROT_LOG_DIR, "create_genbank_idmap_{ukb_dbxref_db}.log"
 )
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
@@ -373,7 +373,7 @@ CEDAR_COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_eset.log")
 CEDAR_TPM_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_matrix.log")
 CEDAR_TPM_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_eset.log")
 
-UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_THREADS = (
+UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS = (
     workflow.cores
     if config["uniprot"]["kb"]["idmap"]["threads"] == "all"
     else config["uniprot"]["kb"]["idmap"]["threads"]
@@ -449,8 +449,8 @@ rule all:
         expand(UNIPROT_KB_XML_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_KB_DBXREF_FILE,
         UNIPROT_KB_IDMAP_FILE,
-        UNIPROT_KB_GENBANK_CDS_IDMAP_FILE,
-        expand(UNIPROT_KB_GENBANK_CDS_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_GENBANK_IDMAP_FILE,
+        expand(UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
