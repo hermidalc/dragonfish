@@ -252,7 +252,9 @@ EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 
-CEDAR_READ_QUANT_FILE = join(PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar.sf")
+CEDAR_READ_QUANT_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv"
+)
 
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
 if len(DATA_SUBDIRS) == 1:
@@ -262,12 +264,19 @@ else:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
     DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
-CEDAR_COUNT_MATRIX_FILE = join(
-    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_matrix.tsv"
+PUFFERFISH_FILTERED_CDS_BAM_COUNT_MATRIX_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.tsv"
 )
-CEDAR_COUNT_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_count_eset.rds")
-CEDAR_TPM_MATRIX_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_matrix.tsv")
-CEDAR_TPM_ESET_FILE = join(DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_tpm_eset.rds")
+CEDAR_COUNT_ESET_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_filtered_cds_count_eset.rds"
+)
+
+CEDAR_COUNT_MATRIX_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_matrix.tsv"
+)
+CEDAR_COUNT_ESET_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_eset.rds"
+)
 
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
@@ -359,19 +368,25 @@ PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_LOG = join(
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.log",
 )
+PUFFERFISH_FILTERED_CDS_BAM_COUNT_MATRIX_LOG = join(
+    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.log"
+)
+PUFFERFISH_FILTERED_CDS_BAM_COUNT_ESET_LOG = join(
+    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_filtered_cds_count_eset.log"
+)
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
 CEDAR_READ_QUANT_LOG = join(
-    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cedar_quant.log"
+    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.log"
 )
 
-CEDAR_COUNT_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_matrix.log")
-CEDAR_COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_count_eset.log")
-CEDAR_TPM_MATRIX_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_matrix.log")
-CEDAR_TPM_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_tpm_eset.log")
+CEDAR_COUNT_MATRIX_LOG = join(
+    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_cedar_count_matrix.log"
+)
+CEDAR_COUNT_ESET_LOG = join(DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_cedar_count_eset.log")
 
 UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS = (
     workflow.cores
@@ -473,14 +488,14 @@ rule all:
         expand(PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_FILTERED_CDS_BAM_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        PUFFERFISH_FILTERED_CDS_BAM_COUNT_MATRIX_FILE,
+        PUFFERFISH_FILTERED_CDS_BAM_COUNT_ESET_FILE,
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
         expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         CEDAR_COUNT_MATRIX_FILE,
         CEDAR_COUNT_ESET_FILE,
-        CEDAR_TPM_MATRIX_FILE,
-        CEDAR_TPM_ESET_FILE,
 
 
 def clean(*dirs):
