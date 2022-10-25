@@ -33,23 +33,18 @@ if isinstance(pattern, (list, tuple)):
 
     cmd_prefix = "seqkit grep --threads {snakemake.threads}"
     shell_cmd = f"{cmd_prefix} {flags[0]} {{infiles}}"
-    if len(flags) > 2:
-        shell_cmd += " | " + " | ".join(
-            f"{cmd_prefix} {f}" for f in flags[1 : len(flags) - 1]
-        )
-    shell_cmd += (
-        f" | {cmd_prefix} {flags[-1]} --out-file {{snakemake.output[0]}} {{log}}"
-    )
+    if len(flags) > 1:
+        shell_cmd += " | " + " | ".join(f"{cmd_prefix} {f}" for f in flags[1:])
+    shell_cmd += " --out-file {snakemake.output[0]} {log}"
 else:
     flags = ""
     if pattern is not None:
         flags += "--pattern {pattern}"
     id_regexp = snakemake.params.get("id_regexp")
-    if id_regexp is not None:
-        flags += " --id-regexp '{id_regexp}'"
-    extra = snakemake.params.get("extra")
     if extra is not None:
         flags += " {extra}"
+    if id_regexp is not None:
+        flags += " --id-regexp '{id_regexp}'"
 
     shell(
         "seqkit grep"
