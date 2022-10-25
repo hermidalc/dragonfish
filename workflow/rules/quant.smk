@@ -15,7 +15,7 @@ rule sam_to_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule filter_bam:
+rule cds_bam:
     input:
         bam=PUFFERFISH_MERGED_GENOMIC_CDS_FILTERED_BAM_FILE,
         qname=REF_CDS_FROM_GENOMIC_DEDUPED_ID_FILE,
@@ -28,7 +28,7 @@ rule filter_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule bam_cds_read_quant:
+rule cds_bam_read_quant:
     input:
         PUFFERFISH_CDS_FILTERED_BAM_FILE,
     params:
