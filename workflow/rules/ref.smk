@@ -3,7 +3,7 @@ rule ref_fasta:
         list_file=NCBI_ASSEMBLY_FASTA_LIST_FILE,
     params:
         id_regexp=lambda wc: (
-            config["ref"]["seqkit"]["seq"]["protein_id_pattern"]
+            config["ref"]["seqkit"]["seq"]["pattern"]
             if wc.asm_type.startswith("cds_from_genomic")
             else None
         ),

@@ -130,7 +130,7 @@ ref:
     threads: all
   seqkit:
     seq:
-      protein_id_pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
+      pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
       extra: '--upper-case --line-width 100'
     rename:
       extra: '--line-width 100'
