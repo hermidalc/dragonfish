@@ -8,7 +8,7 @@ log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 infiles = snakemake.input.get("list_file")
 if infiles is not None:
-    infiles = "--infile-list {infiles}"
+    infiles = f"--infile-list {infiles}"
 else:
     infiles = snakemake.input
 
@@ -39,12 +39,12 @@ if isinstance(pattern, (list, tuple)):
 else:
     flags = ""
     if pattern is not None:
-        flags += "--pattern {pattern}"
+        flags += f"--pattern {pattern}"
     id_regexp = snakemake.params.get("id_regexp")
     if extra is not None:
-        flags += " {extra}"
+        flags += f" {extra}"
     if id_regexp is not None:
-        flags += " --id-regexp '{id_regexp}'"
+        flags += f" --id-regexp '{id_regexp}'"
 
     shell(
         "seqkit grep"

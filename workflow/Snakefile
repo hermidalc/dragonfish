@@ -235,7 +235,7 @@ PUFFERFISH_FILTERED_CDS_BAM_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds.bam"
 )
 PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.tsv"
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.tsv.gz"
 )
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
@@ -253,7 +253,7 @@ EXPAND_PARAMS["asu_basename"] = [
 ]
 
 CEDAR_READ_QUANT_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv"
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv.gz"
 )
 
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))

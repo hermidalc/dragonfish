@@ -8,17 +8,17 @@ log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 infiles = snakemake.input.get("list_file")
 if infiles is not None:
-    infiles = "--infile-list {infiles}"
+    infiles = f"--infile-list {infiles}"
 else:
     infiles = snakemake.input
 
 flags = ""
 id_regexp = snakemake.params.get("id_regexp")
 if id_regexp is not None:
-    flags += "--id-regexp '{id_regexp}'"
+    flags += f"--id-regexp '{id_regexp}'"
 extra = snakemake.params.get("extra")
 if extra is not None:
-    flags += " {extra}"
+    flags += f" {extra}"
 
 shell(
     "seqkit rename"
