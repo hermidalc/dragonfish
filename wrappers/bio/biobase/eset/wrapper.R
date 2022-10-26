@@ -4,6 +4,7 @@
 
 suppressPackageStartupMessages({
     library(Biobase)
+    library(data.table)
 })
 
 # Sink the stderr and stdout to the snakemake log file
@@ -12,19 +13,19 @@ log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
 sink(log, type = "message")
 
-adata <- read.delim(
-    snakemake@input[["assay"]], sep = "\t", header = TRUE, row.names = 1
-)
+adata <- fread(snakemake@input[["assay"]], header = TRUE)
 pdata <- read.delim(
-    snakemake@input[["pheno"]], sep = "\t", header = TRUE,
+    snakemake@input[["pheno"]],
+    sep = "\t", header = TRUE,
     row.names = snakemake@params[["samples"]]
 )
 fdata <- read.delim(
-    snakemake@input[["annot"]], sep = "\t", header = TRUE, row.names = 1
+    snakemake@input[["annot"]],
+    sep = "\t", header = TRUE, row.names = 1
 )
 
 eset <- ExpressionSet(
-    assayData = as.matrix(adata),
+    assayData = as.matrix(adata, rownames = 1),
     phenoData = AnnotatedDataFrame(pdata),
     featureData = AnnotatedDataFrame(fdata),
 )
