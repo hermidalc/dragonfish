@@ -17,8 +17,8 @@ rule uniprot_kb_dbxref_count_matrix:
     conda:
         "../envs/vaex.yaml"
     input:
-        idmap=UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE,
         counts=PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE,
+        idmap=UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE,
     output:
         UNIPROT_KB_DBXREF_COUNT_MATRIX_FILE,
     log:
