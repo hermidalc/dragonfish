@@ -36,6 +36,7 @@ if isinstance(pattern, (list, tuple)):
     if len(flags) > 1:
         shell_cmd += " | " + " | ".join(f"{cmd_prefix} {f}" for f in flags[1:])
     shell_cmd += " --out-file {snakemake.output[0]} {log}"
+    shell(shell_cmd)
 else:
     flags = ""
     if pattern is not None:
@@ -54,5 +55,3 @@ else:
         " --out-file {snakemake.output[0]}"
         " {log}"
     )
-
-shell(shell_cmd)
