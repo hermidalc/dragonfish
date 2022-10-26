@@ -31,13 +31,13 @@ rule ref_deduped_id_fasta:
         SEQKIT_RENAME_WRAPPER
 
 
-rule ref_fasta_ids:
+rule ref_fasta_qnames:
     input:
         REF_DEDUPED_ID_BASE_FASTA_FILE,
     output:
-        REF_DEDUPED_ID_FILE,
+        REF_DEDUPED_QNAME_FILE,
     log:
-        REF_DEDUPED_ID_LOG,
+        REF_DEDUPED_QNAME_LOG,
     shell:
         "pigz -dc {input} | grep '^>' | cut -c2- | awk '{{print \"SN:\"$0}}' 1> {output} 2> {log}"
 

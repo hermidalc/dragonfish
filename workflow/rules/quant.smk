@@ -18,7 +18,7 @@ rule sam_to_bam:
 rule cds_bam:
     input:
         bam=PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE,
-        qname=REF_CDS_FROM_GENOMIC_DEDUPED_ID_FILE,
+        qname=REF_CDS_FROM_GENOMIC_DEDUPED_QNAME_FILE,
     output:
         PUFFERFISH_FILTERED_CDS_BAM_FILE,
     log:

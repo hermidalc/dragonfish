@@ -173,9 +173,9 @@ EXPAND_PARAMS["gc_build"] = config["gencode"]["builds"]
 
 REF_BASE_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
 REF_DEDUPED_ID_BASE_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.fa.gz")
-REF_DEDUPED_ID_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.txt")
-REF_CDS_FROM_GENOMIC_DEDUPED_ID_FILE = join(
-    REF_DIR, "ref_cds_from_genomic_filtered_deduped_id.txt"
+REF_DEDUPED_QNAME_FILE = join(REF_DIR, "ref_{asm_type}_deduped_qnames.txt")
+REF_CDS_FROM_GENOMIC_DEDUPED_QNAME_FILE = join(
+    REF_DIR, "ref_cds_from_genomic_filtered_deduped_qnames.txt"
 )
 REF_DEDUPED_ID_MERGED_FASTA_FILE = join(
     REF_DIR, "ref_merged_genomic_filtered_cds_deduped_id.fa.gz"
@@ -331,7 +331,7 @@ REF_BASE_FASTA_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_fasta.log")
 REF_DEDUPED_ID_BASE_FASTA_LOG = join(
     REF_LOG_DIR, "create_ref_{asm_type}_deduped_id_fasta.log"
 )
-REF_DEDUPED_ID_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_deduped_id.log")
+REF_DEDUPED_QNAME_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_deduped_qnames.log")
 REF_DEDUPED_ID_MERGED_FASTA_LOG = join(
     REF_LOG_DIR, "create_ref_merged_genomic_filtered_cds_deduped_id_fasta.log"
 )
@@ -477,7 +477,7 @@ rule all:
         expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
         expand(REF_BASE_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(REF_DEDUPED_ID_BASE_FASTA_FILE, zip, **EXPAND_PARAMS),
-        expand(REF_DEDUPED_ID_FILE, zip, **EXPAND_PARAMS),
+        expand(REF_DEDUPED_QNAME_FILE, zip, **EXPAND_PARAMS),
         REF_DEDUPED_ID_MERGED_FASTA_FILE,
         expand(REF_DEDUPED_ID_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(REF_DEDUPED_ID_MERGED_DECOY_FASTA_FILE, zip, **EXPAND_PARAMS),
