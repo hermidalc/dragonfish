@@ -68,7 +68,6 @@ ncbi:
       url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
       zip_filename: 'new_taxdump.zip'
       filenames: [
-        'names.dmp',
         'nodes.dmp',
         'rankedlineage.dmp',
       ]
