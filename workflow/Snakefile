@@ -234,8 +234,11 @@ PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE = join(
 PUFFERFISH_FILTERED_CDS_BAM_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds.bam"
 )
-PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE = join(
+PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.tsv.gz"
+)
+PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.hdf5"
 )
 
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
@@ -252,8 +255,11 @@ EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 
-CEDAR_READ_QUANT_FILE = join(
+CEDAR_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv.gz"
+)
+CEDAR_READ_QUANT_TSV_FILE = join(
+    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.hdf5"
 )
 
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
@@ -265,14 +271,14 @@ else:
     DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE = join(
-    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.tsv"
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.tsv.gz"
 )
 UNIPROT_KB_DBXREF_COUNT_MATRIX_FILE = join(
-    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_{{ukb_dbxref_db}}_count_matrix.tsv"
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_{{ukb_dbxref_db}}_count_matrix.tsv.gz"
 )
 
 CEDAR_COUNT_MATRIX_FILE = join(
-    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_matrix.tsv"
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_matrix.tsv.gz"
 )
 CEDAR_COUNT_ESET_FILE = join(
     DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_eset.rds"
@@ -363,10 +369,15 @@ PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_LOG = join(
 PUFFERFISH_FILTERED_CDS_BAM_LOG = join(
     PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_filtered_cds_bam.log"
 )
-PUFFERFISH_FILTERED_CDS_READ_QUANT_LOG = join(
+PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant.log",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant_tsv.log",
+)
+PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_LOG = join(
+    PUFFERFISH_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_read_quant_hdf.log",
 )
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.log"
@@ -379,8 +390,15 @@ NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
 NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
 
-CEDAR_READ_QUANT_LOG = join(
-    PUFFERFISH_LOG_DIR, "{data_subdir}", f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.log"
+CEDAR_READ_QUANT_TSV_LOG = join(
+    PUFFERFISH_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_cedar_read_quant_tsv.log",
+)
+CEDAR_READ_QUANT_TSV_LOG = join(
+    PUFFERFISH_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_cedar_read_quant_hdf.log",
 )
 
 CEDAR_COUNT_MATRIX_LOG = join(
@@ -412,6 +430,11 @@ SAMTOOLS_VIEW_THREADS = (
     workflow.cores
     if config["samtools"]["view"]["threads"] == "all"
     else config["samtools"]["view"]["threads"]
+)
+CDS_READ_QUANT_THREADS = (
+    workflow.cores
+    if config["cds"]["quant"]["threads"] == "all"
+    else config["cds"]["quant"]["threads"]
 )
 CEDAR_READ_QUANT_THREADS = (
     workflow.cores
@@ -487,12 +510,14 @@ rule all:
         expand(PUFFERFISH_ALIGN_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_FILTERED_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
         PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE,
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
-        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
         CEDAR_COUNT_MATRIX_FILE,
         CEDAR_COUNT_ESET_FILE,
 

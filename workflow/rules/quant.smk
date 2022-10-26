@@ -28,30 +28,58 @@ rule cds_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule cds_read_quant:
+rule cds_read_quant_tsv:
     input:
         PUFFERFISH_FILTERED_CDS_BAM_FILE,
     params:
         read_count=True,
     output:
-        PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE,
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE,
     log:
-        PUFFERFISH_FILTERED_CDS_READ_QUANT_LOG,
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_LOG,
     threads: config["seqkit"]["threads"]
     wrapper:
         SEQKIT_BAM_WRAPPER
 
 
-rule cedar_read_quant:
+rule cds_read_quant_hdf:
+    conda:
+        "../envs/vaex.yaml"
+    input:
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE,
+    output:
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE,
+    log:
+        PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_LOG,
+    threads: CDS_READ_QUANT_THREADS
+    script:
+        "../scripts/convert_csv_to_hdf.py"
+
+
+rule cedar_read_quant_tsv:
     input:
         PUFFERFISH_GENOMIC_PAM_FILE,
     params:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
     output:
-        CEDAR_READ_QUANT_FILE,
+        CEDAR_READ_QUANT_TSV_FILE,
     log:
-        CEDAR_READ_QUANT_LOG,
+        CEDAR_READ_QUANT_TSV_LOG,
     threads: CEDAR_READ_QUANT_THREADS
     wrapper:
         CEDAR_READ_QUANT_WRAPPER
+
+
+rule cedar_read_quant_hdf:
+    conda:
+        "../envs/vaex.yaml"
+    input:
+        CEDAR_READ_QUANT_TSV_FILE,
+    output:
+        CEDAR_READ_QUANT_HDF_FILE,
+    log:
+        CEDAR_READ_QUANT_HDF_LOG,
+    threads: CEDAR_READ_QUANT_THREADS
+    script:
+        "../scripts/convert_csv_to_hdf.py"

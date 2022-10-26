@@ -167,6 +167,10 @@ pufferfish:
     threads: all
     extra: '--flat --minCnt 2'
 
+cds:
+  quant:
+    threads: all
+
 seqkit:
   threads: 4
 
