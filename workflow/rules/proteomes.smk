@@ -80,7 +80,7 @@ rule uniprot_kb_dbxref_split:
         "../scripts/create_uniprot_kb_dbxref_split.py"
 
 
-rule uniprot_kb_dbxrefs:
+rule uniprot_kb_merged_dbxref:
     conda:
         "../envs/vaex.yaml"
     input:

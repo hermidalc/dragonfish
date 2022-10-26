@@ -293,62 +293,55 @@ PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
 NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 
-UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_proteomes.log")
-UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_xml.log")
-UNIPROT_KB_FASTA_LOG = join(UNIPROT_LOG_DIR, "get_{ukb_basename}_fasta.log")
-UNIPROT_KB_XML_SPLIT_POS_LOG = join(
-    UNIPROT_LOG_DIR, "get_{ukb_basename}_xml_split_pos.log"
-)
+UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "uniprot_proteomes.log")
+UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml.log")
+UNIPROT_KB_FASTA_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_fasta.log")
+UNIPROT_KB_XML_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml_split_pos.log")
 UNIPROT_KB_DBXREF_SPLIT_LOG = join(
-    UNIPROT_LOG_DIR, "create_{ukb_basename}_dbxref_{ukb_snum}.log"
+    UNIPROT_LOG_DIR, "{ukb_basename}_dbxref_{ukb_snum}.log"
 )
-UNIPROT_KB_DBXREF_LOG = join(UNIPROT_LOG_DIR, "merge_uniprot_kb_dbxrefs.log")
-UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "get_uniprot_kb_idmap.log")
-UNIPROT_KB_GENBANK_IDMAP_LOG = join(
-    UNIPROT_LOG_DIR, "create_uniprot_kb_genbank_idmap.log"
-)
+UNIPROT_KB_DBXREF_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_merged_dbxref.log")
+UNIPROT_KB_IDMAP_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_idmap.log")
+UNIPROT_KB_GENBANK_IDMAP_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_genbank_idmap.log")
 UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG = join(
-    UNIPROT_LOG_DIR, "create_genbank_idmap_{ukb_dbxref_db}.log"
+    UNIPROT_LOG_DIR, "uniprot_kb_genbank_idmap_{ukb_dbxref_db}.log"
 )
 
-NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "get_{asu_basename}.log")
+NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
-    NCBI_GENOME_LOG_DIR, "merge_assembly_summaries.log"
+    NCBI_GENOME_LOG_DIR, "ncbi_assembly_merged_summary.log"
 )
-NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "get_assemblies.log")
+NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_{asm_dir}_cds_from_genomic_filtered_fasta.log"
+    NCBI_GENOME_LOG_DIR, "ncbi_{asm_dir}_cds_from_genomic_filtered_fasta.log"
 )
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
-    NCBI_GENOME_LOG_DIR, "create_assembly_{asm_type}_fasta_list.log"
+    NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
 )
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
-    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fa.log"
+    GENCODE_LOG_DIR, f"gencode_{GENCODE_GENOME_NAME}_fa.log"
 )
 GENCODE_GENOME_FIXED_FASTA_ID_LOG = join(
-    GENCODE_LOG_DIR, f"fix_{GENCODE_GENOME_NAME}_fasta_ids.log"
+    GENCODE_LOG_DIR, f"gencode_{GENCODE_GENOME_NAME}_fasta_ids.log"
 )
 GENCODE_GENOME_MERGED_FIXED_FASTA_ID_LOG = join(
-    GENCODE_LOG_DIR, "merge_genome_fixed_fasta_ids.log"
+    GENCODE_LOG_DIR, "gencode_genome_merged_fixed_fasta_ids.log"
 )
 
-REF_BASE_FASTA_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_fasta.log")
-REF_DEDUPED_ID_BASE_FASTA_LOG = join(
-    REF_LOG_DIR, "create_ref_{asm_type}_deduped_id_fasta.log"
-)
-REF_DEDUPED_QNAME_LOG = join(REF_LOG_DIR, "create_ref_{asm_type}_deduped_qnames.log")
+REF_BASE_FASTA_LOG = join(REF_LOG_DIR, "ref_{asm_type}_fasta.log")
+REF_DEDUPED_ID_BASE_FASTA_LOG = join(REF_LOG_DIR, "ref_{asm_type}_deduped_id_fasta.log")
+REF_DEDUPED_QNAME_LOG = join(REF_LOG_DIR, "ref_{asm_type}_deduped_qnames.log")
 REF_DEDUPED_ID_MERGED_FASTA_LOG = join(
-    REF_LOG_DIR, "create_ref_merged_genomic_filtered_cds_deduped_id_fasta.log"
+    REF_LOG_DIR, "ref_merged_genomic_filtered_cds_deduped_id_fasta.log"
 )
 REF_DEDUPED_ID_MERGED_DECOY_FASTA_LOG = join(
-    REF_LOG_DIR, "create_ref_{ref_type}_deduped_id_merged_decoy_fasta.log"
+    REF_LOG_DIR, "ref_{ref_type}_deduped_id_merged_decoy_fasta.log"
 )
 
 PUFFERFISH_INDEX_LOG_DIR = join(PUFFERFISH_LOG_DIR, "index")
 PUFFERFISH_INDEX_LOG = join(
-    PUFFERFISH_INDEX_LOG_DIR,
-    "create_pufferfish_{ref_type}_deduped_id_merged_decoy_index.log",
+    PUFFERFISH_INDEX_LOG_DIR, "pufferfish_{ref_type}_deduped_id_merged_decoy_index.log"
 )
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
@@ -386,9 +379,9 @@ UNIPROT_KB_DBXREF_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_{{ukb_dbxref_db}}_count_matrix.log"
 )
 
-NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
-NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_taxdump.log")
-NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "unzip_taxdump.log")
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdum_files.log")
 
 CEDAR_READ_QUANT_TSV_LOG = join(
     PUFFERFISH_LOG_DIR,

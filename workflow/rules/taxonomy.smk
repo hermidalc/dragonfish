@@ -26,7 +26,7 @@ rule ncbi_taxdump_zip:
         "../scripts/get_url_file.py"
 
 
-rule ncbi_taxdump:
+rule ncbi_taxdump_file:
     input:
         NCBI_TAXDUMP_ZIP_FILE,
     output:
