@@ -267,6 +267,9 @@ else:
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.tsv"
 )
+UNIPROT_KB_DBXREF_COUNT_MATRIX_FILE = join(
+    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_{{ukb_dbxref_db}}_count_matrix.tsv"
+)
 
 CEDAR_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_cedar_count_matrix.tsv"
@@ -367,6 +370,9 @@ PUFFERFISH_FILTERED_CDS_READ_QUANT_LOG = join(
 )
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_filtered_cds_count_matrix.log"
+)
+UNIPROT_KB_DBXREF_COUNT_MATRIX_LOG = join(
+    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_{{ukb_dbxref_db}}_count_matrix.log"
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "get_{a2t_basename}.log")
