@@ -116,14 +116,8 @@ ncbi:
         file_retry_wait: 5
       seqkit:
         grep:
-          pattern: [
-            '\[pseudo=true\]',
-            '\[protein_id=.+?\]',
-          ]
-          extra: [
-            '--by-name --use-regexp --ignore-case --invert-match --line-width 80',
-            '--by-name --use-regexp --ignore-case --line-width 80',
-          ]
+          pattern: '\[protein_id=.+?\]'
+          extra: '--by-name --use-regexp --ignore-case --line-width 80'
 
 ref:
   pigz:
