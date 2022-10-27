@@ -1,6 +1,6 @@
 rule cds_count_matrix:
     input:
-        expand(PUFFERFISH_FILTERED_CDS_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
         data_col=1,
@@ -30,7 +30,7 @@ rule uniprot_kb_dbxref_count_matrix:
 
 rule cedar_count_matrix:
     input:
-        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
     params:
         samples=SAMPLE_LABELS,
         data_col=4,

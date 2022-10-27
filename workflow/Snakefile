@@ -258,7 +258,7 @@ EXPAND_PARAMS["asu_basename"] = [
 CEDAR_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv.gz"
 )
-CEDAR_READ_QUANT_TSV_FILE = join(
+CEDAR_READ_QUANT_HDF_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.hdf5"
 )
 
@@ -388,7 +388,7 @@ CEDAR_READ_QUANT_TSV_LOG = join(
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cedar_read_quant_tsv.log",
 )
-CEDAR_READ_QUANT_TSV_LOG = join(
+CEDAR_READ_QUANT_HDF_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cedar_read_quant_hdf.log",
