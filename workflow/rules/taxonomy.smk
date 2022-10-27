@@ -12,15 +12,18 @@ rule ncbi_acc2taxid:
         "../scripts/get_url_file.py"
 
 
-rule ncbi_acc2taxid_merged:
+rule ncbi_acc2taxid_filtered_merged:
+    conda:
+        "../envs/panda.yaml"
     input:
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        proteomes=UNIPROT_PROTEOMES_FILE,
     output:
-        NCBI_ACC2TAXID_MERGED_FILE,
+        NCBI_ACC2TAXID_FILTERED_MERGED_FILE,
     log:
-        NCBI_ACC2TAXID_MERGED_LOG,
+        NCBI_ACC2TAXID_FILTERED_MERGED_LOG,
     script:
-        "../scripts/merge_ncbi_acc2taxid.py"
+        "../scripts/merge_filter_ncbi_acc2taxid.py"
 
 
 rule ncbi_taxdump_zip:

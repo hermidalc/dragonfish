@@ -61,6 +61,8 @@ rule cedar_read_quant_tsv:
         PUFFERFISH_GENOMIC_PAM_FILE,
     params:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
+        taxtree=NCBI_TAXDUMP_NODES_FILE,
+        ref2tax=NCBI_ACC2TAXID_FILTERED_MERGED_FILE,
         extra=config["pufferfish"]["cedar"]["extra"],
     output:
         CEDAR_READ_QUANT_TSV_FILE,
