@@ -12,6 +12,17 @@ rule ncbi_acc2taxid:
         "../scripts/get_url_file.py"
 
 
+rule ncbi_acc2taxid_merged:
+    input:
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+    output:
+        NCBI_ACC2TAXID_MERGED_FILE,
+    log:
+        NCBI_ACC2TAXID_MERGED_LOG,
+    script:
+        "../scripts/merge_ncbi_acc2taxid.py"
+
+
 rule ncbi_taxdump_zip:
     params:
         NCBI_TAXDUMP_ZIP_URL,
