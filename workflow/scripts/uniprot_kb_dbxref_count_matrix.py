@@ -22,6 +22,10 @@ dbxref_counts_df = idmap_dbxref_df.join(
     right_on="genbank_id",
     allow_duplication=True,
 )
+
 dbxref_counts_df.drop("genbank_id", inplace=True)
+dbxref_counts_df.drop("uniprot_id", inplace=True)
+
+dbxref_counts_df.groupby(by="db_id", agg="sum", sort=True)
 
 dbxref_counts_df.export_csv_arrow(snakemake.output[0], chunk_size=int(1e7))
