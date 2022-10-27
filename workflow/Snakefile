@@ -186,7 +186,9 @@ REF_DEDUPED_ID_MERGED_DECOY_FASTA_FILE = join(
 )
 EXPAND_PARAMS["ref_type"] = ["merged_genomic_filtered_cds", "genomic"]
 
-PUFFERFISH_INDEX_DIR = join(PUFFERFISH_RESOURCES_DIR, "index", "{ref_type}")
+PUFFERFISH_INDEX_DIR = join(
+    PUFFERFISH_RESOURCES_DIR, "index", "{ref_type}_deduped_id_merged_decoy"
+)
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{data_subdir}")
 
@@ -313,7 +315,7 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
 )
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG = join(
-    NCBI_GENOME_LOG_DIR, "ncbi_{asm_dir}_cds_from_genomic_filtered_fasta.log"
+    NCBI_GENOME_LOG_DIR, "{asm_dir}_cds_from_genomic_filtered_fasta.log"
 )
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
@@ -381,7 +383,7 @@ UNIPROT_KB_DBXREF_COUNT_MATRIX_LOG = join(
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
-NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdum_files.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
 
 CEDAR_READ_QUANT_TSV_LOG = join(
     PUFFERFISH_LOG_DIR,
