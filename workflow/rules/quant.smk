@@ -18,7 +18,7 @@ rule sam_to_bam:
 rule cds_bam:
     input:
         bam=PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE,
-        qname=REF_CDS_FROM_GENOMIC_DEDUPED_QNAME_FILE,
+        qname=REF_CDS_FROM_GENOMIC_FILTERED_DEDUPED_QNAME_FILE,
     output:
         PUFFERFISH_FILTERED_CDS_BAM_FILE,
     log:
@@ -58,11 +58,11 @@ rule cds_read_quant_hdf:
 
 rule cedar_read_quant_tsv:
     input:
-        PUFFERFISH_GENOMIC_PAM_FILE,
-    params:
-        cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
+        pam=PUFFERFISH_GENOMIC_PAM_FILE,
         taxtree=NCBI_TAXDUMP_NODES_FILE,
         ref2tax=NCBI_ACC2TAXID_FILTERED_MERGED_FILE,
+    params:
+        cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
     output:
         CEDAR_READ_QUANT_TSV_FILE,

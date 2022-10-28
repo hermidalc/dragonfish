@@ -14,7 +14,7 @@ rule gencode_genome_fasta:
         GENCODE_GENOME_SEQ_WRAPPER
 
 
-rule gencode_genome_fasta_id_fix:
+rule gencode_genome_fixed_fasta:
     input:
         GENCODE_GENOME_FASTA_FILE,
     params:
