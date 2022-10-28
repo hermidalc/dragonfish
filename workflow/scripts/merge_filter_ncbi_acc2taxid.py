@@ -1,5 +1,7 @@
 import gzip
 
+import pandas as pd
+
 proteome_df = pd.read_csv(snakemake.input.proteomes, sep="\t", index_col="Proteome Id")
 
 with open(snakemake.output[0], "wt") as out_fh:
