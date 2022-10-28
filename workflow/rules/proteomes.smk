@@ -90,7 +90,7 @@ rule uniprot_kb_merged_dbxref:
     log:
         UNIPROT_KB_DBXREF_LOG,
     script:
-        "../scripts/merge_uniprot_kb_dbxref_splits.py"
+        "../scripts/merge_hdf_splits.py"
 
 
 rule uniprot_kb_idmap:
