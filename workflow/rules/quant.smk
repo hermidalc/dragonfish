@@ -1,7 +1,7 @@
 from os.path import abspath
 
 
-rule cds_sam_to_bam:
+rule cds_and_genomic_sam_to_bam:
     input:
         PUFFERFISH_GENOMIC_AND_FILTERED_CDS_SAM_FILE,
     params:
@@ -15,7 +15,7 @@ rule cds_sam_to_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule cds_bam:
+rule cds_filtered_bam:
     input:
         bam=PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE,
         qname=REF_ASSEMBLY_CDS_FROM_GENOMIC_FILTERED_DEDUPED_QNAME_FILE,
