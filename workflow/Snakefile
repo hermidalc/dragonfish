@@ -1,7 +1,7 @@
 import re
 from glob import glob
 from os import getcwd, walk
-from os.path import dirname, exists, isdir, join, splitext
+from os.path import basename, dirname, exists, join, splitext
 from shutil import rmtree
 
 import pandas as pd
@@ -257,7 +257,9 @@ NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
 NCBI_TAXDUMP_FILES = [
     join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
 ]
-NCBI_TAXDUMP_NODES_FILE = [f for f in NCBI_TAXDUMP_FILES if f.startswith("nodes")][0]
+NCBI_TAXDUMP_NODES_FILE = [
+    f for f in NCBI_TAXDUMP_FILES if splitext(basename(f))[0] == "nodes"
+][0]
 
 CEDAR_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_cedar_read_quant.tsv.gz"
