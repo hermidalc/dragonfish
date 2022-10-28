@@ -23,8 +23,7 @@ dbxref_counts_df = idmap_dbxref_df.join(
     allow_duplication=True,
 )
 
-dbxref_counts_df.drop("genbank_id", inplace=True)
-dbxref_counts_df.drop("uniprot_id", inplace=True)
+dbxref_counts_df.drop(["genbank_id", "uniprot_id"], inplace=True)
 
 dbxref_counts_df.groupby(by="db_id", agg="sum", sort=True)
 
