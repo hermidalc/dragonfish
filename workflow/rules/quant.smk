@@ -3,13 +3,13 @@ from os.path import abspath
 
 rule sam_to_bam:
     input:
-        PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_SAM_FILE,
+        PUFFERFISH_GENOMIC_AND_FILTERED_CDS_SAM_FILE,
     params:
         extra="--bam",
     output:
-        PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE,
+        PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE,
     log:
-        PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_LOG,
+        PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_LOG,
     threads: SAMTOOLS_VIEW_THREADS
     wrapper:
         SAMTOOLS_VIEW_WRAPPER
@@ -17,7 +17,7 @@ rule sam_to_bam:
 
 rule cds_bam:
     input:
-        bam=PUFFERFISH_MERGED_GENOMIC_FILTERED_CDS_BAM_FILE,
+        bam=PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE,
         qname=REF_CDS_FROM_GENOMIC_DEDUPED_QNAME_FILE,
     output:
         PUFFERFISH_FILTERED_CDS_BAM_FILE,

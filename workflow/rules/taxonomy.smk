@@ -14,7 +14,7 @@ rule ncbi_acc2taxid:
 
 rule ncbi_acc2taxid_filtered_merged:
     conda:
-        "../envs/panda.yaml"
+        "../envs/pandas.yaml"
     input:
         files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         proteomes=UNIPROT_PROTEOMES_FILE,
