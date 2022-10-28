@@ -9,7 +9,7 @@ rule ncbi_assembly_summary:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule ncbi_assembly_merged_summary:
