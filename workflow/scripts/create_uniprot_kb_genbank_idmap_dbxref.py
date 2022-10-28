@@ -14,7 +14,7 @@ idmap_df = vx.open(snakemake.input.idmap)
 dbxref_df = vx.open(snakemake.input.dbxref)
 
 idmap_dbxref_df = idmap_df.join(
-    dbxref_df[dbxref_df.db == snakemake.params.db],
+    dbxref_df[dbxref_df.db == snakemake.params.db].extract(),
     how="inner",
     left_on="uniprot_id",
     right_on="uniprot_id",
