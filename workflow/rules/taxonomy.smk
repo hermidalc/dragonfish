@@ -9,7 +9,7 @@ rule ncbi_acc2taxid:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule ncbi_acc2taxid_filtered_merged:
@@ -23,7 +23,7 @@ rule ncbi_acc2taxid_filtered_merged:
     log:
         NCBI_ACC2TAXID_FILTERED_MERGED_LOG,
     script:
-        "../scripts/merge_filter_ncbi_acc2taxid.py"
+        "../scripts/ncbi_acc2taxid_filtered_merged.py"
 
 
 rule ncbi_taxdump_zip:
@@ -37,7 +37,7 @@ rule ncbi_taxdump_zip:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule ncbi_taxdump_files:

@@ -53,7 +53,7 @@ rule cds_read_quant_hdf:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_LOG,
     threads: CDS_READ_QUANT_THREADS
     script:
-        "../scripts/convert_csv_to_hdf.py"
+        "../scripts/csv_to_hdf.py"
 
 
 rule cedar_read_quant_tsv:
@@ -84,4 +84,4 @@ rule cedar_read_quant_hdf:
         CEDAR_READ_QUANT_HDF_LOG,
     threads: CEDAR_READ_QUANT_THREADS
     script:
-        "../scripts/convert_csv_to_hdf.py"
+        "../scripts/csv_to_hdf.py"

@@ -22,7 +22,7 @@ rule ncbi_assembly_merged_summary:
     log:
         NCBI_ASSEMBLY_MERGED_SUMMARY_LOG,
     script:
-        "../scripts/merge_ncbi_assembly_summaries.py"
+        "../scripts/ncbi_assembly_merged_summary.py"
 
 
 checkpoint ncbi_assemblies:
@@ -46,7 +46,7 @@ checkpoint ncbi_assemblies:
     retries: config["download"]["retries"]
     threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
     script:
-        "../scripts/get_ncbi_assemblies.py"
+        "../scripts/ncbi_assemblies.py"
 
 
 def gather_ncbi_assembly_fasta_files(wildcards):
@@ -105,4 +105,4 @@ rule ncbi_assembly_fasta_list:
     log:
         NCBI_ASSEMBLY_FASTA_LIST_LOG,
     script:
-        "../scripts/create_file_list_from_paths.py"
+        "../scripts/file_list_from_paths.py"

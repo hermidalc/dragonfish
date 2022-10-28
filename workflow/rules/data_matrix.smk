@@ -25,7 +25,7 @@ rule uniprot_kb_dbxref_count_matrix:
         UNIPROT_KB_DBXREF_COUNT_MATRIX_LOG,
     threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
     script:
-        "../scripts/create_uniprot_kb_dbxref_count_matrix.py"
+        "../scripts/uniprot_kb_dbxref_count_matrix.py"
 
 
 rule cedar_count_matrix:

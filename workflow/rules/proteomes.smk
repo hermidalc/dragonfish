@@ -43,7 +43,7 @@ rule uniprot_kb_fasta:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule uniprot_kb_xml_split_pos:
@@ -59,7 +59,7 @@ rule uniprot_kb_xml_split_pos:
     log:
         UNIPROT_KB_XML_SPLIT_POS_LOG,
     script:
-        "../scripts/get_uniprot_kb_xml_split_pos.py"
+        "../scripts/uniprot_kb_xml_split_pos.py"
 
 
 rule uniprot_kb_dbxref_split:
@@ -77,7 +77,7 @@ rule uniprot_kb_dbxref_split:
     log:
         UNIPROT_KB_DBXREF_SPLIT_LOG,
     script:
-        "../scripts/create_uniprot_kb_dbxref_split.py"
+        "../scripts/uniprot_kb_dbxref_split.py"
 
 
 rule uniprot_kb_merged_dbxref:
@@ -90,7 +90,7 @@ rule uniprot_kb_merged_dbxref:
     log:
         UNIPROT_KB_DBXREF_LOG,
     script:
-        "../scripts/merge_hdf_splits.py"
+        "../scripts/merged_hdf_splits.py"
 
 
 rule uniprot_kb_idmap:
@@ -104,7 +104,7 @@ rule uniprot_kb_idmap:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule uniprot_kb_genbank_idmap:
@@ -121,7 +121,7 @@ rule uniprot_kb_genbank_idmap:
     resources:
         tmpdir=TEMP_DIR,
     script:
-        "../scripts/create_uniprot_kb_genbank_idmap.py"
+        "../scripts/uniprot_kb_genbank_idmap.py"
 
 
 rule uniprot_kb_genbank_idmap_dbxrefs:
@@ -140,4 +140,4 @@ rule uniprot_kb_genbank_idmap_dbxrefs:
         UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG,
     threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
     script:
-        "../scripts/create_uniprot_kb_genbank_idmap_dbxref.py"
+        "../scripts/uniprot_kb_genbank_idmap_dbxrefs.py"
