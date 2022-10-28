@@ -15,7 +15,7 @@ rule uniprot_proteomes:
         UNIPROT_PROTEOMES_LOG,
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_uniprot_proteomes.py"
+        "../scripts/uniprot_proteomes.py"
 
 
 rule uniprot_kb_xml:
@@ -29,7 +29,7 @@ rule uniprot_kb_xml:
         "{params}"
     retries: config["download"]["retries"]
     script:
-        "../scripts/get_url_file.py"
+        "../scripts/url_file.py"
 
 
 rule uniprot_kb_fasta:
