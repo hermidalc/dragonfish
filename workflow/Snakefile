@@ -239,15 +239,16 @@ PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE = join(
     f"{RUN_ID_WILDCARD_STR}_genomic_and_filtered_cds_deduped_id_{{ref_type_b}}.bam",
 )
 PUFFERFISH_FILTERED_CDS_BAM_FILE = join(
-    PUFFERFISH_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}.bam"
+    PUFFERFISH_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}.bam",
 )
 PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}_read_quant.tsv.gz",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}_read_quant.tsv.gz",
 )
 PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}_read_quant.hdf5",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}_read_quant.hdf5",
 )
 
 EXPAND_PARAMS["a2t_basename"] = [
@@ -273,11 +274,11 @@ NCBI_TAXDUMP_NODES_FILE = [
 
 CEDAR_READ_QUANT_TSV_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_genomic_{{ref_type_b}}_cedar_read_quant.tsv.gz",
+    f"{RUN_ID_WILDCARD_STR}_genomic_deduped_id_{{ref_type_b}}_cedar_read_quant.tsv.gz",
 )
 CEDAR_READ_QUANT_HDF_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_genomic_{{ref_type_b}}_cedar_read_quant.hdf5",
+    f"{RUN_ID_WILDCARD_STR}_genomic_deduped_id_{{ref_type_b}}_cedar_read_quant.hdf5",
 )
 
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
@@ -290,23 +291,24 @@ else:
 
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_count_matrix.tsv.gz",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.tsv.gz",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_ESET_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_{{ukb_dbxref_db}}_count_eset.rds",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_eset.rds",
 )
 
 CEDAR_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_genomic_{{ref_type_b}}_cedar_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_matrix.tsv.gz",
 )
 CEDAR_COUNT_ESET_FILE = join(
-    DATA_MATRIX_RESULTS_DIR, f"{STUDY_NAME}_genomic_{{ref_type_b}}_cedar_count_eset.rds"
+    DATA_MATRIX_RESULTS_DIR,
+    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_eset.rds",
 )
 
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
@@ -360,7 +362,7 @@ REF_ASSEMBLY_DEDUPED_ID_FASTA_LOG = join(
 )
 REF_ASSEMBLY_DEDUPED_QNAME_LOG = join(REF_LOG_DIR, "ref_{asm_type}_deduped_qnames.log")
 REF_MERGED_DEDUPED_ID_FASTA_LOG = join(
-    REF_LOG_DIR, "ref_genomic_and_filtered_cds_fasta.log"
+    REF_LOG_DIR, "ref_genomic_and_filtered_cds_deduped_id_fasta.log"
 )
 REF_DEDUPED_ID_WITH_DECOY_FASTA_LOG = join(
     REF_LOG_DIR, "ref_{ref_type_a}_{ref_type_b}_fasta.log"
@@ -381,33 +383,34 @@ PUFFERFISH_ALIGN_LOG = join(
 PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_genomic_and_filtered_cds_{{ref_type_b}}_bam.log",
+    f"{RUN_ID_WILDCARD_STR}_genomic_and_filtered_cds_deduped_id_{{ref_type_b}}_bam.log",
 )
 PUFFERFISH_FILTERED_CDS_BAM_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}_bam.log",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}_bam.log",
 )
 PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}_read_quant_tsv.log",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}_read_quant_tsv.log",
 )
 PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_filtered_cds_{{ref_type_b}}_read_quant_hdf.log",
+    f"{RUN_ID_WILDCARD_STR}_filtered_cds_deduped_id_{{ref_type_b}}_read_quant_hdf.log",
 )
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_LOG = join(
-    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_count_matrix.log"
+    DATA_MATRIX_LOG_DIR,
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_count_matrix.log",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.log",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.log",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_ESET_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_filtered_cds_{{ref_type_b}}_{{ukb_dbxref_db}}_count_eset.log",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_eset.log",
 )
 
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
@@ -420,19 +423,21 @@ NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
 CEDAR_READ_QUANT_TSV_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_genomic_{{ref_type_b}}_cedar_read_quant_tsv.log",
+    f"{RUN_ID_WILDCARD_STR}_genomic_deduped_id_{{ref_type_b}}_cedar_read_quant_tsv.log",
 )
 CEDAR_READ_QUANT_HDF_LOG = join(
     PUFFERFISH_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_genomic_{{ref_type_b}}_cedar_read_quant_hdf.log",
+    f"{RUN_ID_WILDCARD_STR}_genomic_deduped_id_{{ref_type_b}}_cedar_read_quant_hdf.log",
 )
 
 CEDAR_COUNT_MATRIX_LOG = join(
-    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_genomic_{{ref_type_b}}_cedar_count_matrix.log"
+    DATA_MATRIX_LOG_DIR,
+    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_matrix.log",
 )
 CEDAR_COUNT_ESET_LOG = join(
-    DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_genomic_{{ref_type_b}}_cedar_count_eset.log"
+    DATA_MATRIX_LOG_DIR,
+    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_eset.log",
 )
 
 UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS = (

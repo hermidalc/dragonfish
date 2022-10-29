@@ -47,6 +47,8 @@ rule cds_read_quant_hdf:
         "../envs/vaex.yaml"
     input:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE,
+    params:
+        sep="\t",
     output:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE,
     log:
@@ -78,6 +80,8 @@ rule cedar_read_quant_hdf:
         "../envs/vaex.yaml"
     input:
         CEDAR_READ_QUANT_TSV_FILE,
+    params:
+        sep="\t",
     output:
         CEDAR_READ_QUANT_HDF_FILE,
     log:

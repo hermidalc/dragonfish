@@ -8,7 +8,7 @@ sample_names = snakemake.params.get("samples")
 assert sample_names is not None, "params: samples is a required parameter"
 
 data_matrix_df = pd.DataFrame()
-for quant_file, sample_name, strand in zip(snakemake.input[0], sample_names):
+for quant_file, sample_name in zip(snakemake.input, sample_names):
     quants = pd.read_csv(
         quant_file,
         sep="\t",
