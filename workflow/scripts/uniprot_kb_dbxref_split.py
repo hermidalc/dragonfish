@@ -50,4 +50,9 @@ with gzip.open(snakemake.input.kb, "rb") as kb_fh:
             if kb_fh.tell() == end_pos:
                 break
 
-vx.from_dict(dbxrefs).export_hdf5(snakemake.output[0], column_count=3, writer_threads=3)
+dbxref_df = vx.from_dict(dbxrefs)
+dbxref_df.export_hdf5(
+    snakemake.output[0],
+    column_count=dbxref_df.shape[1],
+    writer_threads=dbxref_df.shape[1],
+)

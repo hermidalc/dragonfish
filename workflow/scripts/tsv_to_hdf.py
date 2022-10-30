@@ -16,6 +16,7 @@ with TemporaryDirectory(dir=snakemake.resources.get("tmpdir", gettempdir())) as 
         start=1,
     ):
         df.export_hdf5(join(tmp_dir, f"{file_basename}_{i:03}.hdf5"))
-    vx.open(join(tmp_dir, f"{file_basename}_*.hdf5")).export_hdf5(
-        snakemake.output[0], column_count=3, writer_threads=3
+    df = vx.open(join(tmp_dir, f"{file_basename}_*.hdf5"))
+    df.export_hdf5(
+        snakemake.output[0], column_count=df.shape[1], writer_threads=df.shape[1]
     )
