@@ -291,11 +291,11 @@ else:
 
 PUFFERFISH_FILTERED_CDS_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_count_matrix.hdf5",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_filtered_cds_deduped_id_{{ref_type_b}}_{{ukb_dbxref_db}}_count_matrix.hdf5",
 )
 PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_ESET_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
@@ -304,7 +304,7 @@ PUFFERFISH_FILTERED_CDS_DBXREF_COUNT_ESET_FILE = join(
 
 CEDAR_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_matrix.tsv.gz",
+    f"{STUDY_NAME}_genomic_deduped_id_{{ref_type_b}}_cedar_count_matrix.hdf5",
 )
 CEDAR_COUNT_ESET_FILE = join(
     DATA_MATRIX_RESULTS_DIR,

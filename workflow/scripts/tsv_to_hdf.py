@@ -8,7 +8,7 @@ with TemporaryDirectory(dir=snakemake.resources.get("tmpdir", gettempdir())) as 
     for i, df in enumerate(
         vx.read_csv(
             snakemake.input[0],
-            sep=snakemake.params.sep,
+            sep="\t",
             chunk_size=int(1e7),
             engine="c",
             low_memory=False,

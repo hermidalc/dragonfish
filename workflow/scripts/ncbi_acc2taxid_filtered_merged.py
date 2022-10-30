@@ -2,8 +2,13 @@ import gzip
 
 import pandas as pd
 
-proteome_df = pd.read_csv(snakemake.input.proteomes, sep="\t", index_col="Proteome Id")
-
+proteome_df = pd.read_csv(
+    snakemake.input.proteomes,
+    sep="\t",
+    index_col="Proteome Id",
+    engine="c",
+    low_memory=False,
+)
 with open(snakemake.output[0], "wt") as out_fh:
     for i, gz_file in enumerate(sorted(snakemake.input.files, reverse=True)):
         with gzip.open(gz_file, "rt") as in_fh:

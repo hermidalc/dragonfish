@@ -4,7 +4,7 @@ from shutil import copyfileobj
 from zipfile import ZipFile
 
 try:
-    if snakemake.input[0].endswith((".zip", ".ZIP")):
+    if snakemake.input[0].endswith(".zip"):
         with ZipFile(snakemake.input[0]) as zf:
             if len(snakemake.output) > 1:
                 for member in snakemake.output:
@@ -13,7 +13,7 @@ try:
                 zf.extract(
                     basename(snakemake.output[0]), path=dirname(snakemake.output[0])
                 )
-    elif snakemake.input[0].endswith((".gz", ".GZ")):
+    elif snakemake.input[0].endswith(".gz"):
         with gzip.open(snakemake.input[0], "rb") as f_in:
             with open(snakemake.output[0], "wb") as f_out:
                 copyfileobj(f_in, f_out)

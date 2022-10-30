@@ -11,7 +11,7 @@ vx.settings.main.thread_count = snakemake.threads
 vx.settings.main.thread_count_io = snakemake.threads
 
 genbank_counts_df = vx.open(snakemake.input.counts)
-genbank_counts_df.rename(genbank_counts_df.get_column_names()[0], "genbank_id")
+genbank_counts_df.rename(genbank_counts_df.column_names[0], "genbank_id")
 
 idmap_dbxref_df = vx.open(snakemake.input.idmap)
 

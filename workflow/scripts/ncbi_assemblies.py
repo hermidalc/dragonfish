@@ -39,7 +39,12 @@ def check_md5(file):
     md5_file = join(dirname(file), snakemake.params.md5_name)
     try:
         md5_df = pd.read_csv(
-            md5_file, delim_whitespace=True, header=None, names=["md5", "name"]
+            md5_file,
+            delim_whitespace=True,
+            header=None,
+            names=["md5", "name"],
+            engine="c",
+            low_memory=False,
         )
         md5_df["name"] = md5_df["name"].apply(lambda n: basename(n))
         actual_md5 = md5_df["md5"][md5_df["name"] == basename(file)].values[0]
@@ -58,9 +63,19 @@ print(
 )
 
 summary_df = pd.read_csv(
-    snakemake.input.summary, sep="\t", index_col="assembly_accession", low_memory=False
+    snakemake.input.summary,
+    sep="\t",
+    index_col="assembly_accession",
+    engine="c",
+    low_memory=False,
 )
-proteome_df = pd.read_csv(snakemake.input.proteomes, sep="\t", index_col="Proteome Id")
+proteome_df = pd.read_csv(
+    snakemake.input.proteomes,
+    sep="\t",
+    index_col="Proteome Id",
+    engine="c",
+    low_memory=False,
+)
 
 genome_names = []
 file_urls, files = [], []

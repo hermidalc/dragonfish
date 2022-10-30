@@ -8,6 +8,7 @@ def load_summary_df(summary_file):
         skiprows=1,
         index_col=0,
         na_values=("na", "NA"),
+        engine="c",
         low_memory=False,
     )
     summary_df.index.name = "assembly_accession"

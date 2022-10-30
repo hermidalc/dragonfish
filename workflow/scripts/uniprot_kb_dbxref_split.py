@@ -6,7 +6,13 @@ import vaex as vx
 from Bio.SeqIO.UniprotIO import Parser as UniprotParser
 from lxml import etree
 
-proteome_df = pd.read_csv(snakemake.input.proteomes, sep="\t", index_col="Proteome Id")
+proteome_df = pd.read_csv(
+    snakemake.input.proteomes,
+    sep="\t",
+    index_col="Proteome Id",
+    engine="c",
+    low_memory=False,
+)
 
 with open(snakemake.input.split_pos, "rt") as pos_fh:
     split_pos = pos_fh.read().splitlines()

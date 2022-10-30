@@ -1,7 +1,7 @@
 from os.path import abspath
 
 
-rule cds_and_genomic_sam_to_bam:
+rule cds_and_genomic_bam:
     input:
         PUFFERFISH_GENOMIC_AND_FILTERED_CDS_SAM_FILE,
     params:
@@ -15,7 +15,7 @@ rule cds_and_genomic_sam_to_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule cds_filtered_bam:
+rule cds_bam:
     input:
         bam=PUFFERFISH_GENOMIC_AND_FILTERED_CDS_BAM_FILE,
         qname=REF_ASSEMBLY_CDS_FROM_GENOMIC_FILTERED_DEDUPED_QNAME_FILE,
@@ -47,15 +47,13 @@ rule cds_read_quant_hdf:
         "../envs/vaex.yaml"
     input:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_TSV_FILE,
-    params:
-        sep="\t",
     output:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_FILE,
     log:
         PUFFERFISH_FILTERED_CDS_READ_QUANT_HDF_LOG,
     threads: CDS_READ_QUANT_THREADS
     script:
-        "../scripts/csv_to_hdf.py"
+        "../scripts/tsv_to_hdf.py"
 
 
 rule cedar_read_quant_tsv:
@@ -80,12 +78,10 @@ rule cedar_read_quant_hdf:
         "../envs/vaex.yaml"
     input:
         CEDAR_READ_QUANT_TSV_FILE,
-    params:
-        sep="\t",
     output:
         CEDAR_READ_QUANT_HDF_FILE,
     log:
         CEDAR_READ_QUANT_HDF_LOG,
     threads: CEDAR_READ_QUANT_THREADS
     script:
-        "../scripts/csv_to_hdf.py"
+        "../scripts/tsv_to_hdf.py"

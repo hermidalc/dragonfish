@@ -18,7 +18,7 @@ assert snakemake.input[0].endswith(
 inflag = "--puffMapperOut" if snakemake.input[0].endswith(".pam") else "--sam"
 
 run_pigz = False
-if snakemake.output[0].endswith((".gz", ".GZ")):
+if snakemake.output[0].endswith(".gz"):
     output = splitext(snakemake.output[0])[0]
     run_pigz = True
 else:

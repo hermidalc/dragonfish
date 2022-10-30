@@ -7,7 +7,7 @@ from snakemake.shell import shell
 bam = snakemake.input.get("bam")
 bam = snakemake.input[0] if bam is None else bam
 
-gzip = snakemake.output[0].endswith((".gz", ".GZ"))
+gzip = snakemake.output[0].endswith(".gz")
 
 flags = ""
 read_count = snakemake.params.get("read_count", False)
