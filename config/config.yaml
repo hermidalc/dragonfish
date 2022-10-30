@@ -105,7 +105,6 @@ ncbi:
         'assembly_summary_refseq_historical.txt',
       ]
     file:
-      types: ['genomic', 'cds_from_genomic_filtered']
       exts: ['genomic.fna.gz', 'cds_from_genomic.fna.gz']
       gff_ext: 'genomic.gff.gz'
       download:

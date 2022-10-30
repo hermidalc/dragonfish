@@ -126,7 +126,12 @@ UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE = join(
     UNIPROT_DIR, "uniprot_genbank_idmap_{ukb_dbxref_db}.hdf5"
 )
 
-EXPAND_PARAMS["asm_type"] = config["ncbi"]["assembly"]["file"]["types"]
+EXPAND_PARAMS["asm_type"] = [
+    x.partition(".")[0] for x in config["ncbi"]["assembly"]["file"]["exts"]
+]
+EXPAND_PARAMS["asm_type"][
+    EXPAND_PARAMS["asm_type"].index("cds_from_genomic")
+] = "cds_from_genomic_filtered"
 
 NCBI_ASSEMBLY_SUMMARY_FILE_URL = join(NCBI_ASSEMBLY_SUMMARY_URL, "{asu_basename}.txt")
 NCBI_ASSEMBLY_SUMMARY_FILE = join(NCBI_GENOME_DIR, "{asu_basename}.txt")
@@ -191,7 +196,6 @@ PUFFERFISH_INDEX_DIR = join(
 )
 
 TRIMMED_RESULTS_DIR = join(RESULTS_DIR, "fastp", "{data_subdir}")
-PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 
 FASTQ1_FILE = join(
     FASTQ_DATA_DIR, f"{RUN_ID_WILDCARD_STR}_{FASTQ_MATES[0]}.{FASTQ_EXT}"
@@ -216,6 +220,8 @@ FAILED_READS_FILE = join(
 )
 FASTP_HTML_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.html")
 FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_report.json")
+
+PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 
 PUFFERFISH_ALIGN_FILE = join(
     PUFFERFISH_RESULTS_DIR,
@@ -332,8 +338,8 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_merged_summary.log"
 )
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
-NCBI_ASSEMBLY_CDS_FASTA_LOG = join(
-    NCBI_GENOME_LOG_DIR, "{asm_dir}_cds_from_genomic_fasta.log"
+NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG = join(
+    NCBI_GENOME_LOG_DIR, "{asm_dir}_cds_from_genomic_filtered_fasta.log"
 )
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
@@ -374,22 +380,22 @@ PUFFERFISH_ALIGN_LOG = join(
     f"{RUN_ID_WILDCARD_STR}_{{ref_type_a}}_{{ref_type_b}}_{{pfa_type}}.log",
 )
 PUFFERFISH_GENOMIC_AND_CDS_BAM_LOG = join(
-    PUFFERFISH_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_genomic_and_cds_deduped_id_{{ref_type_b}}_bam.log",
 )
 PUFFERFISH_CDS_BAM_LOG = join(
-    PUFFERFISH_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_bam.log",
 )
 PUFFERFISH_CDS_READ_QUANT_TSV_LOG = join(
-    PUFFERFISH_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant_tsv.log",
 )
 PUFFERFISH_CDS_READ_QUANT_HDF_LOG = join(
-    PUFFERFISH_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant_hdf.log",
 )
