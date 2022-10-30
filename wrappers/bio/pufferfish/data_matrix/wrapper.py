@@ -11,7 +11,7 @@ assert sample_names is not None, "params: samples is a required parameter"
 data_matrix_df = None
 for data_file, sample_name in zip(snakemake.input, sample_names):
     if data_file.endswith((".hdf", ".hdf5")):
-        data_df = vx.open(quant_file)
+        data_df = vx.open(data_file)
         drop_col_idxs = [
             i
             for i in range(data_df.shape[1])
