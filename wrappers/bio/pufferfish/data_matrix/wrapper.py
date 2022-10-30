@@ -8,6 +8,8 @@ import vaex as vx
 sample_names = snakemake.params.get("samples")
 assert sample_names is not None, "params: samples is a required parameter"
 
+collapse_techreps = snakemake.params.get("collapse_techreps", False)
+
 data_matrix_df = None
 for data_file, sample_name in zip(snakemake.input, sample_names):
     if data_file.endswith((".hdf", ".hdf5")):
@@ -18,16 +20,27 @@ for data_file, sample_name in zip(snakemake.input, sample_names):
             if i not in [0, snakemake.params.data_col]
         ]
         data_df.drop(data_df.column_names[drop_col_idxs], inplace=True)
+        data_df.rename(data_df.column_names[-1], sample_name)
         if data_matrix_df:
-            data_matrix_df.join(
-                data_df,
-                how="left",
-                left_on=data_matrix_df.column_names[0],
-                right_on=data_df.column_names[0],
-                allow_duplication=False,
-                cardinality_other=data_matrix_df.shape[0],
-                inplace=True,
-            )
+            if sample_name in data_matrix_df.column_names:
+                print(
+                    f"Collapsing {snakemake.output[0]} technical "
+                    f"replicate {sample_name}",
+                    flush=True,
+                )
+                data_matrix_df[sample_name] = (
+                    data_matrix_df[sample_name] + data_df[sample_name]
+                )
+            else:
+                data_matrix_df.join(
+                    data_df,
+                    how="left",
+                    left_on=data_matrix_df.column_names[0],
+                    right_on=data_df.column_names[0],
+                    allow_duplication=False,
+                    cardinality_other=data_df.shape[0],
+                    inplace=True,
+                )
         else:
             data_matrix_df[sample_name] = data_df
     else:
@@ -52,12 +65,18 @@ for data_file, sample_name in zip(snakemake.input, sample_names):
         data_matrix_df.shape[0] == data_df.shape[0]
     ), "Quant files do not have same rows"
 
-data_matrix_df.index.name = "ID_REF"
-
-collapse_techreps = snakemake.params.get("collapse_techreps", False)
-if collapse_techreps and data_matrix_df.columns.duplicated().any():
-    print(f"Collapsing {snakemake.output[0]} technical replicates", flush=True)
-    data_matrix_df = data_matrix_df.groupby(data_matrix_df.columns, axis=1).sum()
-
-data_matrix_df.sort_index(inplace=True)
-data_matrix_df.to_csv(snakemake.output[0], sep="\t")
+if isinstance(data_matrix_df, pd.DataFrame):
+    data_matrix_df.index.name = "ID_REF"
+    if collapse_techreps and data_matrix_df.columns.duplicated().any():
+        print(f"Collapsing {snakemake.output[0]} technical replicates", flush=True)
+        data_matrix_df = data_matrix_df.groupby(data_matrix_df.columns, axis=1).sum()
+    data_matrix_df.sort_index(inplace=True)
+    data_matrix_df.to_csv(snakemake.output[0], sep="\t")
+else:
+    data_matrix_df.rename(data_matrix_df.column_names[0], "ID_REF")
+    data_matrix_df = data_matrix_df.sort(by=data_matrix_df.column_names[0])
+    data_matrix_df.export_hdf5(
+        snakemake.output[0],
+        column_count=data_matrix_df.shape[1],
+        writer_threads=data_matrix_df.shape[1],
+    )
