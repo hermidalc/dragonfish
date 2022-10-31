@@ -16,7 +16,7 @@ for data_file, sample_name in zip(snakemake.input, sample_names):
         data_df = vx.open(data_file)
         data_df.drop(
             [
-                data_df.column_names(i)
+                data_df.column_names[i]
                 for i in range(data_df.shape[1])
                 if i not in [0, int(snakemake.params.data_col)]
             ],
