@@ -14,12 +14,14 @@ data_matrix_df = None
 for data_file, sample_name in zip(snakemake.input, sample_names):
     if data_file.endswith((".hdf", ".hdf5")):
         data_df = vx.open(data_file)
-        drop_col_idxs = [
-            i
-            for i in range(data_df.shape[1])
-            if i not in [0, snakemake.params.data_col]
-        ]
-        data_df.drop(data_df.column_names[drop_col_idxs], inplace=True)
+        data_df.drop(
+            [
+                data_df.column_names(i)
+                for i in range(data_df.shape[1])
+                if i not in [0, int(snakemake.params.data_col)]
+            ],
+            inplace=True,
+        )
         data_df.rename(data_df.column_names[-1], sample_name)
         if data_matrix_df:
             if sample_name in data_matrix_df.column_names:
