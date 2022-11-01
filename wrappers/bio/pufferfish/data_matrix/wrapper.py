@@ -44,7 +44,7 @@ for data_file, sample_name in zip(snakemake.input, sample_names):
                     inplace=True,
                 )
         else:
-            data_matrix_df[sample_name] = data_df
+            data_matrix_df = data_df
     else:
         data_df = pd.read_csv(
             data_file,
@@ -62,7 +62,7 @@ for data_file, sample_name in zip(snakemake.input, sample_names):
                 [data_matrix_df, data_df], axis=1, verify_integrity=True
             )
         else:
-            data_matrix_df = pd.DataFrame()
+            data_matrix_df = data_df
     assert (
         data_matrix_df.shape[0] == data_df.shape[0]
     ), "Quant files do not have same rows"
