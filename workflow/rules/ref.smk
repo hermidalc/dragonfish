@@ -31,7 +31,7 @@ rule ref_assembly_deduped_id_fasta:
         SEQKIT_RENAME_WRAPPER
 
 
-rule ref_assembly_deduped_qname_fasta:
+rule ref_assembly_deduped_qnames:
     input:
         REF_ASSEMBLY_DEDUPED_ID_FASTA_FILE,
     output:
