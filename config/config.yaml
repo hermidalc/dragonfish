@@ -146,7 +146,7 @@ gencode:
 fastq:
   data_dir: 'data/fastq'
   mates: ['R1_001', 'R2_001']
-  ext: 'fq.gz'
+  ext: 'fastq.gz'
   platform: 'Illumina'
 
 trim:
