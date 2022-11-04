@@ -251,6 +251,14 @@ PUFFERFISH_CDS_READ_QUANT_HDF_FILE = join(
     PUFFERFISH_RESULTS_DIR,
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant.hdf5",
 )
+PUFFERFISH_CDS_UNMAPPED_PAIR_BAM_FILE = join(
+    PUFFERFISH_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair.bam",
+)
+PUFFERFISH_CDS_UNMAPPED_PAIR_FASTQ_FILE = join(
+    PUFFERFISH_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair.fastq.gz",
+)
 
 EXPAND_PARAMS["a2t_basename"] = [
     splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
@@ -399,6 +407,16 @@ PUFFERFISH_CDS_READ_QUANT_HDF_LOG = join(
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant_hdf.log",
 )
+PUFFERFISH_CDS_UNMAPPED_PAIR_BAM_LOG = join(
+    PUFFERFISH_ALIGN_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair_bam.log",
+)
+PUFFERFISH_CDS_UNMAPPED_PAIR_FASTQ_LOG = join(
+    PUFFERFISH_ALIGN_LOG_DIR,
+    "{data_subdir}",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair_fastq.log",
+)
 PUFFERFISH_CDS_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_cds_deduped_id_{{ref_type_b}}_count_matrix.log"
 )
@@ -461,10 +479,10 @@ PUFFERFISH_ALIGN_THREADS = (
     if config["pufferfish"]["align"]["threads"] == "all"
     else config["pufferfish"]["align"]["threads"]
 )
-SAMTOOLS_VIEW_THREADS = (
+SAMTOOLS_THREADS = (
     workflow.cores
-    if config["samtools"]["view"]["threads"] == "all"
-    else config["samtools"]["view"]["threads"]
+    if config["samtools"]["threads"] == "all"
+    else config["samtools"]["threads"]
 )
 CDS_READ_QUANT_THREADS = (
     workflow.cores
@@ -491,6 +509,7 @@ SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
+SAMTOOLS_FASTQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/fastq")
 SAMTOOLS_VIEW_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/view")
 CEDAR_READ_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
 DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
