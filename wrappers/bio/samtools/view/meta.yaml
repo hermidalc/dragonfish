@@ -1,5 +1,5 @@
 name: samtools view
-description: Convert or filter SAM/BAM
+description: Convert or filter SAM/BAM/CRAM
 authors:
   - Leandro C. Hermida
 notes: |
