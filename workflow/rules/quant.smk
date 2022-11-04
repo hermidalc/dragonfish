@@ -10,7 +10,7 @@ rule cds_and_genomic_bam:
         PUFFERFISH_GENOMIC_AND_CDS_BAM_FILE,
     log:
         PUFFERFISH_GENOMIC_AND_CDS_BAM_LOG,
-    threads: SAMTOOLS_VIEW_THREADS
+    threads: SAMTOOLS_THREADS
     wrapper:
         SAMTOOLS_VIEW_WRAPPER
 
@@ -23,7 +23,7 @@ rule cds_bam:
         PUFFERFISH_CDS_BAM_FILE,
     log:
         PUFFERFISH_CDS_BAM_LOG,
-    threads: SAMTOOLS_VIEW_THREADS
+    threads: SAMTOOLS_THREADS
     wrapper:
         SAMTOOLS_VIEW_WRAPPER
 

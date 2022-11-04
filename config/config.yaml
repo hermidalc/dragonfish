@@ -176,7 +176,6 @@ seqkit:
   threads: 4
 
 samtools:
-  view:
     threads: all
 
 paladin:

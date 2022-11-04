@@ -1,0 +1,6 @@
+name: samtools fastq
+description: Converts a SAM/BAM/CRAM to FASTQ format
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information see, http://www.htslib.org/doc/samtools-view.html
