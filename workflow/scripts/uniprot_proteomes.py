@@ -5,15 +5,17 @@ import pandas as pd
 print("\nGetting UniProt Proteomes metadata", flush=True)
 
 ref_df = pd.read_csv(snakemake.params.ref_url, sep="\t", engine="c", low_memory=False)
-other_df = pd.read_csv(
-    snakemake.params.other_url, sep="\t", engine="c", low_memory=False
-)
+if snakemake.params.tax_level == "strain":
+    other_df = pd.read_csv(
+        snakemake.params.other_url, sep="\t", engine="c", low_memory=False
+    )
+    merged_df = pd.concat(
+        [ref_df, other_df], axis=0, ignore_index=True, sort=False, verify_integrity=True
+    )
+else:
+    merged_df = ref_df
 
-merged_df = pd.concat(
-    [ref_df, other_df], axis=0, ignore_index=True, sort=False, verify_integrity=True
-)
 merged_df.dropna(subset="Genome assembly ID", inplace=True)
-# merged_df.dropna(subset="Organism", inplace=True)
 
 # keep newest assmbly version if there are duplicates
 merged_df["Genome assembly ID NV"] = merged_df["Genome assembly ID"].str.split(

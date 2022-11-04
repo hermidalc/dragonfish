@@ -18,12 +18,13 @@ study:
 
 uniprot:
   proteome:
-    url:
-      ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
-      other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
+    tax_level: strain
     n_sample: 0
     random_seed: 777
     filter_domains: []
+    url:
+      ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
+      other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     types: ['sprot', 'trembl']
