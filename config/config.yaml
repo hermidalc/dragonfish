@@ -132,7 +132,7 @@ ref:
 gencode:
   protocol: 'ftp'
   species: ['human', 'mouse']
-  releases: ['41', 'M30']
+  releases: ['42', 'M31']
   builds: ['GRCh38', 'GRCm39']
   regions: 'PRI'
   annot:
