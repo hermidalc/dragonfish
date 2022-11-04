@@ -18,7 +18,7 @@ study:
 
 uniprot:
   proteome:
-    tax_level: strain
+    tax_level: species
     n_sample: 0
     random_seed: 777
     filter_domains: []
