@@ -119,8 +119,6 @@ rule uniprot_kb_genbank_idmap:
         UNIPROT_KB_GENBANK_IDMAP_FILE,
     log:
         UNIPROT_KB_GENBANK_IDMAP_LOG,
-    resources:
-        tmpdir=TEMP_DIR,
     script:
         "../scripts/uniprot_kb_genbank_idmap.py"
 
