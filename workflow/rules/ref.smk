@@ -63,8 +63,8 @@ rule ref_deduped_id_with_decoy_fasta:
     conda:
         "../envs/pigz.yaml"
     input:
-        [REF_DEDUPED_ID_FASTA_FILE],
-        # + expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
+        [REF_DEDUPED_ID_FASTA_FILE]
+        + expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
     output:
         REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE,
     log:
