@@ -13,6 +13,7 @@ else:
     infiles = snakemake.input
 
 flags = ""
+pattern = snakemake.params.get("pattern")
 if pattern is not None:
     flags += f"--pattern '{pattern}'"
     replacement = snakemake.params.get("replacement")
