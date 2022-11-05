@@ -176,7 +176,7 @@ GENCODE_GENOME_ANNOT_FILE = join(
 
 # match order: ref_type_a and pfa_type
 EXPAND_PARAMS["ref_type_a"] = ["genomic_deduped_id", "genomic_and_cds_deduped_id"]
-EXPAND_PARAMS["ref_type_b"] = ["with_decoy"]
+EXPAND_PARAMS["ref_type_b"] = ["with_decoy", "with_decoy"]
 EXPAND_PARAMS["pfa_type"] = ["pam", "sam"]
 
 REF_ASSEMBLY_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
