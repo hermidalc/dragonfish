@@ -6,9 +6,6 @@ from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
-cmd = snakemake.params.get("cmd")
-assert cmd is not None, "input: cmd is a required input parameter"
-
 infiles = snakemake.input.get("list_file")
 if infiles is not None:
     infiles = f"--infile-list {infiles}"
