@@ -63,9 +63,7 @@ sj = snakemake.input.get("sj")
 if sj:
     extra += f" --sjdbFileChrStartEnd {sj}"
 
-tmp_base_dir = snakemake.resources.get("tmp_dir", gettempdir())
-
-with TemporaryDirectory(dir=tmp_base_dir) as tmp_dir:
+with TemporaryDirectory(dir=snakemake.resources.get("tmpdir", gettempdir())) as tmp_dir:
     shell(
         "STAR"
         " --runThreadN {snakemake.threads}"
