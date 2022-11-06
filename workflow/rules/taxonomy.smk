@@ -17,7 +17,6 @@ rule ncbi_acc2taxid_merged:
         "../envs/pandas.yaml"
     input:
         files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        proteomes=UNIPROT_PROTEOMES_FILE,
     output:
         NCBI_ACC2TAXID_MERGED_FILE,
     log:
