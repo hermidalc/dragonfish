@@ -59,8 +59,8 @@ rule cds_read_quant_hdf:
 rule cedar_read_quant_tsv:
     input:
         pam=PUFFERFISH_GENOMIC_PAM_FILE,
-        taxtree=NCBI_TAXDUMP_NODES_FILE,
-        ref2tax=NCBI_ACC2TAXID_MERGED_FILE,
+        taxtree=NCBI_TAXDUMP_FILTERED_NODE_FILE,
+        ref2tax=NCBI_ACC2TAXID_FILTERED_FILE,
     params:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
