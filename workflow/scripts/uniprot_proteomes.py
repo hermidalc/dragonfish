@@ -47,7 +47,7 @@ merged_df = merged_df.loc[
     .fillna(False)
 ]
 
-print(f"\n{merged_df.shape[0]} UniProt proteomes", flush=True)
+print(f"{merged_df.shape[0]} UniProt proteomes", flush=True)
 
 if snakemake.params.n_sample > 0:
     print(f"\nSampling {snakemake.params.n_sample} proteomes", flush=True)
