@@ -25,12 +25,25 @@ rule ncbi_assembly_merged_summary:
         "../scripts/ncbi_assembly_merged_summary.py"
 
 
+rule ncbi_assembly_filtered_summary:
+    conda:
+        "../envs/pandas.yaml"
+    input:
+        summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        proteomes=UNIPROT_PROTEOMES_FILE,
+    output:
+        NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
+    log:
+        NCBI_ASSEMBLY_FILTERED_SUMMARY_LOG,
+    script:
+        "../scripts/ncbi_assembly_filtered_summary.py"
+
+
 checkpoint ncbi_assemblies:
     conda:
         "../envs/joblib.yaml"
     input:
-        proteomes=UNIPROT_PROTEOMES_FILE,
-        summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     params:
         file_exts=config["ncbi"]["assembly"]["file"]["exts"],
         skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
