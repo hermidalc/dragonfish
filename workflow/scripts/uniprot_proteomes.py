@@ -10,7 +10,7 @@ if snakemake.params.tax_level == "strain":
         snakemake.params.other_url, sep="\t", engine="c", low_memory=False
     )
     merged_df = pd.concat(
-        [ref_df, other_df], axis=0, ignore_index=True, sort=False, verify_integrity=True
+        [ref_df, other_df], axis=0, ignore_index=True, verify_integrity=True
     )
 else:
     merged_df = ref_df
