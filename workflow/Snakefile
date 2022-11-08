@@ -145,6 +145,9 @@ NCBI_ASSEMBLY_SUMMARY_FILES = [
     join(NCBI_GENOME_DIR, filename) for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
 NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merged.txt")
+NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE = join(
+    NCBI_GENOME_DIR, "assembly_summary_filtered.txt"
+)
 NCBI_ASSEMBLY_CDS_FASTA_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_cds_from_genomic.fna.gz"
 )
@@ -257,13 +260,13 @@ PUFFERFISH_CDS_READ_QUANT_HDF_FILE = join(
     PUFFERFISH_RESULTS_DIR,
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant.hdf5",
 )
-PUFFERFISH_CDS_UNMAPPED_PAIR_BAM_FILE = join(
+PUFFERFISH_CDS_UNMAPPED_BAM_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair.bam",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pe.bam",
 )
-PUFFERFISH_CDS_UNMAPPED_PAIR_FASTQ_FILE = join(
+PUFFERFISH_CDS_UNMAPPED_FASTQ_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair.fastq.gz",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pe.fastq.gz",
 )
 
 EXPAND_PARAMS["a2t_basename"] = [
@@ -348,6 +351,9 @@ NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_merged_summary.log"
 )
+NCBI_ASSEMBLY_FILTERED_SUMMARY_LOG = join(
+    NCBI_GENOME_LOG_DIR, "ncbi_assembly_filtered_summary.log"
+)
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG = join(
     NCBI_GENOME_LOG_DIR, "{asm_dir}_cds_from_genomic_filtered_fasta.log"
@@ -410,15 +416,15 @@ PUFFERFISH_CDS_READ_QUANT_HDF_LOG = join(
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_read_quant_hdf.log",
 )
-PUFFERFISH_CDS_UNMAPPED_PAIR_BAM_LOG = join(
+PUFFERFISH_CDS_UNMAPPED_BAM_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair_bam.log",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pe_bam.log",
 )
-PUFFERFISH_CDS_UNMAPPED_PAIR_FASTQ_LOG = join(
+PUFFERFISH_CDS_UNMAPPED_FASTQ_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pair_fastq.log",
+    f"{RUN_ID_WILDCARD_STR}_cds_deduped_id_{{ref_type_b}}_unmapped_pe_fastq.log",
 )
 PUFFERFISH_CDS_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR, f"{STUDY_NAME}_cds_deduped_id_{{ref_type_b}}_count_matrix.log"
@@ -547,12 +553,14 @@ rule all:
         expand(UNIPROT_KB_XML_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(UNIPROT_KB_XML_SPLIT_POS_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_DBXREF_SPLIT_FILES,
         UNIPROT_KB_DBXREF_FILE,
         UNIPROT_KB_IDMAP_FILE,
         UNIPROT_KB_GENBANK_IDMAP_FILE,
         expand(UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
+        NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
@@ -574,10 +582,11 @@ rule all:
         expand(PUFFERFISH_CDS_BAM_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_CDS_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_CDS_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_CDS_UNMAPPED_PAIR_BAM_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_CDS_UNMAPPED_PAIR_FASTQ_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_CDS_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_CDS_DBXREF_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_CDS_DBXREF_COUNT_ESET_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_CDS_UNMAPPED_BAM_FILE, zip, **EXPAND_PARAMS),
+        expand(PUFFERFISH_CDS_UNMAPPED_FASTQ_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
         NCBI_TAXDUMP_FILTERED_NODE_FILE,
