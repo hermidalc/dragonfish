@@ -48,4 +48,6 @@ summary_df = summary_df.loc[
     & (summary_df["ftp_path"].notna())
 ]
 
+print(f"{summary_df.shape[0]} filtered assemblies", flush=True)
+
 summary_df.to_csv(snakemake.output[0], sep="\t", index=False)
