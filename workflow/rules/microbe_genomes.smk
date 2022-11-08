@@ -31,6 +31,8 @@ rule ncbi_assembly_filtered_summary:
     input:
         summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         proteomes=UNIPROT_PROTEOMES_FILE,
+    params:
+        skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
     output:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     log:
@@ -46,7 +48,6 @@ checkpoint ncbi_assemblies:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     params:
         file_exts=config["ncbi"]["assembly"]["file"]["exts"],
-        skip=config["ncbi"]["assembly"]["file"]["download"]["skip"],
         md5_name=config["ncbi"]["assembly"]["file"]["download"]["md5_name"],
         retries=config["ncbi"]["assembly"]["file"]["download"]["file_retries"],
         retry_wait=config["ncbi"]["assembly"]["file"]["download"]["file_retry_wait"],

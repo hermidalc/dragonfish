@@ -18,10 +18,7 @@ def load_summary_df(summary_file):
 merged_df = pd.DataFrame()
 for summary_file in snakemake.input:
     merged_df = pd.concat(
-        [merged_df, load_summary_df(summary_file)],
-        axis=0,
-        ignore_index=True,
-        verify_integrity=True,
+        [merged_df, load_summary_df(summary_file)], axis=0, verify_integrity=True
     )
 
 merged_df.to_csv(snakemake.output[0], sep="\t")

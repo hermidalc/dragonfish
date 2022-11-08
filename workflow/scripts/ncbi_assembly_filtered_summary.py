@@ -1,7 +1,9 @@
-from os.path import basename, dirname, exists, join
+from os.path import basename
 from urllib.parse import urlparse
 
 import pandas as pd
+
+print("\nFiltering NCBI genome assemblies")
 
 summary_df = pd.read_csv(
     snakemake.input.summary,
@@ -48,6 +50,6 @@ summary_df = summary_df.loc[
     & (summary_df["ftp_path"].notna())
 ]
 
-print(f"{summary_df.shape[0]} filtered assemblies", flush=True)
+print(f"\n{summary_df.shape[0]} filtered assemblies", flush=True)
 
-summary_df.to_csv(snakemake.output[0], sep="\t", index=False)
+summary_df.to_csv(snakemake.output[0], sep="\t")
