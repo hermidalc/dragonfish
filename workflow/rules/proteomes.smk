@@ -2,14 +2,14 @@ rule uniprot_proteomes:
     conda:
         "../envs/pandas.yaml"
     params:
-        tax_level=config["uniprot"]["proteome"]["tax_level"],
+        tax_level=config["ncbi"]["taxonomy"]["level"],
+        low_quality_pattern=config["ncbi"]["taxonomy"]["low_quality_pattern"],
+        eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
+        ref_url=config["uniprot"]["proteome"]["url"]["ref"],
+        other_url=config["uniprot"]["proteome"]["url"]["other"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
         random_seed=config["uniprot"]["proteome"]["random_seed"],
         filter_domains=config["uniprot"]["proteome"]["filter_domains"],
-        ref_url=config["uniprot"]["proteome"]["url"]["ref"],
-        other_url=config["uniprot"]["proteome"]["url"]["other"],
-        low_quality_pattern=config["ncbi"]["taxonomy"]["low_quality_pattern"],
-        eukaryote_genera=config["ncbi"]["taxonomy"]["eukaryote_genera"],
     output:
         UNIPROT_PROTEOMES_FILE,
     log:
