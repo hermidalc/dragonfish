@@ -1,0 +1,6 @@
+name: rtracklayer gff_convert
+description: rtracklayer annotation file converter
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information, see https://bioconductor.org/packages/release/bioc/html/rtracklayer.html
