@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - bioconductor-rtracklayer
+  - r-r.utils
