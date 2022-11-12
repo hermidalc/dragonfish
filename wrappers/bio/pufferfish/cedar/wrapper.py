@@ -11,6 +11,13 @@ log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 cedar = snakemake.params.get("cedar")
 assert cedar is not None, "params: cedar path is a required parameter"
 
+if snakemake.input.taxtree and snakemake.input.ref2tax:
+    taxflags = (
+        f"--taxtree {snakemake.input.taxtree} --seq2taxa {snakemake.input.ref2tax}"
+    )
+else:
+    taxflags = "--flat"
+
 assert snakemake.input[0].endswith(
     ("sam", "sam.gz", "pam")
 ), "input: file type required to be sam, sam.gz, or pam"
@@ -28,6 +35,7 @@ extra = snakemake.params.get("extra", "")
 
 shell(
     "{cedar}"
+    " {taxflags}"
     " --threads {snakemake.threads}"
     " {inflag} {snakemake.input[0]}"
     " --output {output}"
@@ -35,4 +43,4 @@ shell(
     " {log}"
 )
 if run_pigz:
-    shell("pigz -p {snakemake.threads} {output}")
+    shell("pigz -p {snakemake.threads} {output} {output}.coverage")

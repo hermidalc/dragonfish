@@ -21,7 +21,7 @@ proteome_df = pd.read_csv(
     low_memory=False,
 )
 
-accs, genome_names = [], []
+accessions, genome_names = [], []
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
@@ -30,7 +30,7 @@ for acc in proteome_df["Genome assembly ID"]:
             if genome_name in snakemake.params.skip:
                 print(f"Skipping {genome_name}")
                 continue
-            accs.append(accs)
+            accessions.append(acc)
             genome_names.append(genome_name)
         else:
             print(f"No FTP URL {acc}")
@@ -45,10 +45,7 @@ assert (
     "\n".join(dup_genome_names)
 )
 
-summary_df = summary_df.loc[
-    (summary_df.index.isin(proteome_df["Genome assembly ID"]))
-    & (summary_df["ftp_path"].notna())
-]
+summary_df = summary_df.loc[accessions]
 
 print(f"\n{summary_df.shape[0]} filtered assemblies", flush=True)
 

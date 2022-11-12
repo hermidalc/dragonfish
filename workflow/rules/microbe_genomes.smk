@@ -72,39 +72,10 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     dirs, names = glob_wildcards(
         join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz")
     )
-    # required since some genome assemblies do not have cds_from_genomic files and
-    # cannot use these dirs in expand for cds_from_genomic(_filtered) create fasta
-    # list input, also cds_from_genomic_filtered files don't exist yet when this
-    # function is called so need to use cds_from_genomic dirs for this call
-    dirs = [
-        d
-        for d, n in zip(dirs, names)
-        if n.replace(f"{d}_", "", 1)
-        == (
-            "cds_from_genomic"
-            if wildcards.asm_type.startswith("cds_from_genomic")
-            else wildcards.asm_type
-        )
-    ]
     return expand(
         f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_{wildcards.asm_type}.fna.gz",
         asm_dir=dirs,
     )
-
-
-rule ncbi_assembly_filtered_cds_fasta:
-    input:
-        NCBI_ASSEMBLY_CDS_FASTA_FILE,
-    params:
-        pattern=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["pattern"],
-        extra=config["ncbi"]["assembly"]["file"]["seqkit"]["grep"]["extra"],
-    output:
-        NCBI_ASSEMBLY_FILTERED_CDS_FASTA_FILE,
-    log:
-        NCBI_ASSEMBLY_FILTERED_CDS_FASTA_LOG,
-    threads: config["seqkit"]["threads"]
-    wrapper:
-        SEQKIT_GREP_WRAPPER
 
 
 rule ncbi_assembly_fasta_list:
@@ -120,3 +91,39 @@ rule ncbi_assembly_fasta_list:
         NCBI_ASSEMBLY_FASTA_LIST_LOG,
     script:
         "../scripts/file_list_from_paths.py"
+
+
+def gather_ncbi_assembly_gtf_files(wildcards):
+    ncbi_assembly_dir = checkpoints.ncbi_assemblies.get(**wildcards).output[0]
+    # XXX: workaround here too
+    dirs, names = glob_wildcards(
+        join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}_genomic.gff.gz")
+    )
+    return expand(
+        f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_genomic.gtf.gz",
+        asm_dir=dirs,
+    )
+
+
+rule ncbi_assembly_gtf:
+    input:
+        NCBI_ASSEMBLY_GFF_FILE,
+    params:
+        format="gtf",
+    output:
+        NCBI_ASSEMBLY_GTF_FILE,
+    log:
+        NCBI_ASSEMBLY_GTF_LOG,
+    wrapper:
+        RTRACKLAYER_CONVERT
+
+
+rule ncbi_assembly_merged_gtf:
+    input:
+        gather_ncbi_assembly_gtf_files,
+    output:
+        NCBI_ASSEMBLY_MERGED_GTF_FILE,
+    log:
+        NCBI_ASSEMBLY_MERGED_GTF_LOG,
+    script:
+        "../scripts/merged_gtf.py"

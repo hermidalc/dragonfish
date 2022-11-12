@@ -119,7 +119,7 @@ Parallel(
     verbose=snakemake.params.verbosity,
 )(delayed(check_md5)(file) for file in [f for f in files if exists(f)])
 
-# remove genome dirs with missing genomic and cds_from_genomic files
+# remove genome dirs with missing genomic sequence and annotation files
 # testing if URLs exist (via request HEAD) before downloading is very slow so
 # faster to download everything and then check/remove incomplete genomes
 print("\nChecking for incomplete genomes")

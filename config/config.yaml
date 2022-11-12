@@ -63,6 +63,8 @@ ncbi:
       url: 'https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/'
       zip_filename: 'new_taxdump.zip'
       filenames: [
+        'delnodes.dmp',
+        'merged.dmp',
         'nodes.dmp',
         'rankedlineage.dmp',
       ]
@@ -107,8 +109,7 @@ ncbi:
         'assembly_summary_refseq_historical.txt',
       ]
     file:
-      exts: ['genomic.fna.gz', 'cds_from_genomic.fna.gz']
-      gff_ext: 'genomic.gff.gz'
+      exts: ['genomic.fna.gz', 'genomic.gff.gz']
       download:
         md5_name: 'md5checksums.txt'
         skip: []
@@ -121,8 +122,6 @@ ncbi:
           extra: '--by-name --use-regexp --ignore-case --line-width 80'
 
 ref:
-  pigz:
-    threads: all
   seqkit:
     seq:
       pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
@@ -167,7 +166,10 @@ pufferfish:
     extra: '--coverageScoreRatio 0.5 --genomicReads'
   cedar:
     threads: all
-    extra: '--flat --minCnt 2'
+    extra: '--minCnt 2'
+
+pigz:
+    threads: all
 
 cds:
   quant:
