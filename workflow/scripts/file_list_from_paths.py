@@ -3,6 +3,7 @@ from os.path import join, split
 import pandas as pd
 
 files = snakemake.input
+
 sort_by = snakemake.params.get("sort_by")
 if sort_by:
     file_parts = [split(f) for f in snakemake.input]
@@ -13,5 +14,6 @@ if sort_by:
     )
     file_parts = file_parts_df.to_records(index=False).tolist()
     files = [join(*p) for p in file_parts]
-with open(snakemake.output[0], "w") as fh:
+
+with open(snakemake.output[0], "wt") as fh:
     fh.write("{}\n".format("\n".join(files)))
