@@ -42,9 +42,14 @@ merged_df = merged_df.loc[
             .fillna(False)
         )
     )
-    & ~merged_df["Organism"]
-    .str.contains(snakemake.params.low_quality_pattern, regex=True, flags=re.IGNORECASE)
-    .fillna(False)
+    & (
+        bool(snakemake.params.low_quality_pattern)
+        & ~merged_df["Organism"]
+        .str.contains(
+            snakemake.params.low_quality_pattern, regex=True, flags=re.IGNORECASE
+        )
+        .fillna(False)
+    )
 ]
 
 print(f"{merged_df.shape[0]} UniProt proteomes", flush=True)

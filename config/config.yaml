@@ -6,6 +6,8 @@ analysis_modes: ['functional', 'taxonomic']
 
 tmp_dir: '/home/hermidalc/tmp'
 
+random_seed: 777
+
 download:
   retries: 5
 
@@ -21,7 +23,6 @@ study:
 uniprot:
   proteome:
     n_sample: 0
-    random_seed: 777
     filter_domains: []
     url:
       ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
@@ -112,19 +113,18 @@ ncbi:
       exts: ['genomic.fna.gz', 'genomic.gff.gz']
       download:
         md5_name: 'md5checksums.txt'
-        skip: []
+        skip: [
+          'GCA_006247105.1_UU_GM_1.1',
+        ]
         threads: 16
         file_retries: 5
         file_retry_wait: 5
-      seqkit:
-        grep:
-          pattern: '\[protein_id=.+?\]'
-          extra: '--by-name --use-regexp --ignore-case --line-width 80'
+      gffread:
+        extra: '-F --no-pseudo --force-exons'
 
 ref:
   seqkit:
     seq:
-      pattern: '^\w+\|.*?\[protein_id=(.+?)\]'
       extra: '--upper-case --line-width 100'
     rename:
       extra: '--line-width 100'

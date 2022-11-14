@@ -1,0 +1,6 @@
+name: gffread
+description: Filter, convert or cluster GFF/GTF/BED records, extract the sequence of transcripts (exon or CDS) and more
+authors:
+  - Leandro C. Hermida
+notes: |
+  * For more information see, https://ccb.jhu.edu/software/stringtie/gff.shtml

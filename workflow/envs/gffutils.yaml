@@ -1,0 +1,6 @@
+name: gffutils
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - gffutils

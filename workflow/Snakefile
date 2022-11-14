@@ -149,10 +149,13 @@ NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
 NCBI_ASSEMBLY_GFF_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic.gff.gz"
 )
-NCBI_ASSEMBLY_GTF_FILE = join(
-    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic.gtf.gz"
+NCBI_ASSEMBLY_FILTERED_GFF_FILE = join(
+    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_filtered.gff"
 )
-NCBI_ASSEMBLY_MERGED_GTF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_merged.gtf.gz")
+NCBI_ASSEMBLY_FIXED_GFF_FILE = join(
+    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_fixed.gff"
+)
+NCBI_ASSEMBLY_MERGED_GFF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_fixed.gff.gz")
 
 GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
@@ -338,9 +341,14 @@ NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
 )
-NCBI_ASSEMBLY_GTF_LOG = join(NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_gtf.log")
-NCBI_ASSEMBLY_MERGED_GTF_LOG = join(
-    NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_merged_gtf.log"
+NCBI_ASSEMBLY_FILTERED_GFF_LOG = join(
+    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_filtered_gff.log"
+)
+NCBI_ASSEMBLY_FIXED_GFF_LOG = join(
+    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_fixed_gff.log"
+)
+NCBI_ASSEMBLY_MERGED_GFF_LOG = join(
+    NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_fixed_gff.log"
 )
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
@@ -476,7 +484,7 @@ SEQKIT_GREP_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/grep")
 SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
 SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
-RTRACKLAYER_CONVERT = join(config["wrapper"]["base_url"], "bio/rtracklayer/convert")
+GFFREAD_WRAPPER = join(config["wrapper"]["base_url"], "bio/gffread")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
@@ -520,7 +528,7 @@ rule all:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
-        NCBI_ASSEMBLY_MERGED_GTF_FILE,
+        NCBI_ASSEMBLY_MERGED_GFF_FILE,
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
@@ -532,7 +540,7 @@ rule all:
         expand(PUFFERFISH_INDEX_DIR, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_ALIGN_FILE, **EXPAND_PARAMS),  # <-- product expand here no zip
+        expand(PUFFERFISH_ALIGN_FILE, **EXPAND_PARAMS),  # <- product expand here
         expand(PUFFERFISH_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),

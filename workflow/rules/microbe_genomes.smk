@@ -72,9 +72,11 @@ def gather_ncbi_assembly_fasta_files(wildcards):
     dirs, names = glob_wildcards(
         join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}.fna.gz")
     )
-    return expand(
-        f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_{wildcards.asm_type}.fna.gz",
-        asm_dir=dirs,
+    return sorted(
+        expand(
+            f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_{wildcards.asm_type}.fna.gz",
+            asm_dir=dirs,
+        )
     )
 
 
@@ -83,8 +85,6 @@ rule ncbi_assembly_fasta_list:
         "../envs/pandas.yaml"
     input:
         gather_ncbi_assembly_fasta_files,
-    params:
-        sort_by=["dir", "name"],
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     log:
@@ -93,37 +93,52 @@ rule ncbi_assembly_fasta_list:
         "../scripts/file_list_from_paths.py"
 
 
-def gather_ncbi_assembly_gtf_files(wildcards):
+def gather_ncbi_assembly_gff_files(wildcards):
     ncbi_assembly_dir = checkpoints.ncbi_assemblies.get(**wildcards).output[0]
     # XXX: workaround here too
     dirs, names = glob_wildcards(
         join(ncbi_assembly_dir, "{asm_dir}", "{asm_name}_genomic.gff.gz")
     )
-    return expand(
-        f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_genomic.gtf.gz",
-        asm_dir=dirs,
+    return sorted(
+        expand(
+            f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_genomic_fixed.gff",
+            asm_dir=dirs,
+        )
     )
 
 
-rule ncbi_assembly_gtf:
+rule ncbi_assembly_filtered_gff:
     input:
         NCBI_ASSEMBLY_GFF_FILE,
     params:
-        format="gtf",
+        extra=config["ncbi"]["assembly"]["file"]["gffread"]["extra"],
     output:
-        NCBI_ASSEMBLY_GTF_FILE,
+        NCBI_ASSEMBLY_FILTERED_GFF_FILE,
     log:
-        NCBI_ASSEMBLY_GTF_LOG,
+        NCBI_ASSEMBLY_FILTERED_GFF_LOG,
     wrapper:
-        RTRACKLAYER_CONVERT
+        GFFREAD_WRAPPER
 
 
-rule ncbi_assembly_merged_gtf:
+rule ncbi_assembly_fixed_gff:
+    conda:
+        "../envs/gffutils.yaml"
     input:
-        gather_ncbi_assembly_gtf_files,
+        NCBI_ASSEMBLY_FILTERED_GFF_FILE,
     output:
-        NCBI_ASSEMBLY_MERGED_GTF_FILE,
+        NCBI_ASSEMBLY_FIXED_GFF_FILE,
     log:
-        NCBI_ASSEMBLY_MERGED_GTF_LOG,
+        NCBI_ASSEMBLY_FIXED_GFF_LOG,
     script:
-        "../scripts/merged_gtf.py"
+        "../scripts/fixed_gff.py"
+
+
+rule ncbi_assembly_merged_gff:
+    input:
+        gather_ncbi_assembly_gff_files,
+    output:
+        NCBI_ASSEMBLY_MERGED_GFF_FILE,
+    log:
+        NCBI_ASSEMBLY_MERGED_GFF_LOG,
+    script:
+        "../scripts/merged_gff.py"
