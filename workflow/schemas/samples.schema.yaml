@@ -10,7 +10,7 @@ properties:
     description: Sample label
   condition:
     type: string
-    description: Experimental condition to compare in differential expression analysis
+    description: Experimental conditions to compare
 
 required:
   - sample_name

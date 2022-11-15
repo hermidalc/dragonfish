@@ -4,7 +4,7 @@ type: object
 properties:
   sample_name:
     type: string
-    description: Sample name/identifier the unit has been sequenced from
+    description: Sample name/identifier for the sequenced unit
   unit_name:
     type: string
     description: unit id
