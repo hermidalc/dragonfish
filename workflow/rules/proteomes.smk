@@ -8,6 +8,7 @@ rule uniprot_proteomes:
         ref_url=config["uniprot"]["proteome"]["url"]["ref"],
         other_url=config["uniprot"]["proteome"]["url"]["other"],
         filter_domains=config["uniprot"]["proteome"]["filter_domains"],
+        skip=config["uniprot"]["proteome"]["skip"],
         n_sample=config["uniprot"]["proteome"]["n_sample"],
         random_seed=config["random_seed"],
     output:

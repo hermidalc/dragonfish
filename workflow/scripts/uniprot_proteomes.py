@@ -29,40 +29,45 @@ merged_df = (
 
 merged_df = merged_df.loc[
     (
-        (
-            merged_df["Taxonomic lineage"]
-            .str.split("\s*,\s*", n=2, expand=True)[0]
-            .str.capitalize()
-            != "Eukaryota"
-        )
-        | (
-            merged_df["Organism"]
-            .str.capitalize()
-            .str.startswith(tuple(snakemake.params.eukaryote_genera))
-            .fillna(False)
-        )
+        merged_df["Taxonomic lineage"]
+        .str.split("\s*,\s*", n=2, expand=True)[0]
+        .str.capitalize()
+        != "Eukaryota"
     )
-    & (
-        bool(snakemake.params.low_quality_pattern)
-        & ~merged_df["Organism"]
+    | (
+        merged_df["Organism"]
+        .str.capitalize()
+        .str.startswith(tuple(snakemake.params.eukaryote_genera))
+        .fillna(False)
+    )
+]
+
+if snakemake.params.low_quality_pattern:
+    merged_df = merged_df.loc[
+        ~merged_df["Organism"]
         .str.contains(
             snakemake.params.low_quality_pattern, regex=True, flags=re.IGNORECASE
         )
         .fillna(False)
-    )
-]
+    ]
+
+if snakemake.params.filter_domains:
+    merged_df = merged_df.loc[
+        ~merged_df["Taxonomic lineage"]
+        .str.split("\s*,\s*", n=2, expand=True)[0]
+        .str.capitalize()
+        .isin(snakemake.params.filter_domains)
+    ]
+
+if snakemake.params.skip:
+    merged_df = merged_df.loc[
+        ~merged_df["Genome assembly ID"].isin(snakemake.params.skip)
+    ]
 
 print(f"{merged_df.shape[0]} UniProt proteomes", flush=True)
 
 if snakemake.params.n_sample > 0:
     print(f"\nSampling {snakemake.params.n_sample} proteomes", flush=True)
-    if snakemake.params.filter_domains:
-        merged_df = merged_df.loc[
-            ~merged_df["Taxonomic lineage"]
-            .str.split("\s*,\s*", n=2, expand=True)[0]
-            .str.capitalize()
-            .isin(snakemake.params.filter_domains)
-        ]
     merged_df = merged_df.sample(
         n=snakemake.params.n_sample,
         random_state=snakemake.params.random_seed,

@@ -21,13 +21,15 @@ proteome_df = pd.read_csv(
     low_memory=False,
 )
 
+genomes_to_skip = snakemake.params.get("skip")
+
 accessions, genome_names = [], []
 for acc in proteome_df["Genome assembly ID"]:
     if acc in summary_df.index:
         ftp_dir_url = summary_df.loc[acc]["ftp_path"]
         if pd.notna(ftp_dir_url):
             genome_name = basename(urlparse(ftp_dir_url).path)
-            if genome_name in snakemake.params.skip:
+            if genomes_to_skip and genome_name in genomes_to_skip:
                 print(f"Skipping {genome_name}")
                 continue
             accessions.append(acc)

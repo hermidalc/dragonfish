@@ -24,6 +24,10 @@ uniprot:
   proteome:
     n_sample: 0
     filter_domains: []
+    skip: [
+      'GCA_006247105.1',
+      'GCA_000002435.2',
+    ]
     url:
       ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
       other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
@@ -113,9 +117,7 @@ ncbi:
       exts: ['genomic.fna.gz', 'genomic.gff.gz']
       download:
         md5_name: 'md5checksums.txt'
-        skip: [
-          'GCA_006247105.1_UU_GM_1.1',
-        ]
+        skip: []
         threads: 16
         file_retries: 5
         file_retry_wait: 5
