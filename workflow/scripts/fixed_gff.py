@@ -71,7 +71,7 @@ with gzip.open(snakemake.output[0], "wt") if snakemake.output[0].endswith(
                 for exon in exons:
                     out_fh.write(f"{exon}\n")
             elif len(protein_ids) == 1:
-                parent.attributes["protein_id"] = protein_ids[0]
+                parent.attributes["protein_id"] = protein_ids
                 out_fh.write(f"{parent}\n")
                 for exon in db.children(parent, featuretype="exon"):
                     exon.attributes["protein_id"] = parent.attributes["protein_id"]
@@ -81,4 +81,3 @@ with gzip.open(snakemake.output[0], "wt") if snakemake.output[0].endswith(
                     f"Warning: {snakemake.input[0]}: {parent.id}"
                     " no child CDS protein_id attributes found"
                 )
-    out_fh.write("###\n")
