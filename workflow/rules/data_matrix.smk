@@ -1,18 +1,14 @@
-rule cds_count_matrix:
+rule featurecounts_cds_count_matrix:
     conda:
         "../envs/vaex.yaml"
     input:
-        expand(PUFFERFISH_CDS_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
-    params:
-        samples=SAMPLE_LABELS,
-        data_col=1,
-        collapse_techreps=True,
+        FEATURECOUNTS_CDS_READ_QUANT_FILE,
     output:
-        PUFFERFISH_CDS_COUNT_MATRIX_FILE,
+        FEATURECOUNTS_CDS_COUNT_MATRIX_FILE,
     log:
-        PUFFERFISH_CDS_COUNT_MATRIX_LOG,
-    wrapper:
-        DATA_MATRIX_WRAPPER
+        FEATURECOUNTS_CDS_COUNT_MATRIX_LOG,
+    script:
+        "../scripts/tsv_to_hdf.py"
 
 
 rule cds_dbxref_count_matrix:
@@ -30,35 +26,17 @@ rule cds_dbxref_count_matrix:
         "../scripts/uniprot_kb_dbxref_count_matrix.py"
 
 
-rule cds_dbxref_count_eset:
-    input:
-        assay=PUFFERFISH_CDS_DBXREF_COUNT_MATRIX_FILE,
-        pheno=SAMPLE_CONFIG_FILE,
-    params:
-        samples=SAMPLE_LABELS,
-    output:
-        PUFFERFISH_CDS_DBXREF_COUNT_ESET_FILE,
-    log:
-        PUFFERFISH_CDS_DBXREF_COUNT_ESET_LOG,
-    wrapper:
-        ESET_WRAPPER
-
-
 rule cedar_count_matrix:
     conda:
-        "../envs/vaex.yaml"
+        "../envs/pandas.yaml"
     input:
-        expand(CEDAR_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
-    params:
-        samples=SAMPLE_LABELS,
-        data_col=4,
-        collapse_techreps=True,
+        CEDAR_READ_QUANT_FILE,
     output:
         CEDAR_COUNT_MATRIX_FILE,
     log:
         CEDAR_COUNT_MATRIX_LOG,
-    wrapper:
-        DATA_MATRIX_WRAPPER
+    script:
+        "../scripts/cedar_count_matrix.py"
 
 
 rule cedar_count_eset:

@@ -2,6 +2,7 @@ import re
 from glob import glob
 from os import getcwd, walk
 from os.path import basename, dirname, exists, join, splitext
+from tempfile import gettempdir
 from shutil import rmtree
 
 import pandas as pd
@@ -22,7 +23,7 @@ STUDY_NAME = config["study"]["name"]
 SAMPLE_CONFIG_FILE = config["study"]["samples"]
 UNIT_CONFIG_FILE = config["study"]["units"]
 
-TEMP_DIR = config["tmp_dir"]
+TEMP_DIR = config["tmp_dir"] if config["tmp_dir"] else gettempdir()
 
 EXPAND_PARAMS = {"aly_modes": config["analysis_modes"]}
 
@@ -217,7 +218,7 @@ FASTP_JSON_REPORT_FILE = join(TRIMMED_RESULTS_DIR, f"{RUN_ID_WILDCARD_STR}_repor
 
 PUFFERFISH_RESULTS_DIR = join(RESULTS_DIR, "pufferfish", "{data_subdir}")
 
-EXPAND_PARAMS["pfa_type"] = ["pam", "sam.gz"]
+EXPAND_PARAMS["pfa_type"] = ["pam", "sam"]
 
 PUFFERFISH_ALIGN_FILE = join(
     PUFFERFISH_RESULTS_DIR,
@@ -225,19 +226,11 @@ PUFFERFISH_ALIGN_FILE = join(
 )
 PUFFERFISH_SAM_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}.sam.gz",
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}.sam",
 )
 PUFFERFISH_PAM_FILE = join(
     PUFFERFISH_RESULTS_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}.pam",
-)
-PUFFERFISH_READ_QUANT_TSV_FILE = join(
-    PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_read_quant.tsv.gz",
-)
-PUFFERFISH_READ_QUANT_HDF_FILE = join(
-    PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_read_quant.hdf5",
 )
 PUFFERFISH_UNMAPPED_BAM_FILE = join(
     PUFFERFISH_RESULTS_DIR,
@@ -265,15 +258,6 @@ NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
 
 REF_ID2TAXID_FILE = join(REF_DIR, "ref_id2taxid.tsv")
 
-CEDAR_READ_QUANT_TSV_FILE = join(
-    PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar.tsv.gz",
-)
-CEDAR_READ_QUANT_HDF_FILE = join(
-    PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar.hdf5",
-)
-
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
 if len(DATA_SUBDIRS) == 1:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", DATA_SUBDIRS[0])
@@ -282,26 +266,34 @@ else:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
     DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
-PUFFERFISH_COUNT_MATRIX_FILE = join(
+FEATURECOUNTS_CDS_READ_QUANT_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_count_matrix.hdf5",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_counts.tsv.gz",
 )
-PUFFERFISH_DBXREF_COUNT_MATRIX_FILE = join(
+FEATURECOUNTS_CDS_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{ukb_dbxref_db}}_count_matrix.hdf5",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_counts.hdf5",
 )
-PUFFERFISH_DBXREF_COUNT_ESET_FILE = join(
+FEATURECOUNTS_CDS_DBXREF_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{ukb_dbxref_db}}_count_eset.rds",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_{{ukb_dbxref_db}}_counts.hdf5",
+)
+FEATURECOUNTS_CDS_DBXREF_COUNT_ESET_FILE = join(
+    DATA_MATRIX_RESULTS_DIR,
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_{{ukb_dbxref_db}}_counts.rds",
 )
 
+CEDAR_READ_QUANT_FILE = join(
+    PUFFERFISH_RESULTS_DIR,
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar.tsv",
+)
 CEDAR_COUNT_MATRIX_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_count_matrix.hdf5",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_counts.tsv",
 )
 CEDAR_COUNT_ESET_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_count_eset.rds",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_counts.rds",
 )
 
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
@@ -373,16 +365,6 @@ PUFFERFISH_ALIGN_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{pfa_type}}.log",
 )
-PUFFERFISH_READ_QUANT_TSV_LOG = join(
-    PUFFERFISH_QUANT_LOG_DIR,
-    "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_read_quant_tsv.log",
-)
-PUFFERFISH_READ_QUANT_HDF_LOG = join(
-    PUFFERFISH_QUANT_LOG_DIR,
-    "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_read_quant_hdf.log",
-)
 PUFFERFISH_UNMAPPED_BAM_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
@@ -393,17 +375,18 @@ PUFFERFISH_UNMAPPED_FASTQ_LOG = join(
     "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_pe_fastq.log",
 )
-PUFFERFISH_COUNT_MATRIX_LOG = join(
+
+FEATURECOUNTS_CDS_READ_QUANT_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_count_matrix.log",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_counts_tsv.log",
 )
-PUFFERFISH_DBXREF_COUNT_MATRIX_LOG = join(
+FEATURECOUNTS_CDS_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{ukb_dbxref_db}}_count_matrix.log",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_counts_hdf.log",
 )
-PUFFERFISH_DBXREF_COUNT_ESET_LOG = join(
+FEATURECOUNTS_CDS_DBXREF_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{ukb_dbxref_db}}_count_eset.log",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cds_{{ukb_dbxref_db}}_counts.log",
 )
 
 NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
@@ -413,22 +396,18 @@ NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
 
 REF_ID2TAXID_LOG = join(REF_LOG_DIR, "ref_id2taxid_tsv.log")
 
-CEDAR_READ_QUANT_TSV_LOG = join(
+CEDAR_READ_QUANT_LOG = join(
     PUFFERFISH_QUANT_LOG_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_tsv.log",
-)
-CEDAR_READ_QUANT_HDF_LOG = join(
-    PUFFERFISH_QUANT_LOG_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_hdf.log",
 )
 
 CEDAR_COUNT_MATRIX_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_count_matrix.log",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_counts_tsv.log",
 )
 CEDAR_COUNT_ESET_LOG = join(
     DATA_MATRIX_LOG_DIR,
-    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_count_eset.log",
+    f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_counts_rds.log",
 )
 
 PIGZ_THREADS = (
@@ -454,6 +433,11 @@ PUFFERFISH_ALIGN_THREADS = (
     if config["pufferfish"]["align"]["threads"] == "all"
     else config["pufferfish"]["align"]["threads"]
 )
+FEATURECOUNTS_THREADS = (
+    min([workflow.cores, 32])
+    if config["featurecounts"]["threads"] == "all"
+    else config["featurecounts"]["threads"]
+)
 SAMTOOLS_THREADS = (
     workflow.cores
     if config["samtools"]["threads"] == "all"
@@ -476,12 +460,12 @@ SEQKIT_GREP_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/grep")
 SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
 SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
 SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
-GFFREAD_WRAPPER = join(config["wrapper"]["base_url"], "bio/gffread")
 PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
 FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
 PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
 SAMTOOLS_FASTQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/fastq")
 SAMTOOLS_VIEW_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/view")
+FEATURECOUNTS_WRAPPER = join(config["wrapper"]["base_url"], "bio/subread/featurecounts")
 CEDAR_READ_QUANT_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/cedar")
 DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
 ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
@@ -533,20 +517,17 @@ rule all:
         expand(TRIMMED_FASTQ1_FILE, zip, **EXPAND_PARAMS),
         expand(TRIMMED_FASTQ2_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_ALIGN_FILE, **EXPAND_PARAMS),  # <- product expand here
-        expand(PUFFERFISH_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_DBXREF_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
-        expand(PUFFERFISH_DBXREF_COUNT_ESET_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_UNMAPPED_BAM_FILE, zip, **EXPAND_PARAMS),
         expand(PUFFERFISH_UNMAPPED_FASTQ_FILE, zip, **EXPAND_PARAMS),
+        expand(FEATURECOUNTS_CDS_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
+        expand(FEATURECOUNTS_CDS_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
+        expand(FEATURECOUNTS_CDS_DBXREF_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         NCBI_TAXDUMP_ZIP_FILE,
         NCBI_TAXDUMP_FILES,
         NCBI_TAXDUMP_FIXED_NODE_FILE,
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         REF_ID2TAXID_FILE,
-        expand(CEDAR_READ_QUANT_TSV_FILE, zip, **EXPAND_PARAMS),
-        expand(CEDAR_READ_QUANT_HDF_FILE, zip, **EXPAND_PARAMS),
+        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         expand(CEDAR_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         expand(CEDAR_COUNT_ESET_FILE, zip, **EXPAND_PARAMS),
 

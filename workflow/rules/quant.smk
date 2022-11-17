@@ -1,35 +1,19 @@
 from os.path import abspath
 
 
-rule cds_read_quant_tsv:
+rule featurecounts_cds_read_quant:
     input:
-        PUFFERFISH_CDS_BAM_FILE,
-    params:
-        read_count=True,
+        expand(PUFFERFISH_SAM_FILE, zip, **EXPAND_PARAMS),
     output:
-        PUFFERFISH_CDS_READ_QUANT_TSV_FILE,
+        FEATURECOUNTS_CDS_READ_QUANT_FILE,
     log:
-        PUFFERFISH_CDS_READ_QUANT_TSV_LOG,
-    threads: config["seqkit"]["threads"]
+        FEATURECOUNTS_CDS_READ_QUANT_LOG,
+    threads: FEATURECOUNTS_THREADS
     wrapper:
-        SEQKIT_BAM_WRAPPER
+        FEATURECOUNTS_WRAPPER
 
 
-rule cds_read_quant_hdf:
-    conda:
-        "../envs/vaex.yaml"
-    input:
-        PUFFERFISH_CDS_READ_QUANT_TSV_FILE,
-    output:
-        PUFFERFISH_CDS_READ_QUANT_HDF_FILE,
-    log:
-        PUFFERFISH_CDS_READ_QUANT_HDF_LOG,
-    threads: CDS_READ_QUANT_THREADS
-    script:
-        "../scripts/tsv_to_hdf.py"
-
-
-rule cedar_read_quant_tsv:
+rule cedar_read_quant:
     input:
         pam=PUFFERFISH_PAM_FILE,
         taxtree=NCBI_TAXDUMP_FIXED_NODE_FILE,
@@ -38,23 +22,9 @@ rule cedar_read_quant_tsv:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
     output:
-        CEDAR_READ_QUANT_TSV_FILE,
+        CEDAR_READ_QUANT_FILE,
     log:
-        CEDAR_READ_QUANT_TSV_LOG,
+        CEDAR_READ_QUANT_LOG,
     threads: CEDAR_READ_QUANT_THREADS
     wrapper:
         CEDAR_READ_QUANT_WRAPPER
-
-
-rule cedar_read_quant_hdf:
-    conda:
-        "../envs/vaex.yaml"
-    input:
-        CEDAR_READ_QUANT_TSV_FILE,
-    output:
-        CEDAR_READ_QUANT_HDF_FILE,
-    log:
-        CEDAR_READ_QUANT_HDF_LOG,
-    threads: CEDAR_READ_QUANT_THREADS
-    script:
-        "../scripts/tsv_to_hdf.py"

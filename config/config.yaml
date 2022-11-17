@@ -4,7 +4,7 @@ wrapper:
 
 analysis_modes: ['functional', 'taxonomic']
 
-tmp_dir: '/home/hermidalc/tmp'
+tmp_dir: ''
 
 random_seed: 777
 
@@ -171,17 +171,17 @@ pufferfish:
     extra: '--minCnt 2'
 
 pigz:
-    threads: all
-
-cds:
-  quant:
-    threads: all
+  threads: all
 
 seqkit:
   threads: 4
 
 samtools:
-    threads: all
+  threads: all
+
+featurecounts:
+  threads: all
+  extra: '-p -t CDS -g protein_id'
 
 paladin:
   threads: all
