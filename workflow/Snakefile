@@ -149,13 +149,10 @@ NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
 NCBI_ASSEMBLY_GFF_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic.gff.gz"
 )
-NCBI_ASSEMBLY_FILTERED_GFF_FILE = join(
-    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_filtered.gff"
+NCBI_ASSEMBLY_CDS_GTF_FILE = join(
+    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_cds.gtf"
 )
-NCBI_ASSEMBLY_FIXED_GFF_FILE = join(
-    NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_fixed.gff"
-)
-NCBI_ASSEMBLY_MERGED_GFF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_fixed.gff.gz")
+NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_cds.gtf.gz")
 
 GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
@@ -341,14 +338,9 @@ NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
 )
-NCBI_ASSEMBLY_FILTERED_GFF_LOG = join(
-    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_filtered_gff.log"
-)
-NCBI_ASSEMBLY_FIXED_GFF_LOG = join(
-    NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_fixed_gff.log"
-)
-NCBI_ASSEMBLY_MERGED_GFF_LOG = join(
-    NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_fixed_gff.log"
+NCBI_ASSEMBLY_CDS_GTF_LOG = join(NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_cds_gtf.log")
+NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG = join(
+    NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_cds_gtf.log"
 )
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
@@ -528,7 +520,7 @@ rule all:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
-        NCBI_ASSEMBLY_MERGED_GFF_FILE,
+        NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),

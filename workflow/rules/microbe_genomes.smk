@@ -93,7 +93,7 @@ rule ncbi_assembly_fasta_list:
         "../scripts/file_list_from_paths.py"
 
 
-def gather_ncbi_assembly_gff_files(wildcards):
+def gather_ncbi_assembly_cds_gtf_files(wildcards):
     ncbi_assembly_dir = checkpoints.ncbi_assemblies.get(**wildcards).output[0]
     # XXX: workaround here too
     dirs, names = glob_wildcards(
@@ -101,44 +101,33 @@ def gather_ncbi_assembly_gff_files(wildcards):
     )
     return sorted(
         expand(
-            f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_genomic_fixed.gff",
+            f"{ncbi_assembly_dir}/{{asm_dir}}/{{asm_dir}}_genomic_cds.gtf",
             asm_dir=dirs,
         )
     )
 
 
-rule ncbi_assembly_filtered_gff:
-    input:
-        NCBI_ASSEMBLY_GFF_FILE,
-    params:
-        extra=config["ncbi"]["assembly"]["file"]["gffread"]["extra"],
-    output:
-        NCBI_ASSEMBLY_FILTERED_GFF_FILE,
-    log:
-        NCBI_ASSEMBLY_FILTERED_GFF_LOG,
-    wrapper:
-        GFFREAD_WRAPPER
-
-
-rule ncbi_assembly_fixed_gff:
+rule ncbi_assembly_cds_gtf:
     conda:
         "../envs/gffutils.yaml"
     input:
-        NCBI_ASSEMBLY_FILTERED_GFF_FILE,
+        NCBI_ASSEMBLY_GFF_FILE,
     output:
-        NCBI_ASSEMBLY_FIXED_GFF_FILE,
+        NCBI_ASSEMBLY_CDS_GTF_FILE,
     log:
-        NCBI_ASSEMBLY_FIXED_GFF_LOG,
+        NCBI_ASSEMBLY_CDS_GTF_LOG,
     script:
-        "../scripts/fixed_gff.py"
+        "../scripts/cds_gtf.py"
 
 
-rule ncbi_assembly_merged_gff:
+rule ncbi_assembly_merged_cds_gtf:
     input:
-        gather_ncbi_assembly_gff_files,
+        gather_ncbi_assembly_cds_gtf_files,
+    params:
+        header="#gtf-version 2.2",
     output:
-        NCBI_ASSEMBLY_MERGED_GFF_FILE,
+        NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
     log:
-        NCBI_ASSEMBLY_MERGED_GFF_LOG,
+        NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG,
     script:
         "../scripts/merged_gff.py"
