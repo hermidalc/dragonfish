@@ -30,7 +30,7 @@ rule cedar_count_matrix:
     conda:
         "../envs/pandas.yaml"
     input:
-        CEDAR_READ_QUANT_FILE,
+        expand(CEDAR_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
     output:
         CEDAR_COUNT_MATRIX_FILE,
     log:
