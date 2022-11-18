@@ -15,12 +15,12 @@ rule cds_dbxref_count_matrix:
     conda:
         "../envs/vaex.yaml"
     input:
-        counts=PUFFERFISH_CDS_COUNT_MATRIX_FILE,
+        counts=FEATURECOUNTS_CDS_COUNT_MATRIX_FILE,
         idmap=UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE,
     output:
-        PUFFERFISH_CDS_DBXREF_COUNT_MATRIX_FILE,
+        FEATURECOUNTS_CDS_DBXREF_COUNT_MATRIX_FILE,
     log:
-        PUFFERFISH_CDS_DBXREF_COUNT_MATRIX_LOG,
+        FEATURECOUNTS_CDS_DBXREF_COUNT_MATRIX_LOG,
     threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
     script:
         "../scripts/uniprot_kb_dbxref_count_matrix.py"

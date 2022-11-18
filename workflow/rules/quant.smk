@@ -3,7 +3,10 @@ from os.path import abspath
 
 rule featurecounts_cds_read_quant:
     input:
-        expand(PUFFERFISH_SAM_FILE, zip, **EXPAND_PARAMS),
+        align=expand(PUFFERFISH_SAM_FILE, zip, **EXPAND_PARAMS),
+        gtf=NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
+    params:
+        extra=config["featurecounts"]["extra"],
     output:
         FEATURECOUNTS_CDS_READ_QUANT_FILE,
     log:

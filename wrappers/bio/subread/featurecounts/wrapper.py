@@ -22,7 +22,7 @@ shell(
     " -a {snakemake.input.gtf}"
     " {extra}"
     " -o {output}"
-    " {snakemake.input.aligns}"
+    " {snakemake.input.align}"
     " {log}"
 )
 
