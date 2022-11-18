@@ -359,7 +359,6 @@ PUFFERFISH_INDEX_LOG = join(
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
 PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align", "{data_subdir}")
-PUFFERFISH_QUANT_LOG_DIR = join(PUFFERFISH_LOG_DIR, "quant", "{data_subdir}")
 
 PUFFERFISH_ALIGN_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
@@ -397,7 +396,7 @@ NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
 REF_ID2TAXID_LOG = join(REF_LOG_DIR, "ref_id2taxid_tsv.log")
 
 CEDAR_READ_QUANT_LOG = join(
-    PUFFERFISH_QUANT_LOG_DIR,
+    PUFFERFISH_ALIGN_LOG_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_tsv.log",
 )
 
