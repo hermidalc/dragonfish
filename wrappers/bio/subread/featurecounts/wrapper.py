@@ -3,7 +3,7 @@ __email__ = "hermidalc@pitt.edu"
 __license__ = "BSD 3-Clause"
 
 from os import rename
-from os.path import basename, exists, splitext
+from os.path import exists, splitext
 
 from snakemake.shell import shell
 
@@ -31,4 +31,4 @@ if run_pigz:
 
 summary_file = f"{output}.summary"
 if exists(summary_file):
-    rename(summary_file, f"{basename(summary_file).partition('.')[0]}.summary")
+    rename(summary_file, f"{splitext(summary_file)[0]}.summary")
