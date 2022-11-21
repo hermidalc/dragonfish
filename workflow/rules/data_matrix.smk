@@ -8,7 +8,7 @@ rule featurecounts_cds_count_matrix:
     log:
         FEATURECOUNTS_CDS_COUNT_MATRIX_LOG,
     script:
-        "../scripts/tsv_to_hdf.py"
+        "../scripts/featurecounts_count_matrix.py"
 
 
 rule cds_dbxref_count_matrix:
