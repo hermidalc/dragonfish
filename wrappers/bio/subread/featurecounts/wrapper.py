@@ -31,4 +31,4 @@ if run_pigz:
 
 summary_file = f"{output}.summary"
 if exists(summary_file):
-    rename(summary_file, f"{splitext(summary_file)[0]}.summary")
+    rename(summary_file, f"{splitext(output)[0]}.summary")
