@@ -16,7 +16,7 @@ rule featurecounts_cds_read_quant:
         FEATURECOUNTS_WRAPPER
 
 
-rule cedar_read_quant:
+rule cedar_tax_read_quant:
     input:
         pam=PUFFERFISH_PAM_FILE,
         taxtree=NCBI_TAXDUMP_FIXED_NODE_FILE,
@@ -25,9 +25,9 @@ rule cedar_read_quant:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
     output:
-        CEDAR_READ_QUANT_FILE,
+        CEDAR_TAX_READ_QUANT_FILE,
     log:
-        CEDAR_READ_QUANT_LOG,
-    threads: CEDAR_READ_QUANT_THREADS
+        CEDAR_TAX_READ_QUANT_LOG,
+    threads: CEDAR_TAX_READ_QUANT_THREADS
     wrapper:
-        CEDAR_READ_QUANT_WRAPPER
+        CEDAR_TAX_READ_QUANT_WRAPPER
