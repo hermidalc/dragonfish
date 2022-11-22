@@ -1,7 +1,7 @@
 from os.path import abspath
 
 
-rule pufferfish_align_pe:
+rule pufferfish_align:
     input:
         unpack(lambda wc: get_fq(wc, trimmed=True)),
         index=PUFFERFISH_INDEX_DIR,

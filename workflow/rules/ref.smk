@@ -44,15 +44,15 @@ rule ref_deduped_id_with_decoy_fasta:
         "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
 
 
-rule ref_id2taxid:
+rule ref_taxid_map:
     conda:
         "../envs/pandas.yaml"
     input:
         files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         summary=NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     output:
-        REF_ID2TAXID_FILE,
+        REF_TAXID_MAP_FILE,
     log:
-        REF_ID2TAXID_LOG,
+        REF_TAXID_MAP_LOG,
     script:
-        "../scripts/ref_id2taxid.py"
+        "../scripts/ref_taxid_map.py"

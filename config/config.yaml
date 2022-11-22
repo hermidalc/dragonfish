@@ -40,9 +40,9 @@ uniprot:
     dbxref:
       dbs: [
         'BioCyc',
-        'GO',
         'EC',
         'eggNOG',
+        'GO',
         'InterPro',
         'KEGG',
         'PANTHER',
@@ -71,6 +71,7 @@ ncbi:
         'delnodes.dmp',
         'merged.dmp',
         'nodes.dmp',
+        'names.dmp',
         'rankedlineage.dmp',
       ]
     acc2taxid:

@@ -6,11 +6,35 @@ from snakemake.shell import shell
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
-shell(
-    "diamond makedb"
-    " --threads {snakemake.threads}"
-    " --in {snakemake.input[0]}"
-    " --db {snakemake.output[0]}"
-    " {extra}"
-    " {log}"
-)
+fastas = snakemake.input.get("fastas")
+assert fastas is not None, "input: fastas is a required input parameter"
+
+extra = snakemake.params.get("extra", "")
+
+taxonmap = snakemake.input.get("taxonmap")
+if taxonmap:
+    extra += f"--taxonmap {taxonmap}"
+taxonnodes = snakemake.input.get("taxonnodes")
+if taxonnodes:
+    extra += f"--taxonnodes {taxonnodes}"
+taxonnames = snakemake.input.get("taxonnames")
+if taxonnames:
+    extra += f"--taxonnames {taxonnames}"
+
+if isinstance(fastas, str):
+    shell(
+        "diamond makedb"
+        " --threads {snakemake.threads}"
+        " --in {fastas}"
+        " --db {snakemake.output[0]}"
+        " {extra}"
+        " {log}"
+    )
+else:
+    shell(
+        "pigz -dc {fastas} | diamond makedb"
+        " --threads {snakemake.threads}"
+        " --db {snakemake.output[0]}"
+        " {extra}"
+        " {log}"
+    )

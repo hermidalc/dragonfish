@@ -141,3 +141,14 @@ rule uniprot_kb_genbank_idmap_dbxrefs:
     threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
     script:
         "../scripts/uniprot_kb_genbank_idmap_dbxrefs.py"
+
+
+rule uniprot_kb_taxid_map:
+    input:
+        UNIPROT_KB_IDMAP_FILE,
+    output:
+        UNIPROT_KB_TAXID_MAP_FILE,
+    log:
+        UNIPROT_KB_TAXID_MAP_LOG,
+    script:
+        "../scripts/uniprot_kb_taxid_map.py"

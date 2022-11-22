@@ -61,13 +61,13 @@ SAMPLE_LABELS = [
 
 EXPAND_PARAMS["data_subdir"] = [dirname(fq) for fq in UNIT_DF["fq1"]]
 
-
 UNIPROT_DIR = join(RESOURCES_DIR, "uniprot")
 NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
-GENCODE_DIR = join(RESOURCES_DIR, "gencode")
+DIAMOND_RESOURCES_DIR = join(RESOURCES_DIR, "diamond")
 REF_DIR = join(RESOURCES_DIR, "ref")
+GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
@@ -130,6 +130,7 @@ UNIPROT_KB_GENBANK_IDMAP_FILE = join(UNIPROT_DIR, "uniprot_genbank_idmap.hdf5")
 UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE = join(
     UNIPROT_DIR, "uniprot_genbank_idmap_{ukb_dbxref_db}.hdf5"
 )
+UNIPROT_KB_TAXID_MAP_FILE = join(UNIPROT_DIR, "uniprot_kb_taxid_map.tsv")
 
 EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
@@ -155,6 +156,25 @@ NCBI_ASSEMBLY_CDS_GTF_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_cds.gtf"
 )
 NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_cds.gtf.gz")
+
+EXPAND_PARAMS["a2t_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
+]
+NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_FILES = [
+    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
+]
+NCBI_TAXDUMP_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes.dmp")
+NCBI_TAXDUMP_NAME_FILE = join(NCBI_TAXONOMY_DIR, "names.dmp")
+NCBI_TAXDUMP_FIXED_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes_fixed.dmp")
+
+NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
+
+REF_TAXID_MAP_FILE = join(REF_DIR, "ref_taxid_map.tsv")
+
+DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot")
 
 GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
@@ -242,23 +262,6 @@ PUFFERFISH_UNMAPPED_FASTQ_FILE = join(
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped.fastq.gz",
 )
 
-EXPAND_PARAMS["a2t_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
-]
-
-NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_FILES = [
-    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
-]
-NCBI_TAXDUMP_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes.dmp")
-NCBI_TAXDUMP_FIXED_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes_fixed.dmp")
-
-NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
-NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
-
-REF_ID2TAXID_FILE = join(REF_DIR, "ref_id2taxid.tsv")
-
 DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
 if len(DATA_SUBDIRS) == 1:
     DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", DATA_SUBDIRS[0])
@@ -300,11 +303,12 @@ CEDAR_TAX_COUNT_ESET_FILE = join(
 UNIPROT_LOG_DIR = join(LOG_DIR, "uniprot")
 NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
 NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
+NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
+DIAMOND_LOG_DIR = join(LOG_DIR, "diamond")
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 REF_LOG_DIR = join(LOG_DIR, "ref")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
-NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "uniprot_proteomes.log")
 UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml.log")
@@ -319,6 +323,7 @@ UNIPROT_KB_GENBANK_IDMAP_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_genbank_idmap.l
 UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG = join(
     UNIPROT_LOG_DIR, "uniprot_kb_genbank_idmap_{ukb_dbxref_db}.log"
 )
+UNIPROT_KB_TAXID_MAP_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_taxid_map.log")
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
@@ -335,6 +340,15 @@ NCBI_ASSEMBLY_CDS_GTF_LOG = join(NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_cds_g
 NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_cds_gtf.log"
 )
+
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
+NCBI_TAXDUMP_FIXED_NODE_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_fixed_nodes.log")
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
+
+REF_TAXID_MAP_LOG = join(REF_LOG_DIR, "ref_taxid_map_tsv.log")
+
+DIAMOND_UNIPROT_DB_LOG = join(DIAMOND_LOG_DIR, "uniprot_dmnd.log")
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
     GENCODE_LOG_DIR, f"gencode_{GENCODE_GENOME_NAME}_fa.log"
@@ -389,13 +403,6 @@ FEATURECOUNTS_DBXREF_CDS_COUNT_MATRIX_LOG = join(
     f"{STUDY_NAME}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{ukb_dbxref_db}}_cds_counts.log",
 )
 
-NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
-NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
-NCBI_TAXDUMP_FIXED_NODE_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_fixed_nodes.log")
-NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
-
-REF_ID2TAXID_LOG = join(REF_LOG_DIR, "ref_id2taxid_tsv.log")
-
 CEDAR_TAX_READ_QUANT_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_cedar_tax_tsv.log",
@@ -448,6 +455,11 @@ CEDAR_TAX_READ_QUANT_THREADS = (
     if config["pufferfish"]["cedar"]["threads"] == "all"
     else config["pufferfish"]["cedar"]["threads"]
 )
+DIAMOND_THREADS = (
+    workflow.cores
+    if config["diamond"]["threads"] == "all"
+    else config["diamond"]["threads"]
+)
 
 GENCODE_GENOME_SEQ_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
@@ -471,6 +483,7 @@ CEDAR_TAX_READ_QUANT_WRAPPER = join(
 )
 DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
 ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
+DIAMOND_MAKEDB_WRAPPER = join(config["wrapper"]["base_url"], "bio/diamond/makedb")
 
 
 include: join(RULES_DIR, "common.smk")
@@ -501,12 +514,19 @@ rule all:
         UNIPROT_KB_IDMAP_FILE,
         UNIPROT_KB_GENBANK_IDMAP_FILE,
         expand(UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
+        UNIPROT_KB_TAXID_MAP_FILE,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
+        NCBI_TAXDUMP_ZIP_FILE,
+        NCBI_TAXDUMP_FILES,
+        NCBI_TAXDUMP_FIXED_NODE_FILE,
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        REF_TAXID_MAP_FILE,
+        DIAMOND_UNIPROT_DB_FILE,
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
@@ -524,11 +544,6 @@ rule all:
         expand(FEATURECOUNTS_CDS_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         expand(FEATURECOUNTS_CDS_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         expand(FEATURECOUNTS_DBXREF_CDS_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
-        NCBI_TAXDUMP_ZIP_FILE,
-        NCBI_TAXDUMP_FILES,
-        NCBI_TAXDUMP_FIXED_NODE_FILE,
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        REF_ID2TAXID_FILE,
         expand(CEDAR_TAX_READ_QUANT_FILE, zip, **EXPAND_PARAMS),
         expand(CEDAR_TAX_COUNT_MATRIX_FILE, zip, **EXPAND_PARAMS),
         expand(CEDAR_TAX_COUNT_ESET_FILE, zip, **EXPAND_PARAMS),
