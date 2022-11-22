@@ -15,3 +15,29 @@ rule pufferfish_align_pe:
     threads: PUFFERFISH_ALIGN_THREADS
     wrapper:
         PUFFERFISH_ALIGN_WRAPPER
+
+
+rule pufferfish_unmapped_bam:
+    input:
+        PUFFERFISH_SAM_FILE,
+    params:
+        extra="--require-flags 12 --exclude-flags 256",
+    output:
+        PUFFERFISH_UNMAPPED_BAM_FILE,
+    log:
+        PUFFERFISH_UNMAPPED_BAM_LOG,
+    threads: SAMTOOLS_THREADS
+    wrapper:
+        SAMTOOLS_VIEW_WRAPPER
+
+
+rule pufferfish_unmapped_fastq:
+    input:
+        PUFFERFISH_UNMAPPED_BAM_FILE,
+    output:
+        PUFFERFISH_UNMAPPED_FASTQ_FILE,
+    log:
+        PUFFERFISH_UNMAPPED_FASTQ_LOG,
+    threads: SAMTOOLS_THREADS
+    wrapper:
+        SAMTOOLS_FASTQ_WRAPPER

@@ -235,11 +235,11 @@ PUFFERFISH_PAM_FILE = join(
 )
 PUFFERFISH_UNMAPPED_BAM_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_pe.bam",
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped.bam",
 )
 PUFFERFISH_UNMAPPED_FASTQ_FILE = join(
     PUFFERFISH_RESULTS_DIR,
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_pe.fastq.gz",
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped.fastq.gz",
 )
 
 EXPAND_PARAMS["a2t_basename"] = [
@@ -368,12 +368,12 @@ PUFFERFISH_ALIGN_LOG = join(
 PUFFERFISH_UNMAPPED_BAM_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_pe_bam.log",
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_bam.log",
 )
 PUFFERFISH_UNMAPPED_FASTQ_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     "{data_subdir}",
-    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_pe_fastq.log",
+    f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_fastq.log",
 )
 
 FEATURECOUNTS_CDS_READ_QUANT_LOG = join(
