@@ -41,6 +41,20 @@ rule ncbi_assembly_filtered_summary:
         "../scripts/ncbi_assembly_filtered_summary.py"
 
 
+rule ncbi_assembly_taxid_map:
+    conda:
+        "../envs/pandas.yaml"
+    input:
+        files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        summary=NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
+    output:
+        NCBI_ASSEMBLY_TAXID_MAP_FILE,
+    log:
+        NCBI_ASSEMBLY_TAXID_MAP_LOG,
+    script:
+        "../scripts/ncbi_assembly_taxid_map.py"
+
+
 checkpoint ncbi_assemblies:
     conda:
         "../envs/joblib.yaml"
@@ -131,17 +145,3 @@ rule ncbi_assembly_merged_cds_gtf:
         NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG,
     script:
         "../scripts/merged_gff.py"
-
-
-rule ncbi_assembly_taxid_map:
-    conda:
-        "../envs/pandas.yaml"
-    input:
-        files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        summary=NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
-    output:
-        NCBI_ASSEMBLY_TAXID_MAP_FILE,
-    log:
-        NCBI_ASSEMBLY_TAXID_MAP_LOG,
-    script:
-        "../scripts/ncbi_assembly_taxid_map.py"
