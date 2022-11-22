@@ -26,4 +26,4 @@ with open(snakemake.output[0], "wt") as out_fh:
 
 assert (
     summary_tax_ids == tax_ids
-), f"Not all ref taxids were found in acc2taxid: {summary_tax_ids.difference(tax_ids)}"
+), f"Not all assembly taxids were found in acc2taxid: {summary_tax_ids.difference(tax_ids)}"
