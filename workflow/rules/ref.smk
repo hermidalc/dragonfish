@@ -42,17 +42,3 @@ rule ref_deduped_id_with_decoy_fasta:
         # creates a smaller gzip file than gzip cat
         # don't specify threads for decompress
         "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
-
-
-rule ref_taxid_map:
-    conda:
-        "../envs/pandas.yaml"
-    input:
-        files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        summary=NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
-    output:
-        REF_TAXID_MAP_FILE,
-    log:
-        REF_TAXID_MAP_LOG,
-    script:
-        "../scripts/ref_taxid_map.py"

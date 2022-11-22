@@ -75,6 +75,12 @@ UNIPROT_KB_TYPES = config["uniprot"]["kb"]["types"]
 UNIPROT_KB_IDMAP_URL = config["uniprot"]["kb"]["idmap"]["url"]
 UNIPROT_KB_IDMAP_FILENAME = config["uniprot"]["kb"]["idmap"]["filename"]
 
+NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
+NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
+NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
+NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
+NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
+
 NCBI_ASSEMBLY_SUMMARY_URL = config["ncbi"]["assembly"]["summary"]["url"]
 NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenames"]
 
@@ -86,12 +92,6 @@ FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_MATES = config["fastq"]["mates"]
 FASTQ_EXT = config["fastq"]["ext"]
 FASTQ_PLATFORM = config["fastq"]["platform"]
-
-NCBI_TAXDUMP_URL = config["ncbi"]["taxonomy"]["taxdump"]["url"]
-NCBI_TAXDUMP_ZIP_FILENAME = config["ncbi"]["taxonomy"]["taxdump"]["zip_filename"]
-NCBI_TAXDUMP_FILENAMES = config["ncbi"]["taxonomy"]["taxdump"]["filenames"]
-NCBI_ACC2TAXID_URL = config["ncbi"]["taxonomy"]["acc2taxid"]["url"]
-NCBI_ACC2TAXID_FILENAMES = config["ncbi"]["taxonomy"]["acc2taxid"]["filenames"]
 
 EXPAND_PARAMS["ukb_basename"] = [f"uniprot_{t}" for t in UNIPROT_KB_TYPES]
 EXPAND_PARAMS["ukb_dbxref_db"] = [
@@ -132,6 +132,24 @@ UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE = join(
 )
 UNIPROT_KB_TAXID_MAP_FILE = join(UNIPROT_DIR, "uniprot_kb_taxid_map.tsv")
 
+EXPAND_PARAMS["a2t_basename"] = [
+    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
+]
+
+NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
+NCBI_TAXDUMP_FILES = [
+    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
+]
+NCBI_TAXDUMP_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes.dmp")
+NCBI_TAXDUMP_NAME_FILE = join(NCBI_TAXONOMY_DIR, "names.dmp")
+NCBI_TAXDUMP_FIXED_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes_fixed.dmp")
+
+NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
+NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
+
+DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot")
+
 EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
 ]
@@ -156,25 +174,7 @@ NCBI_ASSEMBLY_CDS_GTF_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_cds.gtf"
 )
 NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_cds.gtf.gz")
-
-EXPAND_PARAMS["a2t_basename"] = [
-    splitext(filename)[0] for filename in NCBI_ACC2TAXID_FILENAMES
-]
-NCBI_TAXDUMP_ZIP_URL = join(NCBI_TAXDUMP_URL, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_ZIP_FILE = join(NCBI_TAXONOMY_DIR, NCBI_TAXDUMP_ZIP_FILENAME)
-NCBI_TAXDUMP_FILES = [
-    join(NCBI_TAXONOMY_DIR, filename) for filename in NCBI_TAXDUMP_FILENAMES
-]
-NCBI_TAXDUMP_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes.dmp")
-NCBI_TAXDUMP_NAME_FILE = join(NCBI_TAXONOMY_DIR, "names.dmp")
-NCBI_TAXDUMP_FIXED_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes_fixed.dmp")
-
-NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
-NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
-
-REF_TAXID_MAP_FILE = join(REF_DIR, "ref_taxid_map.tsv")
-
-DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot")
+NCBI_ASSEMBLY_TAXID_MAP_FILE = join(NCBI_GENOME_DIR, "ncbi_assembly_taxid_map.tsv")
 
 GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
@@ -325,6 +325,13 @@ UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG = join(
 )
 UNIPROT_KB_TAXID_MAP_LOG = join(UNIPROT_LOG_DIR, "uniprot_kb_taxid_map.log")
 
+NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
+NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
+NCBI_TAXDUMP_FIXED_NODE_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_fixed_nodes.log")
+NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
+
+DIAMOND_UNIPROT_DB_LOG = join(DIAMOND_LOG_DIR, "uniprot_dmnd.log")
+
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_merged_summary.log"
@@ -340,15 +347,7 @@ NCBI_ASSEMBLY_CDS_GTF_LOG = join(NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_cds_g
 NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_cds_gtf.log"
 )
-
-NCBI_TAXDUMP_ZIP_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_zip.log")
-NCBI_TAXDUMP_FILES_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_files.log")
-NCBI_TAXDUMP_FIXED_NODE_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_fixed_nodes.log")
-NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
-
-REF_TAXID_MAP_LOG = join(REF_LOG_DIR, "ref_taxid_map_tsv.log")
-
-DIAMOND_UNIPROT_DB_LOG = join(DIAMOND_LOG_DIR, "uniprot_dmnd.log")
+NCBI_ASSEMBLY_TAXID_MAP_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assembly_taxid_map.log")
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
     GENCODE_LOG_DIR, f"gencode_{GENCODE_GENOME_NAME}_fa.log"
@@ -515,18 +514,18 @@ rule all:
         UNIPROT_KB_GENBANK_IDMAP_FILE,
         expand(UNIPROT_KB_GENBANK_IDMAP_DBXREF_FILE, zip, **EXPAND_PARAMS),
         UNIPROT_KB_TAXID_MAP_FILE,
+        NCBI_TAXDUMP_ZIP_FILE,
+        NCBI_TAXDUMP_FILES,
+        NCBI_TAXDUMP_FIXED_NODE_FILE,
+        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
+        DIAMOND_UNIPROT_DB_FILE,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
-        NCBI_TAXDUMP_ZIP_FILE,
-        NCBI_TAXDUMP_FILES,
-        NCBI_TAXDUMP_FIXED_NODE_FILE,
-        expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
-        REF_TAXID_MAP_FILE,
-        DIAMOND_UNIPROT_DB_FILE,
+        NCBI_ASSEMBLY_TAXID_MAP_FILE,
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),

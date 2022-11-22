@@ -20,7 +20,7 @@ rule cedar_tax_read_quant:
     input:
         pam=PUFFERFISH_PAM_FILE,
         taxtree=NCBI_TAXDUMP_FIXED_NODE_FILE,
-        ref2tax=REF_TAXID_MAP_FILE,
+        ref2tax=NCBI_ASSEMBLY_TAXID_MAP_FILE,
     params:
         cedar=abspath(join(config["pufferfish"]["bin_dir"], "cedar")),
         extra=config["pufferfish"]["cedar"]["extra"],
