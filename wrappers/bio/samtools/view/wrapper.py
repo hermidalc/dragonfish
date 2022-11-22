@@ -12,7 +12,7 @@ bam = snakemake.input[0] if bam is None else bam
 extra = snakemake.params.get("extra", "")
 
 qname = snakemake.input.get("qname")
-if qname is not None:
+if qname:
     extra = f"--qname-file {qname} {extra}"
 
 shell(

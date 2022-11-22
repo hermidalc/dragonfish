@@ -7,7 +7,7 @@ from snakemake.shell import shell
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
 infiles = snakemake.input.get("list_file")
-if infiles is not None:
+if infiles:
     infiles = f"--infile-list {infiles}"
 else:
     infiles = snakemake.input
@@ -16,8 +16,8 @@ pattern = snakemake.params.get("pattern")
 extra = snakemake.params.get("extra")
 if isinstance(pattern, (list, tuple)):
     flags = []
-    if pattern is not None:
-        if extra is not None:
+    if pattern:
+        if extra:
             if isinstance(extra, (list, tuple)):
                 assert len(extra) == len(
                     pattern
@@ -27,7 +27,7 @@ if isinstance(pattern, (list, tuple)):
         else:
             for p in pattern:
                 flags.append(f"--pattern '{p}'")
-    elif extra is not None:
+    elif extra:
         for e in extra:
             flags.append(e)
 
@@ -39,12 +39,12 @@ if isinstance(pattern, (list, tuple)):
     shell(shell_cmd)
 else:
     flags = ""
-    if pattern is not None:
+    if pattern:
         flags += f"--pattern '{pattern}'"
     id_regexp = snakemake.params.get("id_regexp")
-    if extra is not None:
+    if extra:
         flags += f" {extra}"
-    if id_regexp is not None:
+    if id_regexp:
         flags += f" --id-regexp '{id_regexp}'"
 
     shell(

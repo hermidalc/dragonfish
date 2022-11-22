@@ -15,7 +15,7 @@ fastas = snakemake.input.get("fastas")
 seqs = snakemake.params.get("seqs")
 assert fastas is not None or seqs is not None, "input fastas or params seqs is required"
 
-if fastas is not None:
+if fastas:
     fastas = [fastas] if isinstance(fastas, str) else fastas
     fastas = ",".join([f"'{f}'" for f in fastas])
     seqs = ""

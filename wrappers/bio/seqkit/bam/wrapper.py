@@ -15,7 +15,7 @@ if read_count:
     flags += "--count " + ("-" if gzip else snakemake.output[0]) + " --quiet-mode"
 
 extra = snakemake.params.get("extra")
-if extra is not None:
+if extra:
     flags += f" {extra}"
 
 pigz = f"| pigz -p {snakemake.threads} -c 1> {snakemake.output[0]}" if gzip else ""
