@@ -164,6 +164,7 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_FILE = join(NCBI_GENOME_DIR, "assembly_summary_merg
 NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE = join(
     NCBI_GENOME_DIR, "assembly_summary_filtered.txt"
 )
+NCBI_ASSEMBLY_TAXID_MAP_FILE = join(NCBI_GENOME_DIR, "assembly_taxid_map.tsv")
 NCBI_ASSEMBLY_FASTA_LIST_FILE = join(
     NCBI_GENOME_DIR, "assembly_{asm_type}_fasta_list.txt"
 )
@@ -174,7 +175,6 @@ NCBI_ASSEMBLY_CDS_GTF_FILE = join(
     NCBI_ASSEMBLY_DIR, "{asm_dir}", "{asm_dir}_genomic_cds.gtf"
 )
 NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE = join(NCBI_GENOME_DIR, "assembly_genomic_cds.gtf.gz")
-NCBI_ASSEMBLY_TAXID_MAP_FILE = join(NCBI_GENOME_DIR, "ncbi_assembly_taxid_map.tsv")
 
 GENCODE_SPECIES = "{gc_species}"
 GENCODE_RELEASE = "{gc_release}"
@@ -339,6 +339,7 @@ NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
 NCBI_ASSEMBLY_FILTERED_SUMMARY_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_filtered_summary.log"
 )
+NCBI_ASSEMBLY_TAXID_MAP_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assembly_taxid_map.log")
 NCBI_ASSEMBLY_FILES_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assemblies.log")
 NCBI_ASSEMBLY_FASTA_LIST_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_{asm_type}_fasta_list.log"
@@ -347,7 +348,6 @@ NCBI_ASSEMBLY_CDS_GTF_LOG = join(NCBI_ASSEMBLY_LOG_DIR, "{asm_dir}_genomic_cds_g
 NCBI_ASSEMBLY_MERGED_CDS_GTF_LOG = join(
     NCBI_GENOME_LOG_DIR, "ncbi_assembly_genomic_cds_gtf.log"
 )
-NCBI_ASSEMBLY_TAXID_MAP_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_assembly_taxid_map.log")
 
 GENCODE_GENOME_FIXED_FASTA_LOG = join(
     GENCODE_LOG_DIR, f"gencode_{GENCODE_GENOME_NAME}_fa.log"
@@ -522,10 +522,10 @@ rule all:
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
+        NCBI_ASSEMBLY_TAXID_MAP_FILE,
         NCBI_ASSEMBLY_DIR,
         expand(NCBI_ASSEMBLY_FASTA_LIST_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_CDS_GTF_FILE,
-        NCBI_ASSEMBLY_TAXID_MAP_FILE,
         expand(GENCODE_GENOME_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
