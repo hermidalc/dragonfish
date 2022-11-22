@@ -24,6 +24,6 @@ with open(snakemake.output[0], "wt") as out_fh:
                     ref_id = fields[1].strip()
                     out_fh.write(f"{ref_id}\t{tax_id}\n")
 
-assert (
-    summary_tax_ids == tax_ids
-), f"Not all assembly taxids were found in acc2taxid: {summary_tax_ids.difference(tax_ids)}"
+missing_taxids = list(sorted(summary_tax_ids.difference(tax_ids)))
+if missing_taxids:
+    print(f"Not all assembly taxids were found in acc2taxid: {missing_taxids}")
