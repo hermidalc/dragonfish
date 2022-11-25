@@ -148,7 +148,7 @@ NCBI_TAXDUMP_FIXED_NODE_FILE = join(NCBI_TAXONOMY_DIR, "nodes_fixed.dmp")
 NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
 NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
 
-DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot")
+DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot.dmnd")
 
 EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
