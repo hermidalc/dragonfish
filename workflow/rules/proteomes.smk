@@ -51,10 +51,10 @@ rule uniprot_kb_fasta:
 rule uniprot_kb_merged_fasta:
     conda:
         "../envs/pigz.yaml"
-    params:
+    input:
         expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
     output:
-        UNIPROT_KB_MERGED_FASTA_FILE,
+        temp(UNIPROT_KB_MERGED_FASTA_FILE),
     log:
         UNIPROT_KB_MERGED_FASTA_LOG,
     # decompress takes ~1 thread in this context subtract 1
