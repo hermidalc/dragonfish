@@ -66,6 +66,7 @@ NCBI_GENOME_DIR = join(RESOURCES_DIR, "genomes")
 NCBI_ASSEMBLY_DIR = join(NCBI_GENOME_DIR, "assemblies")
 NCBI_TAXONOMY_DIR = join(RESOURCES_DIR, "taxonomy")
 DIAMOND_RESOURCES_DIR = join(RESOURCES_DIR, "diamond")
+PALADIN_RESOURCES_DIR = join(RESOURCES_DIR, "paladin")
 REF_DIR = join(RESOURCES_DIR, "ref")
 GENCODE_DIR = join(RESOURCES_DIR, "gencode")
 PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
@@ -103,7 +104,7 @@ UNIPROT_KB_XML_URL = join(UNIPROT_KB_URL, "{ukb_basename}.xml.gz")
 UNIPROT_KB_XML_FILE = join(UNIPROT_DIR, "{ukb_basename}.xml.gz")
 UNIPROT_KB_FASTA_URL = join(UNIPROT_KB_URL, "{ukb_basename}.fasta.gz")
 UNIPROT_KB_FASTA_FILE = join(UNIPROT_DIR, "{ukb_basename}.fasta.gz")
-UNIPROT_KB_MERGED_FASTA_FILE = join(UNIPROT_DIR, "uniprot.fasta.gz")
+UNIPROT_KB_MERGED_FASTA_FILE = join(UNIPROT_DIR, "uniprot_merged.fasta.gz")
 UNIPROT_KB_XML_SPLIT_POS_FILE = join(UNIPROT_DIR, "{ukb_basename}_xml_split_pos.txt")
 UNIPROT_KB_DBXREF_SPLIT_DIR = join(UNIPROT_DIR, "dbxref")
 UNIPROT_KB_DBXREF_SPLIT_FILE = join(
@@ -150,6 +151,7 @@ NCBI_ACC2TAXID_URL = join(NCBI_ACC2TAXID_URL, "{a2t_basename}.gz")
 NCBI_ACC2TAXID_FILE = join(NCBI_TAXONOMY_DIR, "{a2t_basename}.gz")
 
 DIAMOND_UNIPROT_DB_FILE = join(DIAMOND_RESOURCES_DIR, "uniprot.dmnd")
+PALADIN_UNIPROT_INDEX_DIR = join(PALADIN_RESOURCES_DIR, "uniprot")
 
 EXPAND_PARAMS["asu_basename"] = [
     splitext(filename)[0] for filename in NCBI_ASSEMBLY_SUMMARY_FILENAMES
@@ -306,6 +308,7 @@ NCBI_GENOME_LOG_DIR = join(LOG_DIR, "genomes")
 NCBI_ASSEMBLY_LOG_DIR = join(NCBI_GENOME_LOG_DIR, "assemblies")
 NCBI_TAXNOMY_LOG_DIR = join(LOG_DIR, "taxonomy")
 DIAMOND_LOG_DIR = join(LOG_DIR, "diamond")
+PALADIN_LOG_DIR = join(LOG_DIR, "paladin")
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 REF_LOG_DIR = join(LOG_DIR, "ref")
 PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
@@ -314,7 +317,7 @@ FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "uniprot_proteomes.log")
 UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml.log")
 UNIPROT_KB_FASTA_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_fasta.log")
-UNIPROT_KB_MERGED_FASTA_LOG = join(UNIPROT_LOG_DIR, "uniprot_fasta.log")
+UNIPROT_KB_MERGED_FASTA_LOG = join(UNIPROT_LOG_DIR, "uniprot_merged_fasta.log")
 UNIPROT_KB_XML_SPLIT_POS_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml_split_pos.log")
 UNIPROT_KB_DBXREF_SPLIT_LOG = join(
     UNIPROT_LOG_DIR, "{ukb_basename}_dbxref_{ukb_snum}.log"
@@ -333,6 +336,7 @@ NCBI_TAXDUMP_FIXED_NODE_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_taxdump_fixed_nod
 NCBI_ACC2TAXID_LOG = join(NCBI_TAXNOMY_LOG_DIR, "ncbi_{a2t_basename}.log")
 
 DIAMOND_UNIPROT_DB_LOG = join(DIAMOND_LOG_DIR, "uniprot_dmnd.log")
+PALADIN_UNIPROT_INDEX_LOG = join(PALADIN_LOG_DIR, "uniprot_index.log")
 
 NCBI_ASSEMBLY_SUMMARY_LOG = join(NCBI_GENOME_LOG_DIR, "ncbi_{asu_basename}.log")
 NCBI_ASSEMBLY_MERGED_SUMMARY_LOG = join(
@@ -461,6 +465,11 @@ DIAMOND_THREADS = (
     if config["diamond"]["threads"] == "all"
     else config["diamond"]["threads"]
 )
+PALADIN_THREADS = (
+    workflow.cores
+    if config["paladin"]["threads"] == "all"
+    else config["paladin"]["threads"]
+)
 
 GENCODE_GENOME_SEQ_WRAPPER = join(
     config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
@@ -523,6 +532,7 @@ rule all:
         NCBI_TAXDUMP_FIXED_NODE_FILE,
         expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         DIAMOND_UNIPROT_DB_FILE,
+        PALADIN_UNIPROT_INDEX_DIR,
         expand(NCBI_ASSEMBLY_SUMMARY_FILE, zip, **EXPAND_PARAMS),
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
