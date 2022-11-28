@@ -23,7 +23,7 @@ taxonnames = snakemake.input.get("taxonnames")
 if taxonnames:
     extra += f" --taxonnames {taxonnames}"
 
-output = splitext(snakemake.output[0])[0]
+output = snakemake.output[0].rsplit(".dmnd")[0]
 
 if isinstance(fastas, str):
     shell(
