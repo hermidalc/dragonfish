@@ -4,6 +4,8 @@ wrapper:
 
 analysis_modes: ['functional', 'taxonomic']
 
+host_filter_mode: ''
+
 tmp_dir: ''
 
 random_seed: 777

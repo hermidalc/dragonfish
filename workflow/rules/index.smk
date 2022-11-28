@@ -1,10 +1,21 @@
 from os.path import abspath
 
 
+def pufferfish_index_input(wildecards):
+    if config["host_filter_mode"] == "decoys":
+        return {
+            "ref": REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE,
+            "decoys": GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
+        }
+    else:
+        return {
+            "ref": REF_DEDUPED_ID_FASTA_FILE,
+        }
+
+
 rule pufferfish_index:
     input:
-        ref=REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE,
-        decoys=GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
+        unpack(pufferfish_index_input),
     params:
         pufferfish=abspath(join(config["pufferfish"]["bin_dir"], "pufferfish")),
         extra=config["pufferfish"]["index"]["extra"],
@@ -34,7 +45,7 @@ rule diamond_uniprot_db:
 
 rule paladin_uniprot_index:
     input:
-        UNIPROT_KB_MERGED_FASTA_FILE,
+        ref=UNIPROT_KB_MERGED_FASTA_FILE,
     params:
         ref_type=3,
     output:
