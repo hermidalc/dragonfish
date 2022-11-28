@@ -19,7 +19,7 @@ rule pufferfish_index:
 
 rule diamond_uniprot_db:
     input:
-        fastas=expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
+        fastas=UNIPROT_KB_MERGED_FASTA_FILE,
         taxonmap=UNIPROT_KB_TAXID_MAP_FILE,
         taxonnodes=NCBI_TAXDUMP_NODE_FILE,
         taxonnames=NCBI_TAXDUMP_NAME_FILE,
@@ -30,3 +30,17 @@ rule diamond_uniprot_db:
     threads: DIAMOND_THREADS
     wrapper:
         DIAMOND_MAKEDB_WRAPPER
+
+
+rule paladin_uniprot_index:
+    input:
+        UNIPROT_KB_MERGED_FASTA_FILE,
+    params:
+        ref_type=3,
+    output:
+        directory(PALADIN_UNIPROT_INDEX_DIR),
+    log:
+        PALADIN_UNIPROT_INDEX_LOG,
+    threads: PALADIN_THREADS
+    wrapper:
+        PALADIN_INDEX_WRAPPER

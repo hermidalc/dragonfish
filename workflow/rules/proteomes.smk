@@ -48,6 +48,23 @@ rule uniprot_kb_fasta:
         "../scripts/url_file.py"
 
 
+rule uniprot_kb_merged_fasta:
+    conda:
+        "../envs/pigz.yaml"
+    params:
+        expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
+    output:
+        UNIPROT_KB_MERGED_FASTA_FILE,
+    log:
+        UNIPROT_KB_MERGED_FASTA_LOG,
+    # decompress takes ~1 thread in this context subtract 1
+    threads: PIGZ_THREADS - 1
+    shell:
+        # creates a smaller gzip file than gzip cat
+        # don't specify threads for decompress
+        "pigz -dc {input} | pigz -p {threads} 1> {output} 2> {log}"
+
+
 rule uniprot_kb_xml_split_pos:
     input:
         UNIPROT_KB_XML_FILE,
