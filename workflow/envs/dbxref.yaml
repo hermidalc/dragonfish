@@ -1,6 +1,7 @@
 name: dbxref
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - biopython=1.79
   - lxml

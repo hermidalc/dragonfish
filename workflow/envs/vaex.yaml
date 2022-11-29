@@ -1,6 +1,7 @@
 name: vaex
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - numpy=1.22.3
   - vaex

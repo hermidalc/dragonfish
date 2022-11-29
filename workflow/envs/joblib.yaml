@@ -1,6 +1,7 @@
 name: joblib
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - joblib
   - pandas
