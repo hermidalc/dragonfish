@@ -265,13 +265,8 @@ PUFFERFISH_UNMAPPED_FASTQ_FILE = join(
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped.fastq.gz",
 )
 
-DATA_SUBDIRS = list(set(EXPAND_PARAMS["data_subdir"]))
-if len(DATA_SUBDIRS) == 1:
-    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", DATA_SUBDIRS[0])
-    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", DATA_SUBDIRS[0])
-else:
-    DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
-    DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
+DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
+DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
 FEATURECOUNTS_CDS_READ_QUANT_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
