@@ -265,7 +265,6 @@ PUFFERFISH_UNMAPPED_FASTQ_FILE = join(
 )
 
 DATA_MATRIX_RESULTS_DIR = join(RESULTS_DIR, "data_matrix", STUDY_NAME)
-DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
 FEATURECOUNTS_CDS_READ_QUANT_FILE = join(
     DATA_MATRIX_RESULTS_DIR,
@@ -305,8 +304,10 @@ DIAMOND_LOG_DIR = join(LOG_DIR, "diamond")
 PALADIN_LOG_DIR = join(LOG_DIR, "paladin")
 GENCODE_LOG_DIR = join(LOG_DIR, "gencode")
 REF_LOG_DIR = join(LOG_DIR, "ref")
-PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
 FASTP_LOG_DIR = join(LOG_DIR, "fastp", "{data_subdir}")
+PUFFERFISH_LOG_DIR = join(LOG_DIR, "pufferfish")
+PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align", "{data_subdir}")
+DATA_MATRIX_LOG_DIR = join(LOG_DIR, "data_matrix", STUDY_NAME)
 
 UNIPROT_PROTEOMES_LOG = join(UNIPROT_LOG_DIR, "uniprot_proteomes.log")
 UNIPROT_KB_XML_LOG = join(UNIPROT_LOG_DIR, "{ukb_basename}_xml.log")
@@ -372,20 +373,16 @@ PUFFERFISH_INDEX_LOG = join(
 
 FASTP_LOG = join(FASTP_LOG_DIR, f"{RUN_ID_WILDCARD_STR}.log")
 
-PUFFERFISH_ALIGN_LOG_DIR = join(PUFFERFISH_LOG_DIR, "align", "{data_subdir}")
-
 PUFFERFISH_ALIGN_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_{{pfa_type}}.log",
 )
 PUFFERFISH_UNMAPPED_BAM_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
-    "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_bam.log",
 )
 PUFFERFISH_UNMAPPED_FASTQ_LOG = join(
     PUFFERFISH_ALIGN_LOG_DIR,
-    "{data_subdir}",
     f"{RUN_ID_WILDCARD_STR}_{{asm_type}}_deduped_id_{{ref_decoy}}_unmapped_fastq.log",
 )
 
