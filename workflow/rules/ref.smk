@@ -26,7 +26,7 @@ rule ref_deduped_id_fasta:
         SEQKIT_RENAME_WRAPPER
 
 
-rule ref_deduped_id_with_decoy_fasta:
+rule ref_deduped_id_with_decoys_fasta:
     conda:
         "../envs/pigz.yaml"
     input:

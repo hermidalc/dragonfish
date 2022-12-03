@@ -201,10 +201,12 @@ GENCODE_GENOME_ANNOT_FILE = join(
     GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}.gz"
 )
 
-EXPAND_PARAMS["ref_decoy"] = ["with_decoy"]
+EXPAND_PARAMS["ref_decoy"] = (
+    ["with_decoys"] if config["host_filtering"]["mode"] == "decoys" else ["no_decoys"]
+)
 
 REF_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
-REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.fa.gz")
+REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id_no_decoys.fa.gz")
 REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE = join(
     REF_DIR, "ref_{asm_type}_deduped_id_{ref_decoy}.fa.gz"
 )
@@ -453,13 +455,13 @@ CEDAR_TAX_READ_QUANT_THREADS = (
 )
 DIAMOND_THREADS = (
     workflow.cores
-    if config["diamond"]["threads"] == "all"
-    else config["diamond"]["threads"]
+    if config["translated_search"]["diamond"]["threads"] == "all"
+    else config["translated_search"]["diamond"]["threads"]
 )
 PALADIN_THREADS = (
     workflow.cores
-    if config["paladin"]["threads"] == "all"
-    else config["paladin"]["threads"]
+    if config["translated_search"]["paladin"]["threads"] == "all"
+    else config["translated_search"]["paladin"]["threads"]
 )
 
 GENCODE_GENOME_SEQ_WRAPPER = join(

@@ -2,9 +2,7 @@
 wrapper:
   base_url: 'file:wrappers'
 
-analysis_modes: ['functional', 'taxonomic']
-
-host_filter_mode: ''
+analysis_modes: [functional, taxonomic]
 
 tmp_dir: ''
 
@@ -14,7 +12,7 @@ download:
   retries: 5
 
 joblib:
-  backend: 'loky'
+  backend: loky
   verbosity: 1
 
 study:
@@ -173,6 +171,19 @@ pufferfish:
     threads: all
     extra: '--minCnt 2'
 
+host_filtering:
+  mode: none
+  hisat2:
+    threads: all
+  star:
+    index:
+      threads: all
+    align:
+      sort_bam: true
+      threads: all
+    # regex specific to GTF style
+    sj_filter_chr_regex: '^(?!chrM$).+$'  # 'chr([1-9][0-9]?|X|Y)'
+
 pigz:
   threads: all
 
@@ -186,20 +197,9 @@ featurecounts:
   threads: all
   extra: '-p -t CDS -g protein_id'
 
-paladin:
-  threads: all
-
-diamond:
-  threads: all
-
-hisat2:
-  threads: all
-
-star:
-  index:
+translated_search:
+  mode: diamond
+  diamond:
     threads: all
-  align:
-    sort_bam: true
+  paladin:
     threads: all
-  # regex specific to GTF style
-  sj_filter_chr_regex: '^(?!chrM$).+$'  # 'chr([1-9][0-9]?|X|Y)'
