@@ -206,7 +206,7 @@ EXPAND_PARAMS["ref_decoy"] = (
 )
 
 REF_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
-REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id_no_decoys.fa.gz")
+REF_DEDUPED_ID_FASTA_FILE = join(REF_DIR, "ref_{asm_type}_deduped_id.fa.gz")
 REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE = join(
     REF_DIR, "ref_{asm_type}_deduped_id_{ref_decoy}.fa.gz"
 )
