@@ -30,7 +30,7 @@ merged_df = (
 merged_df = merged_df.loc[
     (
         merged_df["Taxonomic lineage"]
-        .str.split("\s*,\s*", n=2, expand=True)[0]
+        .str.split(r"\s*,\s*", n=2, expand=True)[0]
         .str.capitalize()
         != "Eukaryota"
     )
@@ -54,7 +54,7 @@ if snakemake.params.low_quality_pattern:
 if snakemake.params.filter_domains:
     merged_df = merged_df.loc[
         ~merged_df["Taxonomic lineage"]
-        .str.split("\s*,\s*", n=2, expand=True)[0]
+        .str.split(r"\s*,\s*", n=2, expand=True)[0]
         .str.capitalize()
         .isin(snakemake.params.filter_domains)
     ]
