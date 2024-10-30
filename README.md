@@ -46,7 +46,7 @@ cd dragonfish
 
 Run the full pipeline:
 
-```
+```bash
 ./scripts/run_snakemake.sh
 ```
 
