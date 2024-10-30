@@ -30,22 +30,8 @@ to existing functional meta-omic profiling tools that are available.
 ### Mambaforge
 
 Install and set up
-[Mambaforge](https://github.com/conda-forge/miniforge#mambaforge), e.g. on
+[Miniforge3](https://github.com/conda-forge/miniforge#download)
 Linux:
-
-```bash
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
-bash Mambaforge-Linux-x86_64.sh
-```
-
-After installation, close the terminal and open a new one to get the updated
-environment, then:
-
-```bash
-conda config --set auto_activate_base false
-conda config --set channel_priority strict
-mamba update --all
-```
 
 ### Project source
 
@@ -70,7 +56,7 @@ mamba activate dragonfish
 Run the full pipeline:
 
 ```
-snakemake --use-conda --printshellcmds --cores all --scheduler greedy --resources gencode_download_jobs=2
+snakemake
 ```
 
 ## Additional Notes
@@ -189,15 +175,15 @@ files:
 
 ```bash
 $ ldd src/*
-	not a dynamic executable
+ not a dynamic executable
 src/cedar:
-	not a dynamic executable
+ not a dynamic executable
 src/filtersam:
-	not a dynamic executable
+ not a dynamic executable
 src/getLineage:
-	not a dynamic executable
+ not a dynamic executable
 src/pufferfish:
-	not a dynamic executable
+ not a dynamic executable
 ```
 
 Again, these are fully self-contained and can simply be copied and used on any
