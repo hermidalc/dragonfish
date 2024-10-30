@@ -1,6 +1,4 @@
 rule uniprot_proteomes:
-    conda:
-        "../envs/pandas.yaml"
     params:
         tax_level=config["ncbi"]["taxonomy"]["level"],
         low_quality_pattern=config["ncbi"]["taxonomy"]["low_quality_pattern"],
@@ -16,6 +14,8 @@ rule uniprot_proteomes:
     log:
         UNIPROT_PROTEOMES_LOG,
     retries: config["download"]["retries"]
+    conda:
+        "../envs/pandas.yaml"
     script:
         "../scripts/uniprot_proteomes.py"
 
@@ -49,8 +49,6 @@ rule uniprot_kb_fasta:
 
 
 rule uniprot_kb_merged_fasta:
-    conda:
-        "../envs/pigz.yaml"
     input:
         expand(UNIPROT_KB_FASTA_FILE, zip, **EXPAND_PARAMS),
     output:
@@ -59,6 +57,8 @@ rule uniprot_kb_merged_fasta:
         UNIPROT_KB_MERGED_FASTA_LOG,
     # decompress takes ~1 thread in this context subtract 1
     threads: PIGZ_THREADS - 1
+    conda:
+        "../envs/pigz.yaml"
     shell:
         # creates a smaller gzip file than gzip cat
         # don't specify threads for decompress
@@ -82,8 +82,6 @@ rule uniprot_kb_xml_split_pos:
 
 
 rule uniprot_kb_dbxref_split:
-    conda:
-        "../envs/dbxref.yaml"
     input:
         kb=UNIPROT_KB_XML_FILE,
         proteomes=UNIPROT_PROTEOMES_FILE,
@@ -95,19 +93,21 @@ rule uniprot_kb_dbxref_split:
         UNIPROT_KB_DBXREF_SPLIT_FILE,
     log:
         UNIPROT_KB_DBXREF_SPLIT_LOG,
+    conda:
+        "../envs/dbxref.yaml"
     script:
         "../scripts/uniprot_kb_dbxref_split.py"
 
 
 rule uniprot_kb_merged_dbxref:
-    conda:
-        "../envs/vaex.yaml"
     input:
         UNIPROT_KB_DBXREF_SPLIT_FILES,
     output:
         UNIPROT_KB_DBXREF_FILE,
     log:
         UNIPROT_KB_DBXREF_LOG,
+    conda:
+        "../envs/vaex.yaml"
     script:
         "../scripts/merged_hdf.py"
 
@@ -127,8 +127,6 @@ rule uniprot_kb_idmap:
 
 
 rule uniprot_kb_genbank_idmap:
-    conda:
-        "../envs/vaex.yaml"
     input:
         UNIPROT_KB_IDMAP_FILE,
     params:
@@ -137,13 +135,13 @@ rule uniprot_kb_genbank_idmap:
         UNIPROT_KB_GENBANK_IDMAP_FILE,
     log:
         UNIPROT_KB_GENBANK_IDMAP_LOG,
+    conda:
+        "../envs/vaex.yaml"
     script:
         "../scripts/uniprot_kb_genbank_idmap.py"
 
 
 rule uniprot_kb_genbank_idmap_dbxrefs:
-    conda:
-        "../envs/vaex.yaml"
     input:
         idmap=UNIPROT_KB_GENBANK_IDMAP_FILE,
         dbxref=UNIPROT_KB_DBXREF_FILE,
@@ -156,6 +154,8 @@ rule uniprot_kb_genbank_idmap_dbxrefs:
     log:
         UNIPROT_KB_GENBANK_IDMAP_DBXREF_LOG,
     threads: UNIPROT_KB_GENBANK_IDMAP_DBXREF_THREADS
+    conda:
+        "../envs/vaex.yaml"
     script:
         "../scripts/uniprot_kb_genbank_idmap_dbxrefs.py"
 

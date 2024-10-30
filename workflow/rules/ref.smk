@@ -27,8 +27,6 @@ rule ref_deduped_id_fasta:
 
 
 rule ref_deduped_id_with_decoys_fasta:
-    conda:
-        "../envs/pigz.yaml"
     input:
         ref=REF_DEDUPED_ID_FASTA_FILE,
         decoys=expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
@@ -38,6 +36,8 @@ rule ref_deduped_id_with_decoys_fasta:
         REF_DEDUPED_ID_WITH_DECOY_FASTA_LOG,
     # decompress takes ~1 thread in this context subtract 1
     threads: PIGZ_THREADS - 1
+    conda:
+        "../envs/pigz.yaml"
     shell:
         # creates a smaller gzip file than gzip cat
         # don't specify threads for decompress

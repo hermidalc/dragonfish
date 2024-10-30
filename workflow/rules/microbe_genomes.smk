@@ -13,21 +13,19 @@ rule ncbi_assembly_summary:
 
 
 rule ncbi_assembly_merged_summary:
-    conda:
-        "../envs/pandas.yaml"
     input:
         NCBI_ASSEMBLY_SUMMARY_FILES,
     output:
         NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
     log:
         NCBI_ASSEMBLY_MERGED_SUMMARY_LOG,
+    conda:
+        "../envs/pandas.yaml"
     script:
         "../scripts/ncbi_assembly_merged_summary.py"
 
 
 rule ncbi_assembly_filtered_summary:
-    conda:
-        "../envs/pandas.yaml"
     input:
         summary=NCBI_ASSEMBLY_MERGED_SUMMARY_FILE,
         proteomes=UNIPROT_PROTEOMES_FILE,
@@ -37,13 +35,13 @@ rule ncbi_assembly_filtered_summary:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     log:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_LOG,
+    conda:
+        "../envs/pandas.yaml"
     script:
         "../scripts/ncbi_assembly_filtered_summary.py"
 
 
 rule ncbi_assembly_taxid_map:
-    conda:
-        "../envs/pandas.yaml"
     input:
         files=expand(NCBI_ACC2TAXID_FILE, zip, **EXPAND_PARAMS),
         summary=NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
@@ -51,13 +49,13 @@ rule ncbi_assembly_taxid_map:
         NCBI_ASSEMBLY_TAXID_MAP_FILE,
     log:
         NCBI_ASSEMBLY_TAXID_MAP_LOG,
+    conda:
+        "../envs/pandas.yaml"
     script:
         "../scripts/ncbi_assembly_taxid_map.py"
 
 
 checkpoint ncbi_assemblies:
-    conda:
-        "../envs/joblib.yaml"
     input:
         NCBI_ASSEMBLY_FILTERED_SUMMARY_FILE,
     params:
@@ -73,6 +71,8 @@ checkpoint ncbi_assemblies:
         NCBI_ASSEMBLY_FILES_LOG,
     retries: config["download"]["retries"]
     threads: NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS
+    conda:
+        "../envs/joblib.yaml"
     script:
         "../scripts/ncbi_assemblies.py"
 
@@ -95,14 +95,14 @@ def gather_ncbi_assembly_fasta_files(wildcards):
 
 
 rule ncbi_assembly_fasta_list:
-    conda:
-        "../envs/pandas.yaml"
     input:
         gather_ncbi_assembly_fasta_files,
     output:
         NCBI_ASSEMBLY_FASTA_LIST_FILE,
     log:
         NCBI_ASSEMBLY_FASTA_LIST_LOG,
+    conda:
+        "../envs/pandas.yaml"
     script:
         "../scripts/file_list_from_paths.py"
 
@@ -122,14 +122,14 @@ def gather_ncbi_assembly_cds_gtf_files(wildcards):
 
 
 rule ncbi_assembly_cds_gtf:
-    conda:
-        "../envs/gffutils.yaml"
     input:
         NCBI_ASSEMBLY_GFF_FILE,
     output:
         NCBI_ASSEMBLY_CDS_GTF_FILE,
     log:
         NCBI_ASSEMBLY_CDS_GTF_LOG,
+    conda:
+        "../envs/gffutils.yaml"
     script:
         "../scripts/cds_gtf.py"
 
