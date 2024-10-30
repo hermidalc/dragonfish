@@ -1,0 +1,9 @@
+software-deployment-method: conda
+printshellcmds: true
+notemp: true
+scheduler: greedy
+rerun-incomplete: true
+cores: all
+
+resources:
+  gencode_download_jobs: 2

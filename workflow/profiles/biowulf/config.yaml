@@ -1,0 +1,26 @@
+executor: slurm
+software-deployment-method: conda
+keep-going: true
+rerun-incomplete: true
+printshellcmds: true
+nolock: true
+notemp: true
+scheduler: greedy
+max-status-checks-per-second: 1/60
+latency-wait: 120
+jobs: unlimited
+cores: all
+
+# remote-job-local-storage-prefix: '/lscratch/\$SLURM_JOB_ID'
+
+resources:
+  gencode_download_jobs: 2
+
+default-resources:
+  slurm_partition: "ccr,norm"
+  cpus_per_task: 2
+  mem_mb: 6144
+  runtime: "8h"
+  slurm_extra: "'--gres=lscratch:200'"
+
+set-resources:
