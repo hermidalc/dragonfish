@@ -1,4 +1,4 @@
-name: hisat2 index
+name: hisat2 build
 description: HISAT2 genome index creation
 authors:
   - Leandro C. Hermida
