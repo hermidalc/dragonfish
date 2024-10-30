@@ -6,4 +6,5 @@ dependencies:
   - biopython=1.79
   - lxml
   - pandas
+  - pydantic<2
   - vaex
