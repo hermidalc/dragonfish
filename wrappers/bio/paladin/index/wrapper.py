@@ -1,6 +1,6 @@
 __author__ = "Leandro C. Hermida"
 __email__ = "hermidalc@pitt.edu"
-__license__ = "BSD 3-Clause"
+__license__ = "MIT"
 
 from os import remove
 from os.path import basename, join
