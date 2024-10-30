@@ -2,7 +2,7 @@ from os.path import abspath
 
 
 def pufferfish_index_input(wildecards):
-    if config["host_filtering"]["mode"] == "decoys":
+    if config["host_filter"]["mode"] == "decoys":
         return {
             "ref": REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE,
             "decoys": GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,

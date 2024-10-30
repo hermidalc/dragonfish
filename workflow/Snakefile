@@ -202,7 +202,7 @@ GENCODE_GENOME_ANNOT_FILE = join(
 )
 
 EXPAND_PARAMS["ref_decoy"] = (
-    ["with_decoys"] if config["host_filtering"]["mode"] == "decoys" else ["no_decoys"]
+    ["with_decoys"] if config["host_filter"]["mode"] == "decoys" else ["no_decoys"]
 )
 
 REF_FASTA_FILE = join(REF_DIR, "ref_{asm_type}.fa.gz")
