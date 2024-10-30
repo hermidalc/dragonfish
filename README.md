@@ -44,19 +44,10 @@ cd dragonfish
 
 ## Run Dragonfish
 
-Create and activate the base Dragonfish conda environment, which only
-provides snakemake. All the rest of the dependencies are automatically
-provided via snakemake and conda when running Dragonfish.
-
-```
-mamba env create -f envs/dragonfish.yaml
-mamba activate dragonfish
-```
-
 Run the full pipeline:
 
 ```
-snakemake
+./scripts/run_snakemake.sh
 ```
 
 ## Additional Notes
