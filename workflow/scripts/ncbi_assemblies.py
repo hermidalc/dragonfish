@@ -20,12 +20,18 @@ def download_file(url, file, retries, retry_wait):
         try:
             urlretrieve(url, filename=file)
         except HTTPError as e:
-            print(f"Skipped: {url}: {e}", flush=True)
-            break
+            if e.code == 404:
+                print(f"Skipped: {url}: {e}", flush=True)
+                break
+            if exists(file):
+                remove(file)
+            print(f"Retrying: {url}: {e}", flush=True)
+            retries -= 1
+            sleep(retry_wait)
         except Exception as e:
             if exists(file):
                 remove(file)
-            print(f"Error: {url}: {e}", flush=True)
+            print(f"Retrying: {url}: {e}", flush=True)
             retries -= 1
             sleep(retry_wait)
         else:
@@ -40,7 +46,7 @@ def check_md5(file):
     try:
         md5_df = pd.read_csv(
             md5_file,
-            delim_whitespace=True,
+            sep=r"\s+",
             header=None,
             names=["md5", "name"],
             engine="c",
