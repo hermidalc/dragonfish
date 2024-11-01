@@ -1,8 +1,9 @@
 import re
 from os import getcwd, walk
-from os.path import dirname, exists, join, splitext
+from os.path import basename, dirname, exists, join, splitext
 from tempfile import gettempdir
 from shutil import rmtree
+from urllib.parse import urlparse
 
 import pandas as pd
 from snakemake.utils import validate
@@ -24,7 +25,9 @@ UNIT_CONFIG_FILE = config["study"]["units"]
 
 TEMP_DIR = config["tmp_dir"] if config["tmp_dir"] else gettempdir()
 
-EXPAND_PARAMS = {"aly_modes": config["analysis_modes"]}
+EXPAND_PARAMS = {}
+
+EXPAND_PARAMS["anal_mode"] = config["analysis_modes"]
 
 SAMPLE_DF = pd.read_csv(
     SAMPLE_CONFIG_FILE, sep="\t", dtype={"sample_name": str, "sample_label": str}
@@ -68,7 +71,12 @@ DIAMOND_RESOURCES_DIR = join(RESOURCES_DIR, "diamond")
 PALADIN_RESOURCES_DIR = join(RESOURCES_DIR, "paladin")
 REF_DIR = join(RESOURCES_DIR, "ref")
 GENCODE_DIR = join(RESOURCES_DIR, "gencode")
+T2T_DIR = join(RESOURCES_DIR, "t2t")
 PUFFERFISH_RESOURCES_DIR = join(RESOURCES_DIR, "pufferfish")
+
+PUBLIC_WRAPPERS_VERSION = config["wrappers"]["public"]["version"]
+PERSONAL_WRAPPERS_BASE_URL = config["wrappers"]["personal"]["base_url"]
+LOCAL_WRAPPERS_BASE_URL = config["wrappers"]["local"]["base_url"]
 
 UNIPROT_KB_URL = config["uniprot"]["kb"]["url"]
 UNIPROT_KB_TYPES = config["uniprot"]["kb"]["types"]
@@ -87,6 +95,10 @@ NCBI_ASSEMBLY_SUMMARY_FILENAMES = config["ncbi"]["assembly"]["summary"]["filenam
 GENCODE_PROTOCOL = config["gencode"]["protocol"]
 GENCODE_REGIONS = config["gencode"]["regions"]
 GENCODE_ANNOT_FMT = config["gencode"]["annot"]["fmt"]
+T2T_GENOME_FASTA_URL = config["t2t"]["fasta_url"]
+
+HOST_FILTER_TYPE = config["host_filter"]["type"]
+HOST_FILTER_MODE = config["host_filter"]["mode"]
 
 FASTQ_DATA_DIR = config["fastq"]["data_dir"]
 FASTQ_MATES = config["fastq"]["mates"]
@@ -199,6 +211,22 @@ GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE = join(
 )
 GENCODE_GENOME_ANNOT_FILE = join(
     GENCODE_DIR, f"{GENCODE_GENOME_NAME}.{GENCODE_ANNOT_FMT.lower()}.gz"
+)
+
+T2T_GENOME_FASTA_FILE_GZ_NAME = basename(urlparse(T2T_GENOME_FASTA_URL).path)
+T2T_GENOME_FASTA_FILE_NAME = T2T_GENOME_FASTA_FILE_GZ_NAME.removesuffix(
+    ".gz"
+).removesuffix(".GZ")
+T2T_GENOME_FASTA_FILE = join(T2T_DIR, T2T_GENOME_FASTA_FILE_NAME)
+T2T_GENOME_FASTA_LOG = join(
+    LOG_DIR, "t2t", f"download_{T2T_GENOME_FASTA_FILE_NAME}.log"
+)
+
+HOST_GENOME_INDEX_DIR = join(RESOURCES_DIR, HOST_FILTER_MODE, "index")
+HOST_GENOME_LOG_DIR = join(LOG_DIR, HOST_FILTER_MODE, "index")
+HOST_GENOME_INDEX_PREFIX = join(HOST_GENOME_INDEX_DIR, config[HOST_FILTER_TYPE]["name"])
+HOST_GENOME_INDEX_LOG = join(
+    HOST_GENOME_LOG_DIR, f"{config[HOST_FILTER_TYPE]['name']}.log"
 )
 
 EXPAND_PARAMS["ref_decoy"] = (
@@ -428,6 +456,16 @@ NCBI_ASSEMBLY_FILE_DOWNLOAD_THREADS = (
     if config["ncbi"]["assembly"]["file"]["download"]["threads"] == "all"
     else config["ncbi"]["assembly"]["file"]["download"]["threads"]
 )
+HOST_BUILD_THREADS = (
+    workflow.cores
+    if config[HOST_FILTER_MODE]["build"]["threads"] == "all"
+    else config[HOST_FILTER_MODE]["build"]["threads"]
+)
+HOST_ALIGN_THREADS = (
+    workflow.cores
+    if config[HOST_FILTER_MODE]["align"]["threads"] == "all"
+    else config[HOST_FILTER_MODE]["align"]["threads"]
+)
 PUFFERFISH_INDEX_THREADS = (
     workflow.cores
     if config["pufferfish"]["index"]["threads"] == "all"
@@ -465,29 +503,29 @@ PALADIN_THREADS = (
 )
 
 GENCODE_GENOME_SEQ_WRAPPER = join(
-    config["wrapper"]["base_url"], "bio/reference/gencode/sequence"
+    LOCAL_WRAPPERS_BASE_URL, "bio/reference/gencode/sequence"
 )
 GENCODE_GENOME_ANNOT_WRAPPER = join(
-    config["wrapper"]["base_url"], "bio/reference/gencode/annotation"
+    LOCAL_WRAPPERS_BASE_URL, "bio/reference/gencode/annotation"
 )
-SEQKIT_BAM_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/bam")
-SEQKIT_GREP_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/grep")
-SEQKIT_RENAME_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/rename")
-SEQKIT_REPLACE_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/replace")
-SEQKIT_SEQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/seqkit/seq")
-PUFFERFISH_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/index")
-FASTP_WRAPPER = join(config["wrapper"]["base_url"], "bio/fastp")
-PUFFERFISH_ALIGN_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/align")
-SAMTOOLS_FASTQ_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/fastq")
-SAMTOOLS_VIEW_WRAPPER = join(config["wrapper"]["base_url"], "bio/samtools/view")
-FEATURECOUNTS_WRAPPER = join(config["wrapper"]["base_url"], "bio/subread/featurecounts")
-CEDAR_TAX_READ_QUANT_WRAPPER = join(
-    config["wrapper"]["base_url"], "bio/pufferfish/cedar"
-)
-DATA_MATRIX_WRAPPER = join(config["wrapper"]["base_url"], "bio/pufferfish/data_matrix")
-ESET_WRAPPER = join(config["wrapper"]["base_url"], "bio/biobase/eset")
-DIAMOND_MAKEDB_WRAPPER = join(config["wrapper"]["base_url"], "bio/diamond/makedb")
-PALADIN_INDEX_WRAPPER = join(config["wrapper"]["base_url"], "bio/paladin/index")
+HOST_BUILD_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, f"bio/{HOST_FILTER_MODE}/build")
+HOST_ALIGN_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, f"bio/{HOST_FILTER_MODE}/align")
+SEQKIT_BAM_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/seqkit/bam")
+SEQKIT_GREP_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/seqkit/grep")
+SEQKIT_RENAME_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/seqkit/rename")
+SEQKIT_REPLACE_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/seqkit/replace")
+SEQKIT_SEQ_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/seqkit/seq")
+PUFFERFISH_INDEX_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/pufferfish/index")
+FASTP_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/fastp")
+PUFFERFISH_ALIGN_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/pufferfish/align")
+SAMTOOLS_FASTQ_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/samtools/fastq")
+SAMTOOLS_VIEW_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/samtools/view")
+FEATURECOUNTS_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/subread/featurecounts")
+CEDAR_TAX_READ_QUANT_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/pufferfish/cedar")
+DATA_MATRIX_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/pufferfish/data_matrix")
+ESET_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/biobase/eset")
+DIAMOND_MAKEDB_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/diamond/makedb")
+PALADIN_INDEX_WRAPPER = join(LOCAL_WRAPPERS_BASE_URL, "bio/paladin/index")
 
 
 include: join(RULES_DIR, "common.smk")
@@ -495,6 +533,7 @@ include: join(RULES_DIR, "proteomes.smk")
 include: join(RULES_DIR, "microbe_genomes.smk")
 include: join(RULES_DIR, "taxonomy.smk")
 include: join(RULES_DIR, "host_genomes.smk")
+include: join(RULES_DIR, "host_filter.smk")
 include: join(RULES_DIR, "ref.smk")
 include: join(RULES_DIR, "index.smk")
 include: join(RULES_DIR, "trim.smk")
@@ -538,6 +577,8 @@ rule all:
         expand(GENCODE_GENOME_FIXED_FASTA_ID_FILE, zip, **EXPAND_PARAMS),
         GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE,
         expand(GENCODE_GENOME_ANNOT_FILE, zip, **EXPAND_PARAMS),
+        T2T_GENOME_FASTA_FILE,
+        HOST_GENOME_INDEX_DIR,
         expand(REF_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(REF_DEDUPED_ID_FASTA_FILE, zip, **EXPAND_PARAMS),
         expand(REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE, zip, **EXPAND_PARAMS),

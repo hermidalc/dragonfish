@@ -1,0 +1,6 @@
+name: wget
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - wget

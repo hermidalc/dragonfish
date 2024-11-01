@@ -1,6 +1,11 @@
 ---
-wrapper:
-  base_url: 'file:wrappers'
+wrappers:
+  public:
+    version: v3.13.7
+  personal:
+    base_url: https://github.com/hermidalc/snakemake-wrappers/raw/main
+  local:
+    base_url: file:wrappers
 
 analysis_modes: [functional, taxonomic]
 
@@ -29,8 +34,14 @@ uniprot:
       # 'GCA_000002435.2',
     ]
     url:
-      ref: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29'
-      other: 'https://rest.uniprot.org/proteomes/stream?fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2Cgenome_representation%2Cprotein_count%2Clineage&format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29'
+      ref: "https://rest.uniprot.org/proteomes/stream?\
+            fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2C\
+            genome_representation%2Cprotein_count%2Clineage&\
+            format=tsv&query=%2A%20AND%20%28proteome_type%3A1%29"
+      other: "https://rest.uniprot.org/proteomes/stream?\
+              fields=upid%2Corganism_id%2Corganism%2Cgenome_assembly%2C\
+              genome_representation%2Cprotein_count%2Clineage&\
+              format=tsv&query=%2A%20AND%20%28proteome_type%3A2%29"
   kb:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     types: ['sprot', 'trembl']
@@ -103,7 +114,19 @@ ncbi:
       'Trichomonas',
       'Trypanosoma',
     ]
-    low_quality_pattern: '(?:C|c)andidat(?:e|us) | _sp(?:_.*|$) | (?:.*_|^)(?:b|B)acterium(?:_.*|) |. *(?:eury|)archaeo(?:n_|te|n$).* |. *(?:endo|)symbiont.* |. *genomosp_.* |. *unidentified.* |. *_bacteria_.* |. *_taxon_.* |. *_et_al_.* |. *_and_.* |. *(?:cyano|proteo|actinobacterium_.*)'
+    low_quality_pattern: >-
+      (?:C|c)andidat(?:e|us) |
+      _sp(?:_.*|$) |
+      (?:.*_|^)(?:b|B)acterium(?:_.*|) |.
+      *(?:eury|)archaeo(?:n_|te|n$).* |.
+      *(?:endo|)symbiont.* |.
+      *genomosp_.* |.
+      *unidentified.* |.
+      *_bacteria_.* |.
+      *_taxon_.* |.
+      *_et_al_.* |.
+      *_and_.* |.
+      *(?:cyano|proteo|actinobacterium_.*)
 
   assembly:
     summary:
@@ -147,6 +170,34 @@ gencode:
       pattern: '^(\S+)(?:\s.*)?'
       extra: '--line-width 60'
 
+t2t:
+  name: T2T-CHM13v2
+  fasta_url: "https://ftp.ncbi.nlm.nih.gov/\
+              genomes/all/GCF/009/914/755/GCF_009914755.1_T2T-CHM13v2.0/\
+              GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz"
+
+host_filter:
+  type: t2t
+  mode: hisat2
+  hisat2:
+    threads: all
+  star:
+    index:
+      threads: all
+    align:
+      sort_bam: true
+      threads: all
+    # regex specific to GTF style
+    sj_filter_chr_regex: '^(?!chrM$).+$'  # 'chr([1-9][0-9]?|X|Y)'
+
+hisat2:
+    build:
+      extra: ''
+      threads: all
+    align:
+      extra: ''
+      threads: 2
+
 fastq:
   data_dir: 'data/fastq'
   mates: ['R1_001', 'R2_001']
@@ -157,7 +208,12 @@ trim:
   activate: true
   fastp:
     threads: 8
-    extra: '--trim_poly_x --detect_adapter_for_pe --correction --low_complexity_filter --overrepresentation_analysis' # --dedup
+    extra: >-
+      --trim_poly_x
+      --detect_adapter_for_pe
+      --correction
+      --low_complexity_filter
+      --overrepresentation_analysis
 
 pufferfish:
   bin_dir: 'bin/pufferfish/c4db524/linux-x64'
@@ -169,20 +225,7 @@ pufferfish:
     extra: '--coverageScoreRatio 0.5 --genomicReads'
   cedar:
     threads: all
-    extra: '--minCnt 2'
-
-host_filter:
-  mode: none
-  hisat2:
-    threads: all
-  star:
-    index:
-      threads: all
-    align:
-      sort_bam: true
-      threads: all
-    # regex specific to GTF style
-    sj_filter_chr_regex: '^(?!chrM$).+$'  # 'chr([1-9][0-9]?|X|Y)'
+    extra: '--minCnt 10'
 
 pigz:
   threads: all

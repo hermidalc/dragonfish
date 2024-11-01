@@ -71,3 +71,19 @@ rule gencode_genome_annot:
     retries: config["download"]["retries"]
     wrapper:
         GENCODE_GENOME_ANNOT_WRAPPER
+
+
+rule t2t_genome_fasta:
+    params:
+        url=T2T_GENOME_FASTA_URL,
+    output:
+        T2T_GENOME_FASTA_FILE,
+    log:
+        T2T_GENOME_FASTA_LOG,
+    message:
+        "{params.url}"
+    retries: config["download"]["retries"]
+    conda:
+        "../envs/wget.yaml"
+    shell:
+        "wget -nv -O - '{params.url}' | gunzip -c 1> {output} 2> {log}"
