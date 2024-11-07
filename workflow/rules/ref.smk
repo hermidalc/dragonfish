@@ -29,7 +29,7 @@ rule ref_deduped_id_fasta:
 rule ref_deduped_id_with_decoys_fasta:
     input:
         ref=REF_DEDUPED_ID_FASTA_FILE,
-        decoys=expand(GENCODE_GENOME_FIXED_FASTA_FILE, zip, **EXPAND_PARAMS),
+        decoys=[GENCODE_GENOME_MERGED_FIXED_FASTA_ID_FILE, T2T_GENOME_FASTA_FILE],
     output:
         REF_DEDUPED_ID_WITH_DECOY_FASTA_FILE,
     log:

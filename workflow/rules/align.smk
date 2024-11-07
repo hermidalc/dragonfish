@@ -3,7 +3,7 @@ from os.path import abspath
 
 rule pufferfish_align:
     input:
-        unpack(lambda wc: get_fq(wc, trimmed=True)),
+        unpack(lambda wc: get_fq(wc, data_type="filtered")),
         index=PUFFERFISH_INDEX_DIR,
     params:
         pufferfish=abspath(join(config["pufferfish"]["bin_dir"], "pufferfish")),
@@ -31,11 +31,12 @@ rule pufferfish_unmapped_bam:
         SAMTOOLS_VIEW_WRAPPER
 
 
-rule pufferfish_unmapped_fastq:
+rule pufferfish_unmapped_fastq_pe:
     input:
         PUFFERFISH_UNMAPPED_BAM_FILE,
     output:
-        PUFFERFISH_UNMAPPED_FASTQ_FILE,
+        PUFFERFISH_UNMAPPED_FASTQ_R1_FILE,
+        PUFFERFISH_UNMAPPED_FASTQ_R2_FILE,
     log:
         PUFFERFISH_UNMAPPED_FASTQ_LOG,
     threads: SAMTOOLS_THREADS
