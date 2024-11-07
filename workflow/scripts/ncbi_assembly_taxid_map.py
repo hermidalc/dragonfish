@@ -11,7 +11,7 @@ summary_df = pd.read_csv(
 )
 
 tax_ids = set()
-summary_tax_ids = set(summary_df["taxid"].values)
+summary_tax_ids = set(summary_df["taxid"].tolist())
 with open(snakemake.output[0], "wt") as out_fh:
     for i, gz_file in enumerate(sorted(snakemake.input.files, reverse=True)):
         with gzip.open(gz_file, "rt") as in_fh:
