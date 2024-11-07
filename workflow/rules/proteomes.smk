@@ -90,7 +90,7 @@ rule uniprot_kb_dbxref_split:
         dbs=config["uniprot"]["kb"]["dbxref"]["dbs"],
         split_num="{ukb_snum}",
     output:
-        UNIPROT_KB_DBXREF_SPLIT_FILE,
+        temp(UNIPROT_KB_DBXREF_SPLIT_FILE),
     log:
         UNIPROT_KB_DBXREF_SPLIT_LOG,
     conda:
