@@ -46,7 +46,7 @@ uniprot:
     url: 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/'
     types: ['sprot', 'trembl']
     parse:
-      num_splits: [1, 230]
+      num_splits: [1, 248]
       split_size: 1e6
     dbxref:
       dbs: [
